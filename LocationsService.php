@@ -3,20 +3,40 @@ class LocationsService {
 	const ERROR_INVALID_CREDENTIALS = 1;
 	const ERROR_NO_USERNAME_PROVIDED = 2;
 	const ERROR_NO_PASSWORD_PROVIDED = 3;
-	const USER_ROLES_PARAM = 'userroles';
-	const LAST_UPDATE_TIME_PARAM = 'lastupdate';
-	const QUERY_REQUEST = 'q';
-	const QUERY_REQUEST_LOCATIONS = 'locations';
-	var $dbLayer;
+	const LAST_UPDATE_TIME_PARAM = 'last_update';
+// 	var $dbLayer;
+	
+	public function getLocations() {
+		$userRoles = $this->getUserRoles();
+		//TODO: Build JSON object
+		return getLocationList($userRoles);
+	}
+	
+	private function getUserRoles(){
+		
+	}
+	
+	private function getLocationList($userRoles){
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public function placeHolder() {
 		include_once 'DbLayer.php';
 		
-		if ($this->hasDbConnectionData ()) {
-			$this->dbLayer = new DbLayer ( $this->getDbAddress (), $this->getDbUser (), 
-					$this->getDbPass (), $this->getDbName () );
-		} else {
-			$this->dbLayer = new DbLayer ();
-		}
+// 		if ($this->hasDbConnectionData ()) {
+// 			$this->dbLayer = new DbLayer ( $this->getDbAddress (), $this->getDbUser (), 
+// 					$this->getDbPass (), $this->getDbName () );
+// 		} else {
+// 			$this->dbLayer = new DbLayer ();
+// 		}
 		
 		// TODO: Uncomment for production.
 		// if(isset ( $_POST [DbLayer::DB_FIELD_USERNAME] )) {
@@ -33,7 +53,7 @@ class LocationsService {
 		// }
 		//
 		// if ($this->dbLayer->isValidUser ( $username, $password )) {
-		if ($this->dbLayer->isValidUser ( 'suicune', 'pass' )) {
+		if ($this->dbLayer->isValidUser ( 'testuser', 'pass' )) {
 			$userDetails = $this->getUserParameters ( $username );
 			return $this->createJsonAnswer ( $userDetails );
 		} else {
