@@ -1,16 +1,10 @@
-<!DOCTYPE HTML>
-<html>
-    <body>
-        <?php
-            /**
-            * Documentation, License etc.
-            *
-            * @package Webserver
-            */
-            include_once 'Webserver.php';
-            echo "TEST";
-//             $server = new Webserver();
-//             echo $server->parseRequest();
-        ?>
-    </body>
-</html>
+<?php
+	/**
+     * Documentation, License etc.
+     *
+     * @package Webserver
+     */
+    include_once('Webserver.php');
+    $server = new Webserver();
+    echo json_encode($server->parseRequest());
+
