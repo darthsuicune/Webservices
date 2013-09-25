@@ -1,42 +1,72 @@
 <?php
+include_once ('DbLayer.php');
+include_once ('Location.php');
 class LocationsService {
 	const ERROR_INVALID_CREDENTIALS = 1;
 	const ERROR_NO_USERNAME_PROVIDED = 2;
 	const ERROR_NO_PASSWORD_PROVIDED = 3;
 	const LAST_UPDATE_TIME_PARAM = 'last_update';
-// 	var $dbLayer;
-	
-	public function getLocations() {
-		$userRoles = $this->getUserRoles();
-		//TODO: Build JSON object
-		return getLocationList($userRoles);
+	var $dbLayer;
+	public function getLocations($user) {
+		$userRoles = $this->getUserRoles ( $user );
+		return $this->getLocationList ( $userRoles );
+	}
+	const DB_GET_USER_ROLES_QUERY = 'SELECT * FROM userroles WHERE ';
+	public function getUserRoles($username) {
+		// $mysqli = $this->connect ();
+		// $result = $mysqli->query ( '' );
+		$result = array (
+				'Maritimo',
+				'Terrestre',
+				'Admin' 
+		);
+		// $result->close();
+		// $mysqli->close();
+		return $result;
+	}
+	private function getLocationList($userRoles) {
+		// TODO: replace with actual DB search
+		$locationList = array();
+		return $locationList;
 	}
 	
-	private function getUserRoles(){
-		
+	/**
+	 *
+	 * @return array with the locations.
+	 */
+	const DB_SELECT_LOCATIONS_QUERY = 'SELECT * FROM locations WHERE ';
+	public function retrieveFromDb($userDetails) {
+		// $mysqli = $this->connect ();
+		// $result = $mysqli->query ( '' );
+		$result;
+		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {
+			$result = array (
+					"This",
+					"is",
+					"a",
+					"new",
+					"petition" 
+			);
+		} else {
+			$result = array (
+					"But",
+					"this",
+					"is",
+					"old" 
+			);
+		}
+		// $result->close();
+		// $mysqli->close();
+		return $result;
 	}
-	
-	private function getLocationList($userRoles){
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public function placeHolder() {
-		include_once 'DbLayer.php';
 		
-// 		if ($this->hasDbConnectionData ()) {
-// 			$this->dbLayer = new DbLayer ( $this->getDbAddress (), $this->getDbUser (), 
-// 					$this->getDbPass (), $this->getDbName () );
-// 		} else {
-// 			$this->dbLayer = new DbLayer ();
-// 		}
+		// if ($this->hasDbConnectionData ()) {
+		// $this->dbLayer = new DbLayer ( $this->getDbAddress (), $this->getDbUser (),
+		// $this->getDbPass (), $this->getDbName () );
+		// } else {
+		// $this->dbLayer = new DbLayer ();
+		// }
 		
 		// TODO: Uncomment for production.
 		// if(isset ( $_POST [DbLayer::DB_FIELD_USERNAME] )) {

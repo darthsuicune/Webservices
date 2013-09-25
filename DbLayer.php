@@ -14,6 +14,7 @@ class DbLayer {
 	var $dbUsername;
 	var $dbPassword;
 	var $dbDatabase;
+	var $mysqli;
 	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, 
 			$password = self::DB_PASSWORD, $database = self::DB_DATABASE) {
 		$this->dbAddress = $address;
@@ -21,67 +22,17 @@ class DbLayer {
 		$this->dbPassword = $password;
 		$this->dbDatabase = $database;
 	}
-	function connect() {
-		$mysqli = new mysqli ( $this->dbAddress, $this->dbUsername, $this->dbPassword, 
+	public function connect() {
+		$this->mysqli = new mysqli ( $this->dbAddress, $this->dbUsername, $this->dbPassword, 
 				$this->dbDatabase );
-		if ($mysqli->connect_errno) {
-			echo "Connection failed: " . $mysqli->connect_error;
+		if ($this->mysqli->connect_errno) {
+			echo "Connection failed: " . $this->mysqli->connect_error;
 		} else {
-			return $mysqli;
+			return $this->mysqli;
 		}
 	}
-	
-	/**
-	 * Methods for checking user values
-	 */
-	const DB_FIELD_USERNAME = 'username';
-	const DB_FIELD_PASSWORD = 'password';
-	const DB_SELECT_USER_QUERY = 'SELECT * FROM users WHERE ';
-	public function isValidUser($username, $password) {
-		$mysqli = $this->connect ();
-		$result = $mysqli->query ( 
-				self::DB_SELECT_USER_QUERY . self::DB_FIELD_USERNAME . '=\'' . $username . '\' AND ' .
-						 self::DB_FIELD_PASSWORD . '=\'' . $password . '\'' );
-		if ($result == false) {
-			return false;
-		}
-		$res = $result->field_count;
-		$result->close ();
-		$mysqli->close ();
-		return $res > 0;
-	}
-	const DB_GET_USER_ROLES_QUERY = 'SELECT * FROM userroles WHERE ';
-	public function getUserRoles($username) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
-		$result = array ('Maritimo','Terrestre','Admin' 
-		);
-		// $result->close();
-		// $mysqli->close();
-		return $result;
-	}
-	
-	/**
-	 *
-	 * @return array with the locations.
-	 */
-	const DB_SELECT_LOCATIONS_QUERY = 'SELECT * FROM locations WHERE ';
-	public function retrieveFromDb($userDetails) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
-		$result;
-		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {
-			$result = array ("This","is","a","new","petition" 
-			);
-		} else {
-			$result = array ("But","this","is","old" 
-			);
-		}
-		// $result->close();
-		// $mysqli->close();
-		return $result;
-	}
-	function query($mysqli,array $columns,array $tables, $where,array $whereargs) {
+
+	public function query(array $columns,array $tables, $where,array $whereargs) {
 		// TODO: build query
 		$projection;
 		if(is_array($columns)){
@@ -96,15 +47,23 @@ class DbLayer {
 			$tableList = array ('users','userroles','locations','locationroles');
 			$sources = join (' JOIN ', $tableList);
 		}
-		$selection;
-		if(is_array($whereargs)){
-			
+		$selection = ' WHERE ';
+		if(is_string($where) && $where != ""){
+			if(is_array($whereargs)){
+					
+			} else {
+				$selection = "";
+			}
 		} else {
-			
+			$selection = "";
 		}
-		$query = 'SELECT ' . $projection . ' FROM ' . $sources . ' WHERE '. $selection;
-		return $result ( $mysqli->query ( $query ) );
+		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
+		return $result ( $this->mysqli->query ( $query ) );
 	}
+	public function insert(array $columns, $table, array $values){}
+	public function update(array $columns,array $tables, $where,array $whereargs){}
+	public function delete(array $columns,array $tables, $where,array $whereargs){}
+	public function createDb($dbname, array $tables){}
 }
 
 ?>

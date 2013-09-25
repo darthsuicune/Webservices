@@ -4,7 +4,7 @@
      *
      * @package Webserver
      */
-    include_once 'Webserver.php';
+    include_once('Webserver.php');
     $server = new Webserver();
-    echo "{response:".$server->parseRequest()."}";
+    echo json_encode($server->parseRequest());
 
