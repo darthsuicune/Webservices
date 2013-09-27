@@ -6,35 +6,42 @@ class LocationsService {
 	const ERROR_NO_USERNAME_PROVIDED = 2;
 	const ERROR_NO_PASSWORD_PROVIDED = 3;
 	const LAST_UPDATE_TIME_PARAM = 'last_update';
-	var $dbLayer;
+	
+	/**
+	 * 
+	 * @param string $user
+	 * @return multitype:
+	 */
 	public function getLocations($user) {
 		$userRoles = $this->getUserRoles ( $user );
 		return $this->getLocationList ( $userRoles );
 	}
-	const DB_GET_USER_ROLES_QUERY = 'SELECT * FROM userroles WHERE ';
+	/**
+	 * 
+	 * @param unknown
+	 */
+	
 	public function getUserRoles($username) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
+		$dbLayer = new DbLayer();
+		$dbLayer->connect();
 		$result = array (
 				'Maritimo',
 				'Terrestre',
 				'Admin' 
 		);
-		// $result->close();
-		// $mysqli->close();
+		$dbLayer->close();
 		return $result;
 	}
+	/**
+	 *
+	 * @return array with the locations.
+	 */
 	private function getLocationList($userRoles) {
 		// TODO: replace with actual DB search
 		$locationList = array();
 		return $locationList;
 	}
 	
-	/**
-	 *
-	 * @return array with the locations.
-	 */
-	const DB_SELECT_LOCATIONS_QUERY = 'SELECT * FROM locations WHERE ';
 	public function retrieveFromDb($userDetails) {
 		// $mysqli = $this->connect ();
 		// $result = $mysqli->query ( '' );
