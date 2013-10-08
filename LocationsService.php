@@ -18,18 +18,18 @@ class LocationsService {
 	}
 	/**
 	 * 
-	 * @param unknown
+	 * @param string username
 	 */
 	
 	public function getUserRoles($username) {
-		$dbLayer = new DbLayer();
-		$dbLayer->connect();
+// 		$dbLayer = new DbLayer();
+// 		$dbLayer->connect();
 		$result = array (
 				'Maritimo',
 				'Terrestre',
 				'Admin' 
 		);
-		$dbLayer->close();
+// 		$dbLayer->close();
 		return $result;
 	}
 	/**
@@ -43,8 +43,6 @@ class LocationsService {
 	}
 	
 	public function retrieveFromDb($userDetails) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
 		$result;
 		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {
 			$result = array (
@@ -62,8 +60,6 @@ class LocationsService {
 					"old" 
 			);
 		}
-		// $result->close();
-		// $mysqli->close();
 		return $result;
 	}
 	public function placeHolder() {

@@ -15,17 +15,17 @@ class ErrorResponse extends Response {
 		$this->errorCode = $errorCode;
 		switch ($errorCode) {
 			case self::ERROR_NO_REQUEST :
-				$this->errorMessage = "\"I AM ALIVE!!! (and you're wrong ~~)\"";
+				$this->errorMessage = "I AM ALIVE!!! (and you're wrong ~~)";
 			case self::ERROR_WRONG_REQUEST :
-				$this->errorMessage = "\"QUIETA PUTA! QUE TE HE VISTO!\"";
+				$this->errorMessage = "QUIETA PUTA! QUE TE HE VISTO!";
 			case self::ERROR_WRONG_ACCESS_TOKEN :
-				$this->errorMessage = "\"This Access Token is no longer valid.\"";
+				$this->errorMessage = "This Access Token is no longer valid.";
 			case self::ERROR_NO_ACCESS_TOKEN :
-				$this->errorMessage = "\"You haven't requested access yet, bitch!\"";
+				$this->errorMessage = "You haven't requested access yet, bitch!";
 			case self::ERROR_ALREADY_HAS_ACCESS_TOKEN:
 				$this->errorMessage = "Wait, wat?";
 			default :
-				$this->errorMessage = "\"QUIETA PUTA! QUE TE HE VISTO ~~\"";
+				$this->errorMessage = "QUIETA PUTA! QUE TE HE VISTO ~~";
 		}
 	}
 }
