@@ -8,40 +8,18 @@ class LocationsService {
 	const LAST_UPDATE_TIME_PARAM = 'last_update';
 	
 	/**
-	 * 
-	 * @param string $user
+	 *
+	 * @param string $user        	
 	 * @return multitype:
 	 */
 	public function getLocations($user) {
-		$userRoles = $this->getUserRoles ( $user );
-		return $this->getLocationList ( $userRoles );
-	}
-	/**
-	 * 
-	 * @param string username
-	 */
-	
-	public function getUserRoles($username) {
-// 		$dbLayer = new DbLayer();
-// 		$dbLayer->connect();
-		$result = array (
-				'Maritimo',
-				'Terrestre',
-				'Admin' 
-		);
-// 		$dbLayer->close();
-		return $result;
-	}
-	/**
-	 *
-	 * @return array with the locations.
-	 */
-	private function getLocationList($userRoles) {
+		// $dbLayer = new DbLayer();
+		// $dbLayer->connect();
 		// TODO: replace with actual DB search
-		$locationList = array();
+		$locationList = array ();
+		// $dbLayer->close();
 		return $locationList;
 	}
-	
 	public function retrieveFromDb($userDetails) {
 		$result;
 		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {

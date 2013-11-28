@@ -34,9 +34,10 @@ class Webserver {
 					break;
 			}
 		} else {
-			$response = new ErrorResponse ( Response::ERROR_NO_REQUEST );
+			//Show error message, prepare a response or whatever
+			return "NO";
 		}
-		return $response;
+		return json_encode($response);
 	}
 	/**
 	 * Handles a locations request.
@@ -44,8 +45,7 @@ class Webserver {
 	 * In case its token was invalidated, an error is returned.
 	 */
 	function handleLocationsRequest() {
-		// TODO: Add ! to isset when testing with actual clients or it won't work ¬¬
-		if (isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
+		if (! isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
 			return new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
 		}
 		$user = AccessTokenProvider::validateAccessToken ();
@@ -62,20 +62,27 @@ class Webserver {
 	 * Validates user and password and returns the corresponding token/error message.
 	 */
 	function handleAccessRequest() {
-		//If an access token is already provided, this should return an error
+		// If an access token is already provided, this should return an error
 		if (isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
 			return new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
 		}
-		//TODO: replace with a way to get the user from the provided login information.
-		$user = "asd";
-		if ($user != "") {
+		// TODO: replace with a way to get the user from the provided login information.
+		if (! isset ( $_POST [AccessTokenProvider::DB_FIELD_USERNAME] ) ||
+				 ! isset ( $_POST [AccessTokenProvider::DB_FIELD_PASSWORD] )) {
+			return new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
+		}
+		
+		$user = $_POST [AccessTokenProvider::DB_FIELD_USERNAME];
+		$pass = $_POST [AccessTokenProvider::DB_FIELD_PASSWORD];
+		if ($user != "" && $pass != "") {
 			$accessTokenProvider = new AccessTokenProvider ();
+			$accessToken = $accessTokenProvider->getAccessToken ($user, $pass);
+
 			$locationsService = new LocationsService ();
 			$locations = $locationsService->getLocations ( $user );
-			$accessToken = $accessTokenProvider->getAccessToken ();
 			return new AccessTokenResponse ( $accessToken, $locations );
 		} else {
-			return new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
+			return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 		}
 	}
 }
