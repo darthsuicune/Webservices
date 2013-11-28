@@ -6,38 +6,21 @@ class LocationsService {
 	const ERROR_NO_USERNAME_PROVIDED = 2;
 	const ERROR_NO_PASSWORD_PROVIDED = 3;
 	const LAST_UPDATE_TIME_PARAM = 'last_update';
-	var $dbLayer;
-	public function getLocations($user) {
-		$userRoles = $this->getUserRoles ( $user );
-		return $this->getLocationList ( $userRoles );
-	}
-	const DB_GET_USER_ROLES_QUERY = 'SELECT * FROM userroles WHERE ';
-	public function getUserRoles($username) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
-		$result = array (
-				'Maritimo',
-				'Terrestre',
-				'Admin' 
-		);
-		// $result->close();
-		// $mysqli->close();
-		return $result;
-	}
-	private function getLocationList($userRoles) {
-		// TODO: replace with actual DB search
-		$locationList = array();
-		return $locationList;
-	}
 	
 	/**
 	 *
-	 * @return array with the locations.
+	 * @param string $user        	
+	 * @return multitype:
 	 */
-	const DB_SELECT_LOCATIONS_QUERY = 'SELECT * FROM locations WHERE ';
+	public function getLocations($user) {
+		// $dbLayer = new DbLayer();
+		// $dbLayer->connect();
+		// TODO: replace with actual DB search
+		$locationList = array ();
+		// $dbLayer->close();
+		return $locationList;
+	}
 	public function retrieveFromDb($userDetails) {
-		// $mysqli = $this->connect ();
-		// $result = $mysqli->query ( '' );
 		$result;
 		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {
 			$result = array (
@@ -55,8 +38,6 @@ class LocationsService {
 					"old" 
 			);
 		}
-		// $result->close();
-		// $mysqli->close();
 		return $result;
 	}
 	public function placeHolder() {

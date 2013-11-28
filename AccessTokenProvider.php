@@ -3,12 +3,13 @@ class AccessTokenProvider {
 	const TOKEN_REQUEST = 1;
 	const TOKEN_VALIDATION = 2;
 	const PARAMETER_ACCESS_TOKEN = "access_token";
+	const TOKEN_ERROR_INVALID_USER_CREDENTIALS = 0;
 	/**
 	 * 
 	 */
-	public function getAccessToken() {
-		if ($this->hasValidCredentials ()) {
-			return $this->createAccessToken ();
+	public function getAccessToken($user, $pass) {
+		if ($this->hasValidCredentials ($user, $pass)) {
+			return $this->createAccessToken ($user);
 		} else {
 			return $this->invalidUserCredentials ( self::TOKEN_REQUEST );
 		}
@@ -17,24 +18,27 @@ class AccessTokenProvider {
 	 * 
 	 * @return string Empty string if AccessToken is not valid. Username otherwise.
 	 */
-	public static function validateAccessToken() {
-		if (self::isValidToken ()) {
-			return "hola!";
+	public function validateAccessToken($token) {
+		//1-Check if the token is still in the DB
+		if (true) {
+			return true;
 		} else {
-			return self::invalidUserCredentials ( self::TOKEN_VALIDATION );
+			return false;
 		}
 	}
 	/**
 	 * 
 	 */
-	private function createAccessToken() {
+	private function createAccessToken($user) {
+		//1-Create random crap
+		//2-Store random crap in DB related to the user
+		//3-Return random crap to user as Access Token
 	}
-	private function hasValidCredentials() {
-	}
-	private static function isValidToken() {
+	private function hasValidCredentials($user,$pass) {
+		//1-Validate user and password against DB
 		return true;
 	}
-	private static function invalidUserCredentials($action) {
+	private function invalidUserCredentials($action) {
 		switch ($action) {
 			case self::TOKEN_REQUEST :
 				return "";

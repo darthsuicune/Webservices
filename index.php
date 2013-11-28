@@ -6,5 +6,5 @@
      */
     include_once('Webserver.php');
     $server = new Webserver();
-    echo json_encode($server->parseRequest());
+    echo $server->parseRequest();
 

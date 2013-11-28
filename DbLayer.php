@@ -10,13 +10,15 @@ class DbLayer {
 	const DB_USERNAME = 'testuser'; // TODO: Set values
 	const DB_PASSWORD = 'password'; // TODO: Set values
 	const DB_DATABASE = 'webservice';
+	const RESULT_DB_CONNECTION_SUCCESFUL = 0;
+	const RESULT_DB_CONNECTION_ERROR = 1;
 	var $dbAddress;
 	var $dbUsername;
 	var $dbPassword;
 	var $dbDatabase;
 	var $mysqli;
-	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, 
-			$password = self::DB_PASSWORD, $database = self::DB_DATABASE) {
+	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, $password = self::DB_PASSWORD, 
+			$database = self::DB_DATABASE) {
 		$this->dbAddress = $address;
 		$this->dbUsername = $username;
 		$this->dbPassword = $password;
@@ -26,31 +28,43 @@ class DbLayer {
 		$this->mysqli = new mysqli ( $this->dbAddress, $this->dbUsername, $this->dbPassword, 
 				$this->dbDatabase );
 		if ($this->mysqli->connect_errno) {
-			echo "Connection failed: " . $this->mysqli->connect_error;
+			return self::RESULT_DB_CONNECTION_ERROR;
 		} else {
-			return $this->mysqli;
+			return self::RESULT_DB_CONNECTION_SUCCESFUL;
 		}
 	}
-
-	public function query(array $columns,array $tables, $where,array $whereargs) {
-		// TODO: build query
+	public function close(){
+		$this->mysqli->close();
+	}
+	/**
+	 * Abstraction layer for the query to the database.
+	 * @param array $columns
+	 * @param array $tables
+	 * @param unknown $where
+	 * @param array $whereargs
+	 */
+	public function query(array $columns, array $tables, $where, array $whereargs) {
 		$projection;
-		if(is_array($columns)){
-			$projection = join(',', $columns);
+		if (is_array ( $columns )) {
+			$projection = join ( ',', $columns );
 		} else {
 			$projection = '*';
 		}
 		$sources;
-		if(is_array($tables)){
-			$sources = join ( ' JOIN ', $tables);
+		if (is_array ( $tables )) {
+			$sources = join ( ' JOIN ', $tables );
 		} else {
-			$tableList = array ('users','userroles','locations','locationroles');
-			$sources = join (' JOIN ', $tableList);
+			$tableList = array (
+					'users',
+					'userroles',
+					'locations',
+					'locationroles' 
+			);
+			$sources = join ( ' JOIN ', $tableList );
 		}
 		$selection = ' WHERE ';
-		if(is_string($where) && $where != ""){
-			if(is_array($whereargs)){
-					
+		if (is_string ( $where ) && $where != "") {
+			if (is_array ( $whereargs )) {
 			} else {
 				$selection = "";
 			}
@@ -60,10 +74,39 @@ class DbLayer {
 		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
 		return $result ( $this->mysqli->query ( $query ) );
 	}
-	public function insert(array $columns, $table, array $values){}
-	public function update(array $columns,array $tables, $where,array $whereargs){}
-	public function delete(array $columns,array $tables, $where,array $whereargs){}
-	public function createDb($dbname, array $tables){}
+	/**
+	 * Abstraction layer for the insert of rows into a database
+	 * @param array $columns
+	 * @param unknown $table
+	 * @param array $values
+	 */
+	public function insert(array $columns, $table, array $values) {
+	}
+	/**
+	 * Abstraction layer for the update of rows from a database
+	 * @param array $columns
+	 * @param array $tables
+	 * @param unknown $where
+	 * @param array $whereargs
+	 */
+	public function update(array $columns, array $tables, $where, array $whereargs) {
+	}
+	/**
+	 * Abstraction layer for the deletion of rows from a database
+	 * @param array $columns
+	 * @param array $tables
+	 * @param unknown $where
+	 * @param array $whereargs
+	 */
+	public function delete(array $columns, array $tables, $where, array $whereargs) {
+	}
+	/**
+	 * Abstraction layer for creating a new DB with all its tables.
+	 * @param unknown $dbname
+	 * @param array $tables
+	 */
+	public function createDb($dbname, array $tables) {
+	}
 }
 
 ?>
