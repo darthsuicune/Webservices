@@ -33,15 +33,16 @@ class DbLayer {
 			return self::RESULT_DB_CONNECTION_SUCCESFUL;
 		}
 	}
-	public function close(){
-		$this->mysqli->close();
+	public function close() {
+		$this->mysqli->close ();
 	}
 	/**
 	 * Abstraction layer for the query to the database.
-	 * @param array $columns
-	 * @param array $tables
-	 * @param unknown $where
-	 * @param array $whereargs
+	 * 
+	 * @param array $columns        	
+	 * @param array $tables        	
+	 * @param unknown $where        	
+	 * @param array $whereargs        	
 	 */
 	public function query(array $columns, array $tables, $where, array $whereargs) {
 		$projection;
@@ -62,48 +63,55 @@ class DbLayer {
 			);
 			$sources = join ( ' JOIN ', $tableList );
 		}
-		$selection = ' WHERE ';
+		
+		$selection = '';
 		if (is_string ( $where ) && $where != "") {
 			if (is_array ( $whereargs )) {
-			} else {
-				$selection = "";
+				$search = "%";
+				foreach ( $whereargs as $arg ) {
+					$where = substr_replace ( $where, $arg, strpos ( $where, $search ), 
+							strlen ( $search ) );
+				}
+				$selection = ' WHERE ' . $where;
 			}
-		} else {
-			$selection = "";
 		}
 		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
 		return $result ( $this->mysqli->query ( $query ) );
 	}
 	/**
 	 * Abstraction layer for the insert of rows into a database
-	 * @param array $columns
-	 * @param unknown $table
-	 * @param array $values
+	 * 
+	 * @param array $columns        	
+	 * @param unknown $table        	
+	 * @param array $values        	
 	 */
 	public function insert(array $columns, $table, array $values) {
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
-	 * @param array $columns
-	 * @param array $tables
-	 * @param unknown $where
-	 * @param array $whereargs
+	 * 
+	 * @param array $columns        	
+	 * @param array $tables        	
+	 * @param unknown $where        	
+	 * @param array $whereargs        	
 	 */
 	public function update(array $columns, array $tables, $where, array $whereargs) {
 	}
 	/**
 	 * Abstraction layer for the deletion of rows from a database
-	 * @param array $columns
-	 * @param array $tables
-	 * @param unknown $where
-	 * @param array $whereargs
+	 * 
+	 * @param array $columns        	
+	 * @param array $tables        	
+	 * @param unknown $where        	
+	 * @param array $whereargs        	
 	 */
 	public function delete(array $columns, array $tables, $where, array $whereargs) {
 	}
 	/**
 	 * Abstraction layer for creating a new DB with all its tables.
-	 * @param unknown $dbname
-	 * @param array $tables
+	 * 
+	 * @param unknown $dbname        	
+	 * @param array $tables        	
 	 */
 	public function createDb($dbname, array $tables) {
 	}
