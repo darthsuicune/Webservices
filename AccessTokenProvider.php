@@ -16,15 +16,11 @@ class AccessTokenProvider {
 	}
 	/**
 	 * 
-	 * @return string Empty string if AccessToken is not valid. Username otherwise.
+	 * @return boolean
 	 */
 	public function validateAccessToken($token) {
 		//1-Check if the token is still in the DB
-		if (true) {
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 	/**
 	 * 

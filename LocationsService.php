@@ -2,9 +2,6 @@
 include_once ('DbLayer.php');
 include_once ('Location.php');
 class LocationsService {
-	const ERROR_INVALID_CREDENTIALS = 1;
-	const ERROR_NO_USERNAME_PROVIDED = 2;
-	const ERROR_NO_PASSWORD_PROVIDED = 3;
 	const LAST_UPDATE_TIME_PARAM = 'last_update';
 	
 	/**

@@ -17,7 +17,7 @@ class Webserver {
 	 *
 	 * An error response should be returned when no matching request is done.
 	 *
-	 * @return string
+	 * @return string with the response or fail screen
 	 */
 	public function parseRequest() {
 		$response;
@@ -30,13 +30,16 @@ class Webserver {
 					$response = $this->handleAccessRequest ();
 					break;
 				default :
+					http_response_code(400);
 					$response = new ErrorResponse ( Response::ERROR_WRONG_REQUEST );
 					break;
 			}
 		} else {
 			//Show error message, prepare a response or whatever
+			http_response_code(400);
 			return "NO";
 		}
+		header("Content-Type: application/json");
 		return json_encode($response);
 	}
 	/**
@@ -48,8 +51,8 @@ class Webserver {
 		if (! isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
 			return new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
 		}
-		$user = AccessTokenProvider::validateAccessToken ();
-		if ($user != "") {
+		
+		if (AccessTokenProvider::validateAccessToken ();) {
 			$locationsService = new LocationsService ();
 			$locations = $locationsService->getLocations ( $user );
 			return new LocationsResponse ( $locations );
