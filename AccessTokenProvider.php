@@ -2,6 +2,8 @@
 class AccessTokenProvider {
 	const TOKEN_REQUEST = 1;
 	const TOKEN_VALIDATION = 2;
+	const PARAMETER_USERNAME = "username";
+	const PARAMETER_PASSWORD = "password";
 	const PARAMETER_ACCESS_TOKEN = "access_token";
 	const TOKEN_ERROR_INVALID_USER_CREDENTIALS = 0;
 	/**
@@ -16,11 +18,15 @@ class AccessTokenProvider {
 	}
 	/**
 	 * 
-	 * @return boolean
+	 * @return String $user
 	 */
 	public function validateAccessToken($token) {
 		//1-Check if the token is still in the DB
-		return true;
+		if (true) {
+			return "testuser";
+		} else {
+			return null;
+		}
 	}
 	/**
 	 * 
