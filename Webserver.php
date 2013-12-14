@@ -30,14 +30,12 @@ class Webserver {
 					$response = $this->handleAccessRequest ();
 					break;
 				default :
-					http_response_code(400);
 					$response = new ErrorResponse ( Response::ERROR_WRONG_REQUEST );
 					break;
 			}
 		} else {
 			//Show error message, prepare a response or whatever
-			http_response_code(400);
-			return "NO";
+			return new ErrorResponse(ErrorResponse::ERROR_NO_REQUEST);
 		}
 		header("Content-Type: application/json");
 		return json_encode($response);
