@@ -48,12 +48,12 @@ class Webservice {
     function handleLocationsRequest() {
         $response;
         if (! isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
-            $response = new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
+            return  new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
         }
         $user = AccessTokenProvider::validateAccessToken ();
 
         if ($user == null) {
-            $response = new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
+            return new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
         } else {
             $locationsService = new LocationsService ();
             $locations = $locationsService->getLocations ( $user );
@@ -70,18 +70,18 @@ class Webservice {
         $response;
         // If an access token is already provided, this should return an error
         if (isset ( $_POST [AccessTokenProvider::PARAMETER_ACCESS_TOKEN] )) {
-            $response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
+            return new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
         }
         // TODO: replace with a way to get the user from the provided login information.
         if (! isset ( $_POST [AccessTokenProvider::PARAMETER_USERNAME] ) ||
         ! isset ( $_POST [AccessTokenProvider::PARAMETER_PASSWORD] )) {
-            $response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
+            return new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
         }
 
         $user = $_POST [AccessTokenProvider::PARAMETER_USERNAME];
         $pass = $_POST [AccessTokenProvider::PARAMETER_PASSWORD];
         if ($user == "" || $pass == "") {
-            $response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+            return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
         } else {
 
             $accessTokenProvider = new AccessTokenProvider ();
@@ -93,7 +93,7 @@ class Webservice {
                 header("Content-Type: application/json");
                 $response = new AccessTokenResponse ( $accessToken, $locations );
             } else {
-                $response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+                return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
             }
         }
         return $response;
