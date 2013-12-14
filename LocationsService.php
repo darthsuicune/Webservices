@@ -9,17 +9,12 @@ class LocationsService {
 	 * @param string $user        	
 	 * @return multitype:
 	 */
-	public function getLocations($user) {
+	public function getLocations($user, $lastUpdateTime) {
 		// $dbLayer = new DbLayer();
 		// $dbLayer->connect();
 		// TODO: replace with actual DB search
-		$locationList = array ();
-		// $dbLayer->close();
-		return $locationList;
-	}
-	public function retrieveFromDb($userDetails) {
 		$result;
-		if ($userDetails [Webserver::LAST_UPDATE_TIME_PARAM] == 0) {
+		if ($lastUpdateTime == 0) {
 			$result = array (
 					"This",
 					"is",
@@ -36,7 +31,10 @@ class LocationsService {
 			);
 		}
 		return $result;
+		// $dbLayer->close();
 	}
+
+	
 	public function placeHolder() {
 		
 		// if ($this->hasDbConnectionData ()) {
@@ -75,9 +73,6 @@ class LocationsService {
 				self::USER_ROLES_PARAM => $this->dbLayer->getUserRoles ( $username ) 
 		);
 	}
-	function createJsonAnswer($userDetails) {
-		return '[{' . join ( "},{", $this->dbLayer->retrieveFromDb ( $userDetails ) ) . "}]\n";
-	}
 	
 	/**
 	 * Convenience method for displaying error codes
@@ -96,24 +91,5 @@ class LocationsService {
 			default :
 				break;
 		}
-	}
-	/**
-	 * This functions should retrieve the parameters from wherever they are stored.
-	 * Return nothing if no parameter is stored to use the defaults.
-	 */
-	function hasDbConnectionData() {
-		return false;
-	}
-	function getDbAddress() {
-		return;
-	}
-	function getDbUser() {
-		return;
-	}
-	function getDbPass() {
-		return;
-	}
-	function getDbName() {
-		return;
 	}
 }

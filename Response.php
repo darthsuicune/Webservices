@@ -14,6 +14,7 @@ class ErrorResponse extends Response {
 	var $errorMessage;
 	
 	public function __construct($errorCode) {
+		http_response_code(400);
 		$this->errorCode = $errorCode;
 		switch ($errorCode) {
 			case self::ERROR_NO_REQUEST :
