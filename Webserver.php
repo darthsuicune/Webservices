@@ -35,7 +35,7 @@ class Webserver {
 			}
 		} else {
 			//Show error message, prepare a response or whatever
-			return new ErrorResponse(ErrorResponse::ERROR_NO_REQUEST);
+			$response = new ErrorResponse(ErrorResponse::ERROR_NO_REQUEST);
 		}
 		header("Content-Type: application/json");
 		return json_encode($response);
