@@ -2,7 +2,7 @@
 include_once ('DbLayer.php');
 include_once ('Location.php');
 class LocationsService {
-	const LAST_UPDATE_TIME_PARAM = 'last_update';
+	
 	
 	/**
 	 *

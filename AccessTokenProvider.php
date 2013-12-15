@@ -2,9 +2,6 @@
 class AccessTokenProvider {
 	const TOKEN_REQUEST = 1;
 	const TOKEN_VALIDATION = 2;
-	const PARAMETER_USERNAME = "username";
-	const PARAMETER_PASSWORD = "password";
-	const PARAMETER_ACCESS_TOKEN = "access_token";
 	const TOKEN_ERROR_INVALID_USER_CREDENTIALS = 0;
 	/**
 	 * 
@@ -20,10 +17,11 @@ class AccessTokenProvider {
 	 * 
 	 * @return String $user
 	 */
-	public function validateAccessToken($token) {
+	public function validateAccessToken($tokenString) {
 		//1-Check if the token is still in the DB
-		if (true) {
-			return "testuser";
+		$user = AccessToken::isValidToken($tokenString);
+		if ($user != null) {
+			return new User($tokenString);
 		} else {
 			return null;
 		}
@@ -56,7 +54,6 @@ class AccessTokenProvider {
 	 */
 	const DB_FIELD_USERNAME = 'username';
 	const DB_FIELD_PASSWORD = 'password';
-	const DB_SELECT_USER_QUERY = 'SELECT * FROM users WHERE ';
 	public function isValidUser($username, $password) {
 		$mysqli = $this->connect ();
 		$result = $mysqli->query ( 

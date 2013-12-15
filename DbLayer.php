@@ -6,17 +6,23 @@
      */
 include_once 'Webserver.php';
 class DbLayer {
+    
 	const DB_ADDRESS = 'localhost'; // TODO: Set values
 	const DB_USERNAME = 'testuser'; // TODO: Set values
 	const DB_PASSWORD = 'password'; // TODO: Set values
 	const DB_DATABASE = 'webservice';
+	
 	const RESULT_DB_CONNECTION_SUCCESFUL = 0;
 	const RESULT_DB_CONNECTION_ERROR = 1;
+	
 	var $dbAddress;
 	var $dbUsername;
 	var $dbPassword;
 	var $dbDatabase;
 	var $mysqli;
+	
+	const DB_SELECT_USER_QUERY = 'SELECT * FROM users WHERE ';
+	
 	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, $password = self::DB_PASSWORD, 
 			$database = self::DB_DATABASE) {
 		$this->dbAddress = $address;
