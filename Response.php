@@ -51,8 +51,9 @@ class LocationsResponse extends Response {
 		$this->locations = $locations;
 	}
 }
-class AccessTokenResponse extends LocationsResponse {
+class LoginResponse extends Response {
 	var $accessToken;
+	var $locations;
 	public function __construct($accessToken, $locations) {
 		$this->accessToken = $accessToken;
 		$this->locations = $locations;

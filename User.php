@@ -1,35 +1,24 @@
 <?php
+include_once('LoginService.php');
 class User {
     var $username;
     var $accessToken;
     
-    public function __construct($accessToken) {
-        $this->accessToken = new AccessToken($accessToken);
+    public static function getUserFromLogin($username, $password) {
+        //TODO Get details from DB. What follows is temporary data.
+        // 1- Check user existance in DB
+        // If not exists, return null
+        // 2- 
+        $user = new User();
+        $user->username = $username;
+        if($this->accessToken == null){
+            $user->accessToken = AccessToken::createAccessToken();
+        }
+        return $user;
     }
     
-}
-class AccessToken {
-    var $accessTokenString;
-    
-    public function __construct($accessToken){
-        $this->accessTokenString = $accessToken;
+    public static function getUserFromToken($accessToken){
+        //TODO: Get details from DB
     }
     
-    public function isValid() {
-        return ($this->accessTokenString != null);
-    }
-    
-    public function setAccessToken($newAccessToken){
-        $this->accessTokenString = $newAccessToken;
-    }
-    
-    public static function isValidToken($accessToken){
-        //1-Check if the token is still in the DB
-    }
-    
-    public function createAccessToken(){
-        $accessToken = new AccessToken();
-        $length = random(); // Random number between 15 and 25
-        $this->accessToken.setAccessToken(self::createRandomString($length));
-    }
 }
