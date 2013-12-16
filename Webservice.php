@@ -94,11 +94,11 @@ class Webservice {
             return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
         } else {
             $LoginService = new LoginService ();
-            $user = $LoginService->getUser ($username, $password);
+            $user = $LoginService->checkUser ($username, $password);
             if($user != null && ($user->accessToken->isValid())){
                 $locationsService = new LocationsService ();
                 $locations = $locationsService->getLocations ( $user, 0 );
-                $response = new LoginResponse ( $accessToken, $locations );
+                $response = new LoginResponse ( $user->accessToken, $locations );
             } else {
                 return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
             }

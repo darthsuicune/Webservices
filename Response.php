@@ -39,6 +39,7 @@ class ErrorResponse extends Response {
 				$this->errorMessage = "You bastard!";
 				break;
 			default :
+			    http_response_code(403);
 				$this->errorMessage = "QUIETA PUTA! QUE TE HE VISTO ~~";
 				break;
 		}

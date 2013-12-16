@@ -19,6 +19,11 @@ class User {
     
     public static function getUserFromToken($accessToken){
         //TODO: Get details from DB
+        $user = new User();
+        if($user != null){
+            $user->username = "testuser";
+            $user->accessToken = $accessToken;
+        }
     }
     
 }
