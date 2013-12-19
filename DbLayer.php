@@ -88,7 +88,6 @@ class DbLayer {
 		}
 
 		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
-		echo $query . "\n";
 		return $this->mysqli->query($query);
 	}
 	/**
