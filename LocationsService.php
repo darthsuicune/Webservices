@@ -1,29 +1,22 @@
 <?php
-include_once ('DbLayer.php');
-include_once ('Location.php');
-class LocationsService {	
-	public function getLocations($user, $lastUpdateTime) {
-// 		$dbLayer = new DbLayer();
-// 		$dbLayer->connect();
-// 		TODO: replace with actual DB search
-		$result = "";
-		if ($lastUpdateTime == 0) {
-		    $result = array (
-					"This",
-					"is",
-					"a",
-					"new",
-					"petition" 
-		    );
-		} else {
-		    $result = array (
-					"But",
-					"this",
-					"is",
-					"old" 
-		    );
-		}
-// 		$dbLayer->close();
-		return $result;
-	}
+
+include_once('DbLayer.php');
+class LocationsService {
+    public function getLocations($user, $lastUpdateTime) {
+        if($user == null){
+            return null;
+        }
+        return $this->getLocationList($user, $lastUpdateTime);
+    }
+
+    function getLocationList($user, $lastUpdateTime){
+        $dbLayer = new DbLayer();
+        if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
+            return null;
+        }
+        $locationList;
+        
+        $dbLayer->close();
+        return $locationList;
+    }
 }

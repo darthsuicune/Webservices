@@ -47,8 +47,9 @@ class DbLayer {
 	 * 
 	 * @param array $columns        	
 	 * @param array $tables        	
-	 * @param unknown $where        	
-	 * @param array $whereargs        	
+	 * @param String $where        	
+	 * @param array $whereargs
+	 * @return mixed 
 	 */
 	public function query(array $columns, array $tables, $where, array $whereargs) {
 		$projection;
@@ -82,7 +83,7 @@ class DbLayer {
 			}
 		}
 		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
-		return $result ( $this->mysqli->query ( $query ) );
+		return mysqli_query($this->mysqli, $query );
 	}
 	/**
 	 * Abstraction layer for the insert of rows into a database
@@ -119,8 +120,6 @@ class DbLayer {
 	 * @param unknown $dbname        	
 	 * @param array $tables        	
 	 */
-	public function createDb($dbname, array $tables) {
-	}
 }
 
 ?>
