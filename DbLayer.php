@@ -64,9 +64,7 @@ class DbLayer {
 		} else {
 			$tableList = array (
 					'users',
-					'userroles',
 					'locations',
-					'locationroles' 
 			);
 			$sources = join ( ' JOIN ', $tableList );
 		}
