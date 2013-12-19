@@ -1,5 +1,6 @@
 <?php
 include_once('User.php');
+include_once('DbLayer.php');
 class LoginService {
     const TOKEN_REQUEST = 1;
     const TOKEN_VALIDATION = 2;
@@ -11,7 +12,23 @@ class LoginService {
         if($username == null || $username == "" || $password == null || $password == ""){
             return null;
         }
-        return User::getUserFromLogin($username, $password);
+        $projection = array(
+        UsersContract::USERS_COLUMN_USERNAME,
+        UsersContract::USERS_COLUMN_E_MAIL,
+        UsersContract::USERS_COLUMN_ROLE
+        );
+        $tables = array(UsersContract::USERS_TABLE_NAME);
+        $where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " . 
+            UsersContract::USERS_COLUMN_PASSWORD . "=%";
+        $whereargs = array($username,$password);
+        $row = self::getUserData($projection, $tables, $where, $whereargs);
+        if($row != null){
+            return self::createUser($row[UsersContract::USERS_COLUMN_USERNAME],
+            $row[UsersContract::USERS_COLUMN_ROLE],
+            $row[UsersContract::USERS_COLUMN_E_MAIL]);
+        } else {
+            return null;
+        }
     }
     /**
      *
@@ -21,28 +38,64 @@ class LoginService {
         if($tokenString == null || $tokenString == "") {
             return null;
         }
-        return User::getUserFromToken($tokenString);
+        //TODO: Get details from DB
+        $projection = array(
+        UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_USERNAME,
+        UsersContract::USERS_COLUMN_E_MAIL,
+        UsersContract::USERS_COLUMN_ROLE,
+        UsersContract::ACCESS_TOKEN_TABLE_NAME . "." . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN
+        );
+        $tables = array(UsersContract::USERS_TABLE_NAME, UsersContract::ACCESS_TOKEN_TABLE_NAME);
+        $where = UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=%";
+        $whereargs = array(
+        $tokenString
+        );
+        $row = self::getUserData($projection, $tables, $where, $whereargs);
+        if($row != null){
+            return new User(
+            $row[UsersContract::USERS_COLUMN_USERNAME],
+            $row[UsersContract::USERS_COLUMN_ROLE],
+            $row[UsersContract::USERS_COLUMN_E_MAIL],
+            new AccessToken($row[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN])
+            );
+        } else {
+            return null;
+        }
     }
-}
 
-class AccessToken {
-    var $accessTokenString;
-
-    public function __construct($accessToken){
-        $this->accessTokenString = $accessToken;
+    static function getUserData($projection, $tables, $where, $whereargs){
+        $dbLayer = new DbLayer();
+        if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+            $data = $dbLayer->query($projection, $tables, $where, $whereargs);
+            $row;
+            if($data == null){
+                $row = null;
+            } else {
+                $row = $data->fetch_assoc();
+            }
+            $dbLayer->close();
+            return $row;
+        } else {
+            return null;
+        }
     }
 
-    public function isValid() {
-        return ($this->accessTokenString != null && $this->accessTokenString != "");
-    }
+    const DB_INSERT_USER = "testinsert";
+    const DB_INSERT_PASS = "testpassword";
+    static function createUser($username, $role, $email){
+        $accessToken = AccessToken::createAccessToken();
+        $dbLayer = new DbLayer(DbLayer::DB_ADDRESS, self::DB_INSERT_USER, self::DB_INSERT_PASS, DbLayer::DB_DATABASE);
+        if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+             $result = $dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME,
+             array(
+             UsersContract::ACCESS_TOKEN_USERNAME=>$username,
+             UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
+             ));
+            $dbLayer->close();
+            return new User($username, $role, $email, $accessToken);
+        } else {
+            return null;
+        }
 
-    public static function isValidToken($accessToken){
-        return ($accessToken->accessTokenString != null && $accessToken->accessTokenString != "");
-        //1-Check if the token is still in the DB
-    }
-
-    public static function createAccessToken(){
-        $token = new AccessToken(substr(sha1(time()), 0, 30)); //This method generates the sha1 hash of the time with length 30.
-        return $token;
     }
 }

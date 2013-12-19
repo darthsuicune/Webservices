@@ -1,21 +1,24 @@
 <?php
-include_once('DbLayer.php');
 class Location {
     var $latitude;
     var $longitude;
     var $name;
+    var $type;
     var $address;
     var $description;
-    var $type;
     var $lastUpdateTime;
-    public function __construct($latitude, $longitude, $name, $address, $description, $type, $lastUpdateTime) {
-        $this->latitude = $latitude;
-        $this->longitude = $longitude;
-        $this->name = $name;
-        $this->address = $address;
-        $this->description = $description;
-        $this->type = $type;
-        $this->lastUpdateTime = $lastUpdateTime;
+    /**
+     * Public constructor
+     * @param mysql_assoc $row mysql row containing the relative data.
+     */
+    public function __construct ( $row ) {
+        $this->latitude = $row[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
+        $this->longitude = $row[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
+        $this->name = $row[LocationsContract::LOCATIONS_COLUMN_NAME];
+        $this->type = $row[LocationsContract::LOCATIONS_COLUMN_TYPE];
+        $this->address = $row[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
+        $this->description = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
+        $this->lastUpdateTime= $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
     }
 }
 
@@ -25,7 +28,7 @@ class LocationsContract {
      */
     const LOCATIONS_TABLE_NAME = "locations";
     const LOCATIONS_COLUMN_ID = "id";
-    const LOCATIONS_COLUMN_LATITUTDE = "latitude";
+    const LOCATIONS_COLUMN_LATITUDE = "latitude";
     const LOCATIONS_COLUMN_LONGITUDE = "longitude";
     const LOCATIONS_COLUMN_NAME = "name";
     const LOCATIONS_COLUMN_TYPE = "type";
