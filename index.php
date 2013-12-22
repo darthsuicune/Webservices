@@ -6,4 +6,4 @@
  */
 include_once('Webservice.php');
 $server = new Webservice();
-echo $server->parseRequest();
+printf($server->parseRequest());

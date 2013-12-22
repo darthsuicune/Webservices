@@ -52,7 +52,6 @@ class Webservice {
      * In case its token was invalidated, an error is returned.
      */
     function handleLocationsRequest() {
-        $response;
         if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
             return  new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
         }
@@ -68,16 +67,14 @@ class Webservice {
             $locationsService = new LocationsService ();
             $locations = $locationsService->getLocations ( $user, $lastUpdateTime );
 
-            $response =  new LocationsResponse ( $locations );
+            return new LocationsResponse ( $locations );
         }
-        return $response;
     }
     /**
      * Handles a request for access.
      * Validates user and password and returns the corresponding response/error message.
      */
     function handleAccessRequest() {
-        $response;
         // If an access token is already provided, this should return an error
         if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
             return new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
@@ -95,14 +92,13 @@ class Webservice {
         } else {
             $LoginService = new LoginService ();
             $user = $LoginService->checkUser ($username, $password);
-            if($user != null && ($user->accessToken->isValid())){
+            if($user == null || !($user->accessToken->isValid())){
+                return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+            } else {
                 $locationsService = new LocationsService ();
                 $locations = $locationsService->getLocations ( $user, 0 );
-                $response = new LoginResponse ( $user->accessToken, $locations );
-            } else {
-                return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+                return new LoginResponse ( $user->accessToken, $locations );
             }
         }
-        return $response;
     }
 }

@@ -86,7 +86,8 @@ class AccessToken {
     }
 
     public static function createAccessToken(){
-        $token = new AccessToken(substr(sha1(microtime()), 0, 30)); //This method generates the sha1 hash of the time with length 30.
+        //This method generates the sha1 hash of the time with length 30.
+        $token = new AccessToken(substr(sha1(microtime()), 0, 30)); 
         return $token;
     }
 }
