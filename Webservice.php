@@ -55,8 +55,7 @@ class Webservice {
         if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
             return  new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
         }
-        $user = LoginService::validateAccessToken ();
-        echo json_encode($user);
+        $user = LoginService::validateAccessToken ($_POST [self::PARAMETER_ACCESS_TOKEN]);
 
         if ($user == null || (!$user->accessToken->isValid())) {
             return new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
