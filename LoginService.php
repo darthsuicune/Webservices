@@ -51,7 +51,6 @@ class LoginService {
         $tokenString
         );
         $row = self::getUserData($projection, $tables, $where, $whereargs);
-        echo json_encode($row);
         if($row != null){
             return new User(
             $row[UsersContract::USERS_COLUMN_USERNAME],
