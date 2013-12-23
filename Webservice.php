@@ -56,6 +56,7 @@ class Webservice {
             return  new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
         }
         $user = LoginService::validateAccessToken ();
+        echo json_encode($user);
 
         if ($user == null || (!$user->accessToken->isValid())) {
             return new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
