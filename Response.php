@@ -18,35 +18,35 @@ class ErrorResponse extends Response {
         switch ($errorCode) {
             case self::ERROR_NO_REQUEST :
                 http_response_code(400);
-                $this->errorMessage = "I'M ALIVE!!! (and you're wrong ~~)";
+                $this->errorMessage = "No hay peticion";
                 break;
             case self::ERROR_WRONG_REQUEST :
                 http_response_code(400);
-                $this->errorMessage = "QUIETA PUTA! QUE TE HE VISTO!";
+                $this->errorMessage = "Peticion no disponible";
                 break;
             case self::ERROR_WRONG_ACCESS_TOKEN :
                 http_response_code(400);
-                $this->errorMessage = "This Access Token is no longer valid.";
+                $this->errorMessage = "Access token invalido";
                 break;
             case self::ERROR_NO_ACCESS_TOKEN :
                 http_response_code(403);
-                $this->errorMessage = "You haven't requested access yet, bitch!";
+                $this->errorMessage = "No hay access token";
                 break;
             case self::ERROR_ALREADY_HAS_ACCESS_TOKEN:
                 http_response_code(400);
-                $this->errorMessage = "Wait, wat?";
+                $this->errorMessage = "Ya tiene access token y solicita nuevo";
                 break;
             case self::ERROR_NO_LOGIN_INFORMATION:
                 http_response_code(403);
-                $this->errorMessage = "Srsly?";
+                $this->errorMessage = "Sin user ni pass";
                 break;
             case self::ERROR_WRONG_LOGIN_INFORMATION:
                 http_response_code(403);
-                $this->errorMessage = "You bastard!";
+                $this->errorMessage = "User y pass incorrecto";
                 break;
             default :
                 http_response_code(403);
-            $this->errorMessage = "QUIETA PUTA! QUE TE HE VISTO ~~";
+            $this->errorMessage = "Wait, wat?";
             break;
         }
     }
