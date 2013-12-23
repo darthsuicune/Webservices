@@ -51,12 +51,13 @@ class LoginService {
         $tokenString
         );
         $row = self::getUserData($projection, $tables, $where, $whereargs);
+        echo json_encode($row);
         if($row != null){
             return new User(
-            $row[UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_USERNAME],
+            $row[UsersContract::USERS_COLUMN_USERNAME],
             $row[UsersContract::USERS_COLUMN_ROLE],
             $row[UsersContract::USERS_COLUMN_E_MAIL],
-            new AccessToken($row[UsersContract::ACCESS_TOKEN_TABLE_NAME . "." . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN])
+            new AccessToken($row[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN])
             );
         } else {
             return null;
