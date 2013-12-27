@@ -37,6 +37,7 @@ class DbLayer {
 		if ($this->mysqli->connect_errno) {
 			return self::RESULT_DB_CONNECTION_ERROR;
 		} else {
+			$this->mysqli->set_charset("utf8");
 			return self::RESULT_DB_CONNECTION_SUCCESFUL;
 		}
 	}

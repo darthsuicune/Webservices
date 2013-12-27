@@ -18,7 +18,7 @@ class Location {
         $this->type = $row[LocationsContract::LOCATIONS_COLUMN_TYPE];
         $this->address = $row[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
         $this->description = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
-        $this->lastUpdateTime= $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
+        $this->lastUpdateTime = $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
     }
 }
 
