@@ -111,6 +111,7 @@ class Webservice {
     function handleWebRequest(){
     	include_once('WebRequest.php');
     	$webRequest = new WebRequest();
-    	return $webRequest->parseRequest();
+    	$response = $webRequest->parseRequest();
+    	return $response;
     }
 }
