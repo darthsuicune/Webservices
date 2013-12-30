@@ -19,14 +19,14 @@ class Webservice {
     const PARAMETER_LAST_UPDATE_TIME = 'last_update';
 
     /**
-     * This method must return a string containing the response to the original request.
+     * This method must $response = a string containing the response to the original request.
      *
      * An error response should be returned when no matching request is done.
      *
-     * @return string with the response or fail screen
+     * @$response = string with the response or fail screen
      */
     public function parseRequest() {
-        $response;
+    	$response;
         if (isset ( $_GET [self::QUERY_REQUEST] )) {
             switch ($_GET [self::QUERY_REQUEST]) {
                 case self::QUERY_REQUEST_LOCATIONS :
@@ -40,11 +40,11 @@ class Webservice {
                 break;
             }
         } else {
-            //Show error message, prepare a response or whatever
-            $response = new ErrorResponse(ErrorResponse::ERROR_NO_REQUEST);
+        	//No request means web petition... for now.
+        	$response = $this->handleWebRequest();
         }
-        header("Content-Type: application/json");
-        return json_encode($response);
+        
+        return $response;
     }
     /**
      * Handles a locations request.
@@ -52,13 +52,14 @@ class Webservice {
      * In case its token was invalidated, an error is returned.
      */
     function handleLocationsRequest() {
+    	$response;
         if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
-            return  new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
+            $response = new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
         }
         $user = LoginService::validateAccessToken ($_POST [self::PARAMETER_ACCESS_TOKEN]);
 
         if ($user == null || (!$user->accessToken->isValid())) {
-            return new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
+            $response = new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
         } else {
             $lastUpdateTime = 0;
             if (isset ($_POST [self::PARAMETER_LAST_UPDATE_TIME])){
@@ -66,39 +67,50 @@ class Webservice {
             }
             $locationsService = new LocationsService ();
             $locations = $locationsService->getLocations ( $user, $lastUpdateTime );
-
-            return new LocationsResponse ( $locations );
+            
+            $response = new LocationsResponse ( $locations );
         }
+        header("Content-Type: application/json");
+        return json_encode($response);
     }
     /**
      * Handles a request for access.
      * Validates user and password and returns the corresponding response/error message.
      */
     function handleAccessRequest() {
-        // If an access token is already provided, this should return an error
+    	$response;
+        // If an access token is already provided, this should $response = an error
         if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
-            return new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
+            $response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
         }
         // TODO: replace with a way to get the user from the provided login information.
         if (! isset ( $_POST [self::PARAMETER_USERNAME] ) ||
         ! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
-            return new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
+            $response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
         }
 
         $username = $_POST [self::PARAMETER_USERNAME];
         $password = $_POST [self::PARAMETER_PASSWORD];
         if ($username == "" || $password == "") {
-            return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+            $response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
         } else {
             $LoginService = new LoginService ();
             $user = $LoginService->checkUser ($username, $password);
             if($user == null || !($user->accessToken->isValid())){
-                return new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+                $response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
             } else {
                 $locationsService = new LocationsService ();
                 $locations = $locationsService->getLocations ( $user, 0 );
-                return new LoginResponse ( $user->accessToken, $locations );
+                $response = new LoginResponse ( $user->accessToken, $locations );
             }
         }
+        header("Content-Type: application/json");
+        return json_encode($response);
+    }
+    
+    function handleWebRequest(){
+    	include_once('WebRequest.php');
+    	$webRequest = new WebRequest();
+    	return $webRequest->parseRequest();
     }
 }

@@ -5,7 +5,7 @@ class Location {
     var $name;
     var $type;
     var $address;
-    var $description;
+    var $other;
     var $lastUpdateTime;
     /**
      * Public constructor
@@ -17,7 +17,7 @@ class Location {
         $this->name = $row[LocationsContract::LOCATIONS_COLUMN_NAME];
         $this->type = $row[LocationsContract::LOCATIONS_COLUMN_TYPE];
         $this->address = $row[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
-        $this->description = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
+        $this->other = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
         $this->lastUpdateTime = $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
     }
 }
