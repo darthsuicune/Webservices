@@ -1,92 +1,109 @@
 <?php
 class WebRequest {
+	const API_KEY = 'AIzaSyBfi8KVys-Vo9uea-i_IKNMRgfB6EXI5dk';
+	const JQUERY = 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js';
+	const CENTER = 'new google.maps.LatLng(41.3958, 2.1739)';
+	const MAP_DEFAULT_ZOOM = '12';
+	const MAP_DEFAULT_TYPE = 'google.maps.MapTypeId.ROADMAP';
 	public function parseRequest() {
-		echo '<HTML>' . "\n";
-		$this->writeHeader ();
- 		$this->writeBody ();
-		echo '</HTML>' . "\n";
+		return '<HTML>' . "\n"
+				. $this->writeHeader ()
+				. $this->writeBody ()
+				. '</HTML>' . "\n";
 	}
 	function writeHeader() {
-		echo '<HEAD>' . "\n";
-		echo '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" charset="utf-8" />' . "\n";
-		echo '<link rel="shortcut icon" href="favicon.ico"/><title>Mapa de Creu Roja Barcelona</title>' . "\n";
- 		$this->getStyleSheet ();
- 		$this->getScripts ();
-		echo '</HEAD>' . "\n";
+		return '<HEAD>' . "\n" 
+				. '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" '
+				. 'charset="utf-8" />'
+				. '<link rel="shortcut icon" href="'. $this->getFavIcon() . '"/>' . "\n"
+				. '<title>' . $this->getTitle() . '</title>' . "\n"
+				. $this->getStyleSheet ()
+				. $this->getScripts ()
+				. '</HEAD>' . "\n";
 	}
 	function writeBody() {
-		echo '<body onload="initialize()">' . "\n";
-		echo '<div id="map_canvas" style="width:100%; height:100%"></div>' . "\n";
-		echo '</body>' . "\n";
+ 		return '<body onload="' . $this->getInitializeMethodName() . '">' . "\n"
+				. '  <div id="map_canvas" style="width:100%; height:100%"></div>' . "\n"
+ 				. '</body>' . "\n";
+	}	
+	function getFavIcon(){
+		return 'favicon.ico';
+	}
+	function getTitle() {
+		return 'Mapa de Creu Roja Barcelona</title>';
 	}
 	function getStyleSheet() {
-		echo '<style type="text/css">' . "\n";
-		echo 'html { height: 100% }' . "\n";
-		echo 'body { height: 100%; margin: 0; padding: 0 }' . "\n";
-		echo '#map_canvas { height: 100% }' . "\n";
-		echo '</style>' . "\n";
+		return '<style type="text/css">' . "\n"
+				. '  html { height: 100% }' . "\n"
+				. '  body { height: 100%; margin: 0; padding: 0 }' . "\n"
+				. '  #map_canvas { height: 100% }' . "\n"
+				. '</style>' . "\n";
 	}
 	function getScripts() {
-		$this->getJQuery ();
-		$this->getGMaps ();
-		$this->getInitializeScript ();
+		return '<script src="' . self::JQUERY . '"></script>' . "\n"
+				. '<script type="text/javascript" src="'
+				. $this->getGMapsScript ()
+				. '"></script>' . "\n" 
+				. $this->getInitializeScript ();
 	}
-	function getJQuery() {
-		echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>' . "\n";
-	}
-	function getGMaps() {
-		echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfi8KVys-Vo9uea-i_IKNMRgfB6EXI5dk&sensor=false"></script>' . "\n";
+	function getGMapsScript() {
+		return 'https://maps.googleapis.com/maps/api/js?key=' . self::API_KEY . '&sensor=false';
 	}
 	function getInitializeScript() {
-		echo '<script type="text/javascript">' . "\n";
-		echo 'google.maps.visualRefresh = true;' . "\n";
-		$this->getInitializeMethod ();
-		echo '</script>' . "\n";
+		return '<script type="text/javascript">' . "\n"
+				. $this->setMapOptions() 
+				. $this->getInitializeMethod ()
+				. '</script>' . "\n";
 	}
 	function setMapOptions() {
+		return 'google.maps.visualRefresh = true;' . "\n";
 	}
 	function getInitializeMethod() {
-		echo 'function initialize() {' . "\n";
-		$this->getMapOptions ();
-		$this->getAuxVars ();
-		echo 'var marcadores=' . $this->loadMarkers () . ';' . "\n";
-		$this->processMarkers ();
-		echo '}' . "\n";
+		return 'function ' . $this->getInitializeMethodName() . ' {' . "\n"
+				. $this->getMapOptions ()
+				. $this->getAuxVars ()
+				. 'var marcadores=' . $this->loadMarkers () . ';' . "\n"
+				. $this->processMarkers ()
+				. '}' . "\n";
+	}
+	function getInitializeMethodName(){
+		return "initialize()";
 	}
 	function getMapOptions() {
-		echo 'var mapOptions = {' . "\n";
-		echo '	center: new google.maps.LatLng(41.3958, 2.1739),' . "\n";
-		echo '	zoom: 12,' . "\n";
-		echo '	disableDefaultUI: true,' . "\n";
-		echo '	mapTypeId: google.maps.MapTypeId.ROADMAP' . "\n";
-		echo '};' . "\n";
+		return 'var mapOptions = {' . "\n"
+				. '	center: '. self::CENTER . ',' . "\n"
+				. '	zoom: ' . self::MAP_DEFAULT_ZOOM . ',' . "\n"
+				. '	disableDefaultUI: true,' . "\n"
+				. '	mapTypeId: ' . self::MAP_DEFAULT_TYPE . "\n"
+				. '};' . "\n";
 	}
 	function getAuxVars() {
-		echo 'var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);' . "\n";
-		echo 'var infowindow = new google.maps.InfoWindow({content: \'\'});' . "\n";
+		return 'var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);'
+				 . "\n"
+				 . 'var infowindow = new google.maps.InfoWindow({content: \'\'});' . "\n";
 	}
 	function processMarkers() {
-		echo 'for (var i = 0, j = marcadores.length; i < j; i++) {' . "\n";
-		echo '  var contenido;' . "\n";
-		echo '  if (marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_ADDRESS . ' != null && ' 
-				. 'marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_OTHER .' != null){' . "\n";
-		echo '      contenido = ' . $this->loadContent(true) . ';' . "\n";
-		echo ' } else {'  . "\n";
-		echo '      contenido = ' . $this->loadContent(false) . "\n";
-		echo ' }'  . "\n";
-		echo '	var marker = new google.maps.Marker({' . "\n";
-		echo '		position: new google.maps.LatLng(marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LATITUDE
-				 . ', marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LONGITUDE . '),' . "\n";
-		echo '		map: map,' . "\n";
-		echo '		icon: marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n";
-		echo '	});' . "\n";
-		echo '	(function(marker, contenido){' . "\n";
-		echo '		google.maps.event.addListener(marker, \'click\', function() {' . "\n";
-		echo '			infowindow.setContent(contenido);' . "\n";
-		echo '			infowindow.open(map, marker);' . "\n";
-		echo '		});' . "\n";
-		echo '	})(marker,contenido);' . "\n";
-		echo '}' . "\n";
+		return 'for (var i = 0, j = marcadores.length; i < j; i++) {' . "\n"
+				. '  var contenido;' . "\n"
+				. '  if (marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_ADDRESS . ' != null && ' 
+						. 'marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_OTHER .' != null){' . "\n"
+				. '    contenido = ' . $this->loadContent(true) . ';' . "\n"
+				. '  } else {'  . "\n"
+				. '    contenido = ' . $this->loadContent(false) . "\n"
+				. '  }'  . "\n"
+				. '	 var marker = new google.maps.Marker({' . "\n"
+				. '    position: new google.maps.LatLng(marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LATITUDE
+						. ', marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LONGITUDE . '),' . "\n"
+				. '    map: map,' . "\n"
+				. '	   icon: marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n"
+				. '	 });' . "\n"
+				. '	 (function(marker, contenido){' . "\n"
+				. '	   google.maps.event.addListener(marker, \'click\', function() {' . "\n"
+				. '	     infowindow.setContent(contenido);' . "\n"
+				. '	     infowindow.open(map, marker);' . "\n"
+				. '    });' . "\n"
+				. '  })(marker,contenido);' . "\n"
+				. '}' . "\n";
 	}
 	function loadContent($withAddress) {
 		if($withAddress){

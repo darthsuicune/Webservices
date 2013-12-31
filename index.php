@@ -6,7 +6,7 @@
  */
 include_once ('Webservice.php');
 $server = new Webservice ();
-printf ( $server->parseRequest () );
+print ( $server->parseRequest () );
 
 // echo "\n" . "TEST" . "\n";
 // include_once ('DbLayer.php');
