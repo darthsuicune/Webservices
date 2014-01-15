@@ -96,7 +96,8 @@ class WebRequest {
 				. '    position: new google.maps.LatLng(marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LATITUDE
 						. ', marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LONGITUDE . '),' . "\n"
 				. '    map: map,' . "\n"
-				. '	   icon: "icons/" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n"
+				. '	   icon: "' . $this->getIconFolder() 
+				. '" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n"
 				. '	 });' . "\n"
 				. '	 (function(marker, contenido){' . "\n"
 				. '	   google.maps.event.addListener(marker, \'click\', function() {' . "\n"
@@ -115,6 +116,9 @@ class WebRequest {
 			return '"<strong>" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_NAME . ' + "</strong>"'; 
 		} 
 	}
+	function getIconFolder() {
+		return "icons/";
+	}
 	function loadMarkers() {
 		include_once ('DbLayer.php');
 		$dbLayer = new DbLayer ();
@@ -128,7 +132,8 @@ class WebRequest {
 				LocationsContract::LOCATIONS_COLUMN_TYPE,
 				LocationsContract::LOCATIONS_COLUMN_ADDRESS,
 				LocationsContract::LOCATIONS_COLUMN_OTHER,
-				LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED 
+				LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
+				LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
 		);
 		$tables = array (
 				LocationsContract::LOCATIONS_TABLE_NAME 
