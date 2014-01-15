@@ -38,7 +38,6 @@ class LoginService {
         if($tokenString == null || $tokenString == "") {
             return null;
         }
-        //TODO: Get details from DB
         $projection = array(
         UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_USERNAME,
         UsersContract::USERS_COLUMN_E_MAIL,

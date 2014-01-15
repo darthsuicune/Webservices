@@ -7,11 +7,11 @@ class WebRequest {
 	const MAP_DEFAULT_TYPE = 'google.maps.MapTypeId.ROADMAP';
 	public function parseRequest() {
 		return '<HTML>' . "\n"
-				. $this->writeHeader ()
+				. $this->writeHead ()
 				. $this->writeBody ()
 				. '</HTML>' . "\n";
 	}
-	function writeHeader() {
+	function writeHead() {
 		return '<HEAD>' . "\n" 
 				. '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" '
 				. 'charset="utf-8" />'
@@ -30,7 +30,7 @@ class WebRequest {
 		return 'favicon.ico';
 	}
 	function getTitle() {
-		return 'Mapa de Creu Roja Barcelona</title>';
+		return 'Mapa de Creu Roja Barcelona';
 	}
 	function getStyleSheet() {
 		return '<style type="text/css">' . "\n"
@@ -47,7 +47,8 @@ class WebRequest {
 				. $this->getInitializeScript ();
 	}
 	function getGMapsScript() {
-		return 'https://maps.googleapis.com/maps/api/js?key=' . self::API_KEY . '&sensor=false';
+		return 'https://maps.googleapis.com/maps/api/js?key=' . self::API_KEY 
+				. '&sensor=false';
 	}
 	function getInitializeScript() {
 		return '<script type="text/javascript">' . "\n"

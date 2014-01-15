@@ -83,7 +83,6 @@ class Webservice {
         if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
             $response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
         }
-        // TODO: replace with a way to get the user from the provided login information.
         if (! isset ( $_POST [self::PARAMETER_USERNAME] ) ||
         ! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
             $response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );

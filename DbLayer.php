@@ -24,8 +24,8 @@ class DbLayer {
 	
 	const DB_SELECT_USER_QUERY = 'SELECT * FROM users WHERE ';
 	
-	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, $password = self::DB_PASSWORD, 
-			$database = self::DB_DATABASE) {
+	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME, 
+			$password = self::DB_PASSWORD, $database = self::DB_DATABASE) {
 		$this->dbAddress = $address;
 		$this->dbUsername = $username;
 		$this->dbPassword = $password;
