@@ -72,6 +72,24 @@ class User {
         $array[] = LocationsContract::TYPE_TERRESTRE;
         return $array;
     }
+
+    const DB_INSERT_USER = "testinsert";
+    const DB_INSERT_PASS = "testpassword";
+    public static function createUser($username, $role, $email){
+        $accessToken = AccessToken::createAccessToken();
+        $dbLayer = new DbLayer(DbLayer::DB_ADDRESS, self::DB_INSERT_USER, self::DB_INSERT_PASS, DbLayer::DB_DATABASE);
+        if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+             $result = $dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME,
+             array(
+             UsersContract::ACCESS_TOKEN_USERNAME=>$username,
+             UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
+             ));
+            $dbLayer->close();
+            return new User($username, $role, $email, $accessToken);
+        } else {
+            return null;
+        }
+    }
 }
 
 class AccessToken {

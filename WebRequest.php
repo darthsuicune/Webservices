@@ -96,7 +96,7 @@ class WebRequest {
 				. '    position: new google.maps.LatLng(marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LATITUDE
 						. ', marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_LONGITUDE . '),' . "\n"
 				. '    map: map,' . "\n"
-				. '	   icon: marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n"
+				. '	   icon: "icons/" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_TYPE . ' + ".png"' . "\n"
 				. '	 });' . "\n"
 				. '	 (function(marker, contenido){' . "\n"
 				. '	   google.maps.event.addListener(marker, \'click\', function() {' . "\n"

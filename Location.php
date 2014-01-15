@@ -7,6 +7,7 @@ class Location {
     var $address;
     var $other;
     var $lastUpdateTime;
+    var $expireDate;
     /**
      * Public constructor
      * @param mysql_assoc $row mysql row containing the relative data.
@@ -19,6 +20,7 @@ class Location {
         $this->address = $row[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
         $this->other = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
         $this->lastUpdateTime = $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
+        $this->expireDate = $row[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
     }
 }
 
@@ -35,6 +37,7 @@ class LocationsContract {
     const LOCATIONS_COLUMN_ADDRESS = "address";
     const LOCATIONS_COLUMN_OTHER = "other";
     const LOCATIONS_COLUMN_LAST_UPDATED = "lastupdated";
+    const LOCATIONS_COLUMN_EXPIRE_DATE = "expiredate";
 
     const TYPE_ADAPTADAS = "adaptadas";
     const TYPE_ASAMBLEA = "asamblea";
