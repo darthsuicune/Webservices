@@ -4,13 +4,14 @@
  *
  * @package Webserver
  */
-$server = new Webservice ();
-print ( $server->parseRequest () );
-
 include_once ('Response.php');
 include_once ('LocationsService.php');
 include_once ('LoginService.php');
 include_once ('User.php');
+
+$server = new Webservice ();
+print ( $server->parseRequest () );
+
 class Webservice {
     const QUERY_REQUEST = 'q';
     const QUERY_REQUEST_LOCATIONS = 'get_locations';
