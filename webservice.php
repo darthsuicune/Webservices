@@ -4,6 +4,9 @@
  *
  * @package Webserver
  */
+$server = new Webservice ();
+print ( $server->parseRequest () );
+
 include_once ('Response.php');
 include_once ('LocationsService.php');
 include_once ('LoginService.php');
@@ -40,8 +43,7 @@ class Webservice {
                 break;
             }
         } else {
-        	//No request means web petition... for now.
-        	$response = $this->handleWebRequest();
+        	$response = new ErrorResponse ( Response::ERROR_NO_REQUEST );
         }
         
         return $response;
@@ -105,12 +107,5 @@ class Webservice {
         }
         header("Content-Type: application/json");
         return json_encode($response);
-    }
-    
-    function handleWebRequest(){
-    	include_once('WebRequest.php');
-    	$webRequest = new WebRequest();
-    	$response = $webRequest->parseRequest();
-    	return $response;
     }
 }

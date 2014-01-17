@@ -4,9 +4,16 @@
  *
  * @package Webserver
  */
-include_once ('Webservice.php');
-$server = new Webservice ();
-print ( $server->parseRequest () );
+
+
+handleWebRequest();
+
+function handleWebRequest(){
+	include_once('Map.php');
+	$map = new Map();
+	$response = $map->parseRequest();
+	echo $response;
+}
 
 // echo "\n" . "TEST" . "\n";
 // include_once ('DbLayer.php');
