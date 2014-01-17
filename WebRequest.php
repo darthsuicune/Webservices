@@ -138,8 +138,10 @@ class WebRequest {
 		$tables = array (
 				LocationsContract::LOCATIONS_TABLE_NAME 
 		);
-		$where = "";
-		$whereargs = array ();
+		$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">%";
+		$whereargs = array (
+				round(microtime(true) * 1000)
+		);
 		
 		$result = $dbLayer->query ( $projection, $tables, $where, $whereargs );
 		

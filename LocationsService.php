@@ -52,7 +52,6 @@ class LocationsService {
             $locationList[] = new Location($row);
         }
 
-
         $dbLayer->close();
         return $locationList;
     }
