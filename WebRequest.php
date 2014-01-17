@@ -138,7 +138,8 @@ class WebRequest {
 		$tables = array (
 				LocationsContract::LOCATIONS_TABLE_NAME 
 		);
-		$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">%";
+		$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " . 
+		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " IS NULL";
 		$whereargs = array (
 				round(microtime(true) * 1000)
 		);

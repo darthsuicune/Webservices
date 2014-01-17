@@ -34,7 +34,8 @@ class LocationsService {
         );
         $tables = array(LocationsContract::LOCATIONS_TABLE_NAME);
         $where = LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">% AND " .
-		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% AND " . 
+		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " . 
+		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " IS NULL" . ") AND " . 
         LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (%)";
         $whereargs = array(
             $lastUpdateTime,
