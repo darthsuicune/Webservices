@@ -39,8 +39,6 @@ class Index {
 	}
 
 	function getFromForm(){
-		include_once 'login.php';
-
 		if(!isset($_POST[self::USERNAME]) || $_POST[self::USERNAME] == ""){
 			$this->showLoginForm();
 			return;
@@ -49,7 +47,6 @@ class Index {
 			$this->showLoginForm();
 			return;
 		}
-		$login = new Login();
 		return $this->performLogin($_POST[self::USERNAME], $_POST[self::PASSWORD]);
 	}
 	function showLoginForm(){
