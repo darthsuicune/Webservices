@@ -90,6 +90,9 @@ class User {
             return null;
         }
     }
+    public static function createWebUser($username, $role, $email){
+    	return new User($username, $role, $email, "");
+    }
 }
 
 class AccessToken {

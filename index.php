@@ -5,14 +5,87 @@
  * @package Webserver
  */
 
+$index = new Index();
+$user = $index->getUserDetails();
+if($user){
+	$index->showMap($user);
+} else {
+	$index->showLoginForm();
+}
 
-handleWebRequest();
+class Index {
+	const LOGIN_REQUEST = "login";
+	const REQUEST_TYPE = "q";
+	const USERNAME = "username";
+	const PASSWORD = "password";
 
-function handleWebRequest(){
-	include_once('Map.php');
-	$map = new Map();
-	$response = $map->parseRequest();
-	echo $response;
+	public function showMap(){
+		include_once('Map.php');
+		$map = new Map();
+		$response = $map->parseRequest($user);
+		echo $response;
+	}
+
+	public function getUserDetails(){
+		$user = $this->getFromCookies();
+		if($user == null) {
+			$user = $this->getFromForm();
+		}
+		return $user;
+	}
+
+	function getFromCookies(){
+		return null;
+	}
+
+	function getFromForm(){
+		include_once 'login.php';
+
+		if(!isset($_POST[self::USERNAME]) || $_POST[self::USERNAME] == ""){
+			$this->showLoginForm();
+			return;
+		}
+		if(!isset($_POST[self::PASSWORD]) || $_POST[self::PASSWORD] == ""){
+			$this->showLoginForm();
+			return;
+		}
+		$login = new Login();
+		return $this->performLogin($_POST[self::USERNAME], $_POST[self::PASSWORD]);
+	}
+	function showLoginForm(){
+		include_once 'login.html';
+
+	}
+
+	function performLogin($username, $password){
+		include_once('User.php');
+		include_once('LoginService.php');
+		if($username == null || $username == "" || $password == null || $password == ""){
+			return null;
+		}
+		$projection = array(
+				UsersContract::USERS_COLUMN_USERNAME,
+				UsersContract::USERS_COLUMN_E_MAIL,
+				UsersContract::USERS_COLUMN_ROLE
+		);
+		$tables = array(UsersContract::USERS_TABLE_NAME);
+		$where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " .
+				UsersContract::USERS_COLUMN_PASSWORD . "=%";
+		echo $password;
+		$whereargs = array($username,sha1($password));
+		$row = LoginService::getUserData($projection, $tables, $where, $whereargs);
+		if($row != null){
+			echo "PASSED!";
+			return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
+					$row[UsersContract::USERS_COLUMN_ROLE],
+					$row[UsersContract::USERS_COLUMN_E_MAIL]);
+		} else {
+			echo "FAILED! $username ".sha1($password);
+			return null;
+		}
+	}
+
+
 }
 
 // echo "\n" . "TEST" . "\n";

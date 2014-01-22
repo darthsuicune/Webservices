@@ -30,6 +30,7 @@ class LoginService {
             return null;
         }
     }
+    
     /**
      *
      * @return User $user
@@ -62,7 +63,7 @@ class LoginService {
         }
     }
 
-    static function getUserData($projection, $tables, $where, $whereargs){
+    public static function getUserData($projection, $tables, $where, $whereargs){
         $dbLayer = new DbLayer();
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
             $data = $dbLayer->query($projection, $tables, $where, $whereargs);
