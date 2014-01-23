@@ -50,4 +50,18 @@ class LocationsContract {
     const TYPE_NOSTRUM = "nostrum";
     const TYPE_SOCIAL = "social";
     const TYPE_TERRESTRE = "terrestre";
+    
+    public static function getLocationTypes(){
+    	return array(
+    			'adaptadas',
+    			'asamblea',
+    			'bravo',
+    			'cuap',
+    			'hospital',
+    			'maritimo',
+    			'nostrum',
+    			'social',
+    			'terrestre'
+    			);
+    }
 }

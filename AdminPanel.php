@@ -1,7 +1,7 @@
 <?php
 class AdminPanel{
 	public function getAdminPanel($user){
-		include_once('LocationsService.php');
+		include_once('Location.php');
 		$response = "<html>" . "\n";
 		$response .= $this->printHeader();
 		$response .= $this->printBody($user);
@@ -126,7 +126,7 @@ class AdminPanel{
 		return $cell;
 	}
 	function getOptions($type){
-		$availableOptions = LocationsService::getLocationTypes();
+		$availableOptions = LocationsContract::getLocationTypes();
 		$options = "";
 		foreach($availableOptions as $option){
 			$options .= "                            <option";
