@@ -1,6 +1,7 @@
 <?php
 class AdminPanel{
 	public function getAdminPanel($user){
+		include_once('LocationsService.php');
 		$response = "<html>" . "\n";
 		$response .= $this->printHeader();
 		$response .= $this->printBody($user);
@@ -37,12 +38,26 @@ class AdminPanel{
 
 	function getLocationTable($locationList){
 		$table = "        <table>" . "\n";
+		$table .= $this->getTableHeader();
 		$table .= $this->getEmptyRow();
 		foreach($locationList as $index=>$value){
 			$table .= $this->getLocationRow($value);
 		}
 		$table .= "        </table>" . "\n";
 		return $table;
+	}
+	
+	function getTableHeader(){
+		$header = "            <tr>" . "\n";
+		$header .= '                <th>Latitude</th>' . "\n";
+		$header .= '                <th>Longitude</th>' . "\n";
+		$header .= '                <th>Name</th>' . "\n";
+		$header .= '                <th>Type</th>' . "\n";
+		$header .= '                <th>Address</th>' . "\n";
+		$header .= '                <th>Other</th>' . "\n";
+		$header .= '                <th>Expire Date</th>' . "\n";
+		$header .= "            </tr>" . "\n";
+		return $header;
 	}
 	
 	function getEmptyRow(){
@@ -104,39 +119,54 @@ class AdminPanel{
 	}
 	function getTypeCell($type){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="type" type="text" value="' . $type . '">';
+		$cell .= '<select required="required" name="type"">' . "\n";
+		$cell .= $this->getOptions($type);
+		$cell .= '                    </select>';
 		$cell .= "</td>" . "\n";
 		return $cell;
 	}
+	function getOptions($type){
+		$availableOptions = LocationsService::getLocationTypes();
+		$options = "";
+		foreach($availableOptions as $option){
+			$options .= "                            <option";
+			if($type == $option) {
+				$options .= ' selected="selected"';
+			}
+			$options .= ">" . $option . "</option>\n";
+		}
+		return $options;
+		
+	}
 	function getAddressCell($address){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="address" type="text" value="';
+		$cell .= '<input name="address" type="text" value="';
 		if($address != null){
 			 $cell .= $address;
 		} else {
-			$cell .= "null";
+			$cell .= "";
 		}
 		$cell .= '"></td>' . "\n";
 		return $cell;
 	}
 	function getOtherCell($other){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="other" type="text" value="';
+		$cell .= '<input name="other" type="text" value="';
 		if($other != null){
 			$cell .= $other;
 		} else {
-			$cell .= "null";
+			$cell .= "";
 		}
 		$cell .= '"></td>' . "\n";
 		return $cell;
 	}
 	function getExpireDateCell($expireDate){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="expireDate" type="text" value="';
+		$cell .= '<input name="expireDate" type="date" value="';
 		if($expireDate != null){
 			$cell .= $expireDate;
 		} else {
-			$cell .= "null";
+			$cell .= "";
 		}
 		$cell .= '"></td>' . "\n";
 		return $cell;

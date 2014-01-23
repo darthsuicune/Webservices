@@ -57,4 +57,18 @@ class LocationsService {
         $dbLayer->close();
         return $locationList;
     }
+    
+    public static function getLocationTypes(){
+    	return array(
+    			'adaptadas',
+    			'asamblea',
+    			'bravo',
+    			'cuap',
+    			'hospital',
+    			'maritimo',
+    			'nostrum',
+    			'social',
+    			'terrestre'
+    			);
+    }
 }
