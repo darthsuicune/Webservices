@@ -23,6 +23,7 @@ class LocationsService {
             $lastUpdateTime = 0;
         }
         $projection = array(
+        	LocationsContract::LOCATIONS_COLUMN_ID,
             LocationsContract::LOCATIONS_COLUMN_LATITUDE,
             LocationsContract::LOCATIONS_COLUMN_LONGITUDE,
             LocationsContract::LOCATIONS_COLUMN_NAME,

@@ -1,5 +1,6 @@
 <?php
 class Location {
+	var $id;
     var $latitude;
     var $longitude;
     var $name;
@@ -13,6 +14,7 @@ class Location {
      * @param mysql_assoc $row mysql row containing the relative data.
      */
     public function __construct ( $row ) {
+    	$this->id = $row[LocationsContract::LOCATIONS_COLUMN_ID];
         $this->latitude = $row[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
         $this->longitude = $row[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
         $this->name = $row[LocationsContract::LOCATIONS_COLUMN_NAME];

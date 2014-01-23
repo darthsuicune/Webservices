@@ -53,10 +53,10 @@ class DbLayer {
 	 * @param array $columns        	
 	 * @param array $tables        	
 	 * @param String $where        	
-	 * @param array $whereargs
+	 * @param array $whereArgs
 	 * @return mixed 
 	 */
-	public function query(array $columns, array $tables, $where, array $whereargs) {
+	public function query(array $columns, array $tables, $where, array $whereArgs) {
 
 	    $projection;
 		if (is_array ( $columns ) && count($columns) > 0) {
@@ -76,19 +76,9 @@ class DbLayer {
 			$sources = join ( ' JOIN ', $tableList );
 		}
 
-		$selection = '';
-		if (is_string ( $where ) && $where != "") {
-			if (is_array ( $whereargs )  && count($whereargs) > 0) {
-				$search = "%";
-				foreach ( $whereargs as $arg ) {
-					$where = substr_replace ( $where, "'" . $arg . 
-							"'", strpos ( $where, $search ), strlen ( $search ) );
-				}
-				$selection = ' WHERE ' . $where;
-			}
-		}
-
-		$query = 'SELECT ' . $projection . ' FROM ' . $sources . $selection;
+		$query = 'SELECT ' . $projection . 
+				' FROM ' . $sources . 
+				$this->getCondition($where, $whereArgs);
 		return $this->mysqli->query($query);
 	}
 	/**
@@ -111,28 +101,41 @@ class DbLayer {
         $fields = join(',', $fields);
         $row = '\'' . join('\',\'', $row) . '\'';
 	    $query = 'INSERT INTO ' . $table . ' (' . $fields . 
-	    ') VALUES (' . $row . ')';
+	    		') VALUES (' . $row . ')';
  	    return $this->mysqli->query($query);
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
-	 * 
+	 * @param array $values 
 	 * @param array $columns        	
-	 * @param array $tables        	
+	 * @param $table
 	 * @param unknown $where        	
-	 * @param array $whereargs        	
+	 * @param array $whereArgs        	
 	 */
-	public function update(array $columns, array $tables, $where, array $whereargs) {
+	public function update(array $values, array $columns, $table, $where, array $whereArgs) {
+		if($table == null || $table == "" || 
+				!is_array($values) || count($values < 1) ||
+				!is_array($columns) || count($columns) < 1 || 
+				(count($columns) != count($values))){
+			return null;
+		}
+		
+		$query = "UPDATE " . $table . 
+				" SET " . $columns[0] . "=" . $values[0] .  
+				$this->getCondition($where, $whereArgs);
+		return $this->mysqli->query($query);
 	}
 	/**
 	 * Abstraction layer for the deletion of rows from a database
 	 * 
-	 * @param array $columns        	
-	 * @param array $tables        	
-	 * @param unknown $where        	
-	 * @param array $whereargs        	
+	 * @param $table
+	 * @param unknown $where
+	 * @param array $whereArgs
 	 */
-	public function delete(array $columns, array $tables, $where, array $whereargs) {
+	public function delete($table, $where, array $whereArgs) {
+		$query = "DELETE FROM " . $table . 
+				$this->getCondition($where, $whereArgs);
+		return $this->mysqli->query($query);
 	}
 	/**
 	 * Abstraction layer for creating a new DB with all its tables.
@@ -140,6 +143,22 @@ class DbLayer {
 	 * @param unknown $dbname        	
 	 * @param array $tables        	
 	 */
+	
+	function getCondition($where, $whereArgs){
+		$selection = "";
+		if (is_string ( $where ) && $where != "") {
+			if (is_array ( $whereArgs )  && count($whereArgs) > 0) {
+				$search = "%";
+				foreach ( $whereArgs as $arg ) {
+					$where = substr_replace ( $where, "'" . $arg .
+							"'", strpos ( $where, $search ), strlen ( $search ) );
+				}
+				$selection = ' WHERE ' . $where;
+			}
+		}
+		return $selection; 
+	}
+	
 }
 
 ?>

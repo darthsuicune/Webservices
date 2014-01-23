@@ -4,10 +4,13 @@
  *
  * @package Webserver
  */
+include_once('User.php');
 
 $index = new Index();
 $user = $index->getUserDetails();
-if($user){
+if($user->role == UsersContract::ROLE_ADMIN){
+	$index->showAdminPanel($user);
+} else if($user){
 	$index->showMap($user);
 } else {
 	$index->showLoginForm();
@@ -18,8 +21,15 @@ class Index {
 	const REQUEST_TYPE = "q";
 	const USERNAME = "username";
 	const PASSWORD = "password";
+	
+	public function showAdminPanel($user){
+		include_once('AdminPanel.php');
+		$adminPanel = new AdminPanel();
+		echo $adminPanel->getAdminPanel($user);
+		
+	}
 
-	public function showMap(){
+	public function showMap($user){
 		include_once('Map.php');
 		$map = new Map();
 		$response = $map->parseRequest($user);
@@ -32,6 +42,10 @@ class Index {
 			$user = $this->getFromForm();
 		}
 		return $user;
+	}
+	
+	public function showLoginForm(){
+		include_once 'login.html';
 	}
 
 	function getFromCookies(){
@@ -50,13 +64,8 @@ class Index {
 		}
 		return $this->performLogin($_POST[self::USERNAME], $_POST[self::PASSWORD]);
 	}
-	function showLoginForm(){
-		include_once 'login.html';
-
-	}
 
 	function performLogin($username, $password){
-		include_once('User.php');
 		include_once('LoginService.php');
 		if($username == null || $username == "" || $password == null || $password == ""){
 			return null;
