@@ -35,6 +35,7 @@ class Index {
 	}
 
 	function getFromCookies(){
+		//TODO: guess what.
 		return null;
 	}
 
@@ -68,16 +69,13 @@ class Index {
 		$tables = array(UsersContract::USERS_TABLE_NAME);
 		$where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " .
 				UsersContract::USERS_COLUMN_PASSWORD . "=%";
-		echo $password;
 		$whereargs = array($username,sha1($password));
 		$row = LoginService::getUserData($projection, $tables, $where, $whereargs);
 		if($row != null){
-			echo "PASSED!";
 			return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
 					$row[UsersContract::USERS_COLUMN_ROLE],
 					$row[UsersContract::USERS_COLUMN_E_MAIL]);
 		} else {
-			echo "FAILED! $username ".sha1($password);
 			return null;
 		}
 	}
