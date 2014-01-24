@@ -10,18 +10,18 @@ class Map {
 	}
 	public function getMap($user){
 		return '<HTML>' . "\n"
-				. $this->writeHead ()
+				. $this->writeHead ($user)
 				. $this->writeBody ()
 				. '</HTML>' . "\n";
 	}
-	function writeHead() {
+	function writeHead($user) {
 		return '<HEAD>' . "\n" 
 				. '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" '
 				. 'charset="utf-8" />'
 				. '<link rel="shortcut icon" href="'. $this->getFavIcon() . '"/>' . "\n"
 				. '<title>' . $this->getTitle() . '</title>' . "\n"
 				. $this->getStyleSheet ()
-				. $this->getScripts ()
+				. $this->getScripts ($user)
 				. '</HEAD>' . "\n";
 	}
 	function writeBody() {
@@ -42,31 +42,31 @@ class Map {
 				. '  #map_canvas { height: 100% }' . "\n"
 				. '</style>' . "\n";
 	}
-	function getScripts() {
+	function getScripts($user) {
 		return '<script src="' . self::JQUERY . '"></script>' . "\n"
 				. '<script type="text/javascript" src="'
 				. $this->getGMapsScript ()
 				. '"></script>' . "\n" 
-				. $this->getInitializeScript ();
+				. $this->getInitializeScript ($user);
 	}
 	function getGMapsScript() {
 		return 'https://maps.googleapis.com/maps/api/js?key=' . self::API_KEY 
 				. '&sensor=false';
 	}
-	function getInitializeScript() {
+	function getInitializeScript($user) {
 		return '<script type="text/javascript">' . "\n"
 				. $this->setMapOptions() 
-				. $this->getInitializeMethod ()
+				. $this->getInitializeMethod ($user)
 				. '</script>' . "\n";
 	}
 	function setMapOptions() {
 		return 'google.maps.visualRefresh = true;' . "\n";
 	}
-	function getInitializeMethod() {
+	function getInitializeMethod($user) {
 		return 'function ' . $this->getInitializeMethodName() . ' {' . "\n"
 				. $this->getMapOptions ()
 				. $this->getAuxVars ()
-				. 'var marcadores=' . $this->loadMarkers () . ';' . "\n"
+				. 'var marcadores=' . $this->loadMarkers ($user) . ';' . "\n"
 				. $this->processMarkers ()
 				. '}' . "\n";
 	}
@@ -122,43 +122,9 @@ class Map {
 	function getIconFolder() {
 		return "icons/";
 	}
-	function loadMarkers() {
-		include_once ('DbLayer.php');
-		$dbLayer = new DbLayer ();
-		if ($dbLayer->connect () == DbLayer::RESULT_DB_CONNECTION_ERROR) {
-			return null;
-		}
-		$projection = array (
-				LocationsContract::LOCATIONS_COLUMN_ID,
-				LocationsContract::LOCATIONS_COLUMN_LATITUDE,
-				LocationsContract::LOCATIONS_COLUMN_LONGITUDE,
-				LocationsContract::LOCATIONS_COLUMN_NAME,
-				LocationsContract::LOCATIONS_COLUMN_TYPE,
-				LocationsContract::LOCATIONS_COLUMN_ADDRESS,
-				LocationsContract::LOCATIONS_COLUMN_OTHER,
-				LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
-				LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
-		);
-		$tables = array (
-				LocationsContract::LOCATIONS_TABLE_NAME 
-		);
-		$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " . 
-		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " IS NULL";
-		$whereargs = array (
-				round(microtime(true) * 1000)
-		);
-		
-		$result = $dbLayer->query ( $projection, $tables, $where, $whereargs );
-		
-		if ($result == null) {
-			return null;
-		}
-		$locationList = array ();
-		while ( $row = $result->fetch_assoc () ) {
-			$locationList [] = new Location ( $row );
-		}
-		
-		$dbLayer->close ();
-		return json_encode ( $locationList );
+	function loadMarkers($user) {
+		include_once ('LocationsService.php');
+		$locationService = new LocationsService();
+		return json_encode($locationService->getWebLocations($user));
 	}
 }

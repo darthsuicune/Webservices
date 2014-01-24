@@ -175,7 +175,7 @@ class Index {
 			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = 
 					strtotime($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) * 1000;
 		} else {
-			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = "null";
+			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = "0";
 				
 		}
 		return $values;

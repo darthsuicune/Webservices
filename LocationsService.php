@@ -7,7 +7,26 @@ class LocationsService {
         if($user == null){
             return null;
         }
-        return $this->getLocationList($user, $lastUpdateTime);
+        $where = LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">% AND " .
+        		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " .
+        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " =0" . ") AND " .
+        		LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (%)";
+        $whereArgs = array(
+        		$lastUpdateTime,
+        		round(microtime(true) * 1000),
+        		$user->getAllowedTypes()
+        );
+        return $this->getLocationsFromDb($user, $lastUpdateTime, $where, $whereArgs);
+    }
+    
+    public function  getWebLocations($user) {
+    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " .
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0";
+    	$whereArgs = array (
+    			round(microtime(true) * 1000)
+    	);
+    	return $this->getLocationsFromDb($user, 0, $where, $whereArgs);
+    	 
     }
     
     public function getAdminLocations($user) {
@@ -19,20 +38,11 @@ class LocationsService {
     }
 
     function getLocationList($user, $lastUpdateTime){
-    	$where = LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">% AND " .
-    			"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " .
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " IS NULL" . ") AND " .
-    			LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (%)";
-    	$whereArgs = array(
-    			$lastUpdateTime,
-    			round(microtime(true) * 1000),
-    			$user->getAllowedTypes()
-    	);
-    	return $this->getLocationsFromDb($user, $lastUpdateTime, $where, $whereArgs);
+    	
     	 
     }
     
-    function getLocationsFromDb($user, $lastUpdateTime, $where, $whereArgs){
+    function getLocationsFromDb($user, $lastUpdateTime, $where, array $whereArgs){
     	if($user == null){
     		return null;
     	}
