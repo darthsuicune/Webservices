@@ -139,7 +139,6 @@ class DbLayer {
 	public function delete($table, $where, array $whereArgs) {
 		$query = "DELETE FROM " . $table . 
 				$this->getCondition($where, $whereArgs);
-		echo $query;
 		return $this->mysqli->query($query);
 	}
 	/**
