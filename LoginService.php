@@ -56,7 +56,7 @@ class LoginService {
             $row[UsersContract::USERS_COLUMN_USERNAME],
             $row[UsersContract::USERS_COLUMN_ROLE],
             $row[UsersContract::USERS_COLUMN_E_MAIL],
-            new AccessToken($row[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN])
+            $row[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
             );
         } else {
             return null;

@@ -5,55 +5,121 @@
  * @package Webserver
  */
 include_once('User.php');
+include_once('LocationsService.php');
+include_once('LoginService.php');
+
 
 $index = new Index();
-$user = $index->getUserDetails();
-if($user->role == UsersContract::ROLE_ADMIN){
-	$index->showAdminPanel($user);
-} else if($user){
-	$index->showMap($user);
-} else {
-	$index->showLoginForm();
-}
+$index->getIndex();
 
 class Index {
 	const LOGIN_REQUEST = "login";
+	const UPDATE_REQUEST = "update";
+	const ADD_REQUEST = "addNew";
+	const DELETE_REQUEST = "delete";
 	const REQUEST_TYPE = "q";
 	const USERNAME = "username";
 	const PASSWORD = "password";
 	
-	public function showAdminPanel($user){
+	const COOKIE_NAME = "accessToken";
+
+	public function getIndex(){
+		$user = $this->getUserDetails();
+		if($user && isset($_GET[self::REQUEST_TYPE])){
+			$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
+			switch($requestType[0]){
+				case self::LOGIN_REQUEST:
+					$this->handleLoginRequest($user);
+					break;
+				case self::ADD_REQUEST:
+					$this->handleAddRequest($user);
+					break;
+				case self::DELETE_REQUEST:
+					$this->handleDeleteRequest($user, $requestType[1]);
+					break;
+				case self::UPDATE_REQUEST:
+					$this->handleUpdateRequest($user, $requestType[1]);
+					break;
+				default:
+					$this->showLoginForm();
+					break;
+			}
+		} else {
+			$this->showLoginForm();
+		}
+	}
+	
+	function handleLoginRequest($user){
+		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
+		if($user->role == UsersContract::ROLE_ADMIN){
+			$this->showAdminPanel($user);
+		} else {
+			$this->showMap($user);
+		}
+	}
+	
+	function handleAddRequest($user){
+		if($user && $user->role == UsersContract::ROLE_ADMIN){
+			$values = $this->createLocationValues();
+			if($values){
+				LocationsService::addLocation($values);
+			}
+			$this->showAdminPanel($user);
+		}
+	}
+	
+	function handleDeleteRequest($user, $id){
+		if($user && $user->role == UsersContract::ROLE_ADMIN){
+			LocationsService::deleteLocation($id);
+			$this->showAdminPanel($user);
+		}
+	}
+	
+	function handleUpdateRequest($user, $id){
+		if($user && $user->role == UsersContract::ROLE_ADMIN){
+			$values = $this->createLocationValues();
+			if($values){
+				LocationsService::updateLocation($id, $values);
+			}
+			$this->showAdminPanel($user);
+		}
+	}
+
+	function showAdminPanel($user){
 		include_once('AdminPanel.php');
 		$adminPanel = new AdminPanel();
 		echo $adminPanel->getAdminPanel($user);
-		
+
 	}
 
-	public function showMap($user){
+	function showMap($user){
 		include_once('Map.php');
 		$map = new Map();
-		$response = $map->parseRequest($user);
-		echo $response;
+		echo $map->parseRequest($user);
 	}
 
-	public function getUserDetails(){
-		$user = $this->getFromCookies();
+	function getUserDetails(){
+		$user = $this->getUserFromCookies();
 		if($user == null) {
-			$user = $this->getFromForm();
+			$user = $this->getUserFromForm();
 		}
 		return $user;
 	}
-	
-	public function showLoginForm(){
+
+	function showLoginForm(){
 		include_once 'login.html';
 	}
 
-	function getFromCookies(){
-		//TODO: guess what.
-		return null;
+	function getUserFromCookies(){
+		$user = null;
+		if(isset($_COOKIE[self::COOKIE_NAME])){
+			$loginService = new LoginService();
+			$user = $loginService->validateAccessToken($_COOKIE[self::COOKIE_NAME]);
+		}
+		return $user;
 	}
 
-	function getFromForm(){
+	function getUserFromForm(){
 		if(!isset($_POST[self::USERNAME]) || $_POST[self::USERNAME] == ""){
 			$this->showLoginForm();
 			return;
@@ -62,11 +128,11 @@ class Index {
 			$this->showLoginForm();
 			return;
 		}
-		return $this->performLogin($_POST[self::USERNAME], $_POST[self::PASSWORD]);
+		$loginService = new LoginService();
+		return $loginService->checkUser($_POST[self::USERNAME], sha1($_POST[self::PASSWORD]));
 	}
 
 	function performLogin($username, $password){
-		include_once('LoginService.php');
 		if($username == null || $username == "" || $password == null || $password == ""){
 			return null;
 		}
@@ -78,7 +144,7 @@ class Index {
 		$tables = array(UsersContract::USERS_TABLE_NAME);
 		$where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " .
 				UsersContract::USERS_COLUMN_PASSWORD . "=%";
-		$whereargs = array($username,sha1($password));
+		$whereargs = array($username,$password);
 		$row = LoginService::getUserData($projection, $tables, $where, $whereargs);
 		if($row != null){
 			return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
@@ -89,7 +155,31 @@ class Index {
 		}
 	}
 
+	function createLocationValues(){
+		$values = array();
+		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
+		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
+		$values[LocationsContract::LOCATIONS_COLUMN_NAME] = $_POST[LocationsContract::LOCATIONS_COLUMN_NAME];
+		$values[LocationsContract::LOCATIONS_COLUMN_TYPE] = $_POST[LocationsContract::LOCATIONS_COLUMN_TYPE];
+		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_OTHER])){
+			$values[LocationsContract::LOCATIONS_COLUMN_ADDRESS] = $_POST[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
+		}
+		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_ADDRESS])){
 
+			$values[LocationsContract::LOCATIONS_COLUMN_OTHER] = $_POST[LocationsContract::LOCATIONS_COLUMN_OTHER];
+		}
+		$values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED] = round(microtime(true) * 1000);
+		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) 
+				&& $_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] > 0){
+			date_default_timezone_set("Europe/Madrid");
+			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = 
+					strtotime($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) * 1000;
+		} else {
+			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = "null";
+				
+		}
+		return $values;
+	}
 }
 
 // echo "\n" . "TEST" . "\n";

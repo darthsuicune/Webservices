@@ -33,7 +33,7 @@ class User {
         $this->username = $username;
         $this->role = $role;
         $this->email = $email;
-        $this->accessToken = $accessToken;
+        $this->accessToken = new AccessToken($accessToken);
     }
 
     public function getAllowedTypes(){
@@ -85,13 +85,10 @@ class User {
              UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
              ));
             $dbLayer->close();
-            return new User($username, $role, $email, $accessToken);
+            return new User($username, $role, $email, $accessToken->accessTokenString);
         } else {
             return null;
         }
-    }
-    public static function createWebUser($username, $role, $email){
-    	return new User($username, $role, $email, "");
     }
 }
 

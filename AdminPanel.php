@@ -32,7 +32,7 @@ class AdminPanel{
 	function getLocationList($user){
 		include_once('LocationsService.php');
 		$locationService = new LocationsService();
-		return $locationService->getLocations($user, 0);
+		return $locationService->getAdminLocations($user);
 
 	}
 
@@ -62,7 +62,8 @@ class AdminPanel{
 	
 	function getEmptyRow(){
 		$row = "            <tr>" . "\n";
-		$row .= '               <form accept-charset="utf8" method="POST" action="">';
+		$row .= '               <form accept-charset="utf8" method="POST" action="?q=' . Index::ADD_REQUEST 
+				 . '">' . "\n";
 		$row .= $this->getLatitudeCell("");
 		$row .= $this->getLongitudeCell("");
 		$row .= $this->getNameCell("");
@@ -86,40 +87,46 @@ class AdminPanel{
 		$location .= $this->getAddressCell($row->address);
 		$location .= $this->getotherCell($row->other);
 		$location .= $this->getexpireDateCell($row->expireDate);
-		$location .= '                    <td><input name="send" type="submit" value="Modify"></td>' . "\n";
-		$location .= '                    <td><input name="send" type="submit" value="Borrar"></td>' . "\n";
+		$location .= '                    <td><input name="modify" type="submit" value="Modify"></td>' . "\n";
 		$location .= "                </form>" . "\n";
+		$location .= '                <td><a href="?q=' . Index::DELETE_REQUEST . '/' . $row->id 
+				. '"><input type="submit" value="Borrar"></a></td>' . "\n";
 		$location .= "            </tr>" . "\n";
 		return $location;
 	}
 
 	function addForm($id){
-		$form = '		<form accept-charset="utf8" method="POST" action="index.php"';
+		$form = '		<form accept-charset="utf8" method="POST" action="?q=' . Index::UPDATE_REQUEST 
+				. '/' . $id . '"';
 		$form .= "";
 		return $form . ">\n";
 	}
 
 	function getLatitudeCell($coordinate){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="latitude" type="text" value="' . $coordinate . '">';
+		$cell .= '<input required="required" name="' . LocationsContract::LOCATIONS_COLUMN_LATITUDE 
+				. '" type="text" value="' . $coordinate . '">';
 		$cell .= "</td>" . "\n";
 		return $cell;
 	}
 	function getLongitudeCell($coordinate){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="longitude" type="text" value="' . $coordinate . '">';
+		$cell .= '<input required="required" name="' . LocationsContract::LOCATIONS_COLUMN_LONGITUDE 
+				. '" type="text" value="' . $coordinate . '">';
 		$cell .= "</td>" . "\n";
 		return $cell;
 	}
 	function getNameCell($name){
 		$cell = "                    <td>";
-		$cell .= '<input required="required" name="name" type="text" value="' . $name . '">';
+		$cell .= '<input required="required" name="' . LocationsContract::LOCATIONS_COLUMN_NAME 
+				. '" type="text" value="' . $name . '">';
 		$cell .= "</td>" . "\n";
 		return $cell;
 	}
 	function getTypeCell($type){
 		$cell = "                    <td>";
-		$cell .= '<select required="required" name="type"">' . "\n";
+		$cell .= '<select required="required" name="' . LocationsContract::LOCATIONS_COLUMN_TYPE
+				. '"">' . "\n";
 		$cell .= $this->getOptions($type);
 		$cell .= '                    </select>';
 		$cell .= "</td>" . "\n";
@@ -140,8 +147,9 @@ class AdminPanel{
 	}
 	function getAddressCell($address){
 		$cell = "                    <td>";
-		$cell .= '<input name="address" type="text" value="';
-		if($address != null){
+		$cell .= '<input name="' . LocationsContract::LOCATIONS_COLUMN_ADDRESS 
+				. '" type="text" value="';
+		if($address){
 			 $cell .= $address;
 		} else {
 			$cell .= "";
@@ -151,8 +159,9 @@ class AdminPanel{
 	}
 	function getOtherCell($other){
 		$cell = "                    <td>";
-		$cell .= '<input name="other" type="text" value="';
-		if($other != null){
+		$cell .= '<input name="' . LocationsContract::LOCATIONS_COLUMN_OTHER 
+				. '" type="text" value="';
+		if($other){
 			$cell .= $other;
 		} else {
 			$cell .= "";
@@ -162,9 +171,11 @@ class AdminPanel{
 	}
 	function getExpireDateCell($expireDate){
 		$cell = "                    <td>";
-		$cell .= '<input name="expireDate" type="date" value="';
-		if($expireDate != null){
-			$cell .= $expireDate;
+		$cell .= '<input name="' . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
+				. '" type="date" value="';
+		if($expireDate){
+			date_default_timezone_set("Europe/Madrid");
+			$cell .= substr(date(DateTime::RFC3339, $expireDate/1000), 0, 10);
 		} else {
 			$cell .= "";
 		}

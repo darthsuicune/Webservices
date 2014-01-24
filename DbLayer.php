@@ -66,7 +66,7 @@ class DbLayer {
 		}
 		$sources;
 		if (is_array ( $tables ) && count($tables) > 0) {
-			$sources = join ( ' JOIN ', $tables );
+			$sources = join ( ' NATURAL JOIN ', $tables );
 		} else {
 			$tableList = array (
 					UsersContract::USERS_TABLE_NAME,
@@ -112,16 +112,20 @@ class DbLayer {
 	 * @param unknown $where        	
 	 * @param array $whereArgs        	
 	 */
-	public function update(array $values, array $columns, $table, $where, array $whereArgs) {
+	public function update(array $values, $table, $where, array $whereArgs) {
 		if($table == null || $table == "" || 
-				!is_array($values) || count($values < 1) ||
-				!is_array($columns) || count($columns) < 1 || 
-				(count($columns) != count($values))){
+				!is_array($values) || count($values) < 1){
 			return null;
 		}
-		
+		$update = "";
+		foreach($values as $index => $value){
+			$update .= $this->mysqli->real_escape_string($index);
+			$update .= "='";
+			$update .= $this->mysqli->real_escape_string($value) . "'";
+			$update .= ",";
+		}
 		$query = "UPDATE " . $table . 
-				" SET " . $columns[0] . "=" . $values[0] .  
+				" SET " . substr($update, 0, -1) .  
 				$this->getCondition($where, $whereArgs);
 		return $this->mysqli->query($query);
 	}
@@ -135,6 +139,7 @@ class DbLayer {
 	public function delete($table, $where, array $whereArgs) {
 		$query = "DELETE FROM " . $table . 
 				$this->getCondition($where, $whereArgs);
+		echo $query;
 		return $this->mysqli->query($query);
 	}
 	/**
