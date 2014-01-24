@@ -70,9 +70,8 @@ class LocationsService {
     	$dbLayer->close();
     	return $locationList;
     }
-    
     public static function addLocation(array $values){
-    	$dbLayer = new DbLayer();
+    	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
     	}
@@ -81,7 +80,7 @@ class LocationsService {
     }
     
     public static function deleteLocation($id){
-    	$dbLayer = new DbLayer();
+    	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
     	}
@@ -93,7 +92,7 @@ class LocationsService {
     }
     
     public static function updateLocation($id, array $values){
-    	$dbLayer = new DbLayer();
+    	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
     	}
