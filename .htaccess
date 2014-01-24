@@ -1,0 +1,14 @@
+<FilesMatch "\.(htaccess|html|php)$">
+ Order Allow,Deny
+ Deny from all
+</FilesMatch>
+
+<Files index.php>
+Order allow,deny
+Allow from all
+</Files>
+
+<Files webservice.php>
+Order allow,deny
+Allow from all
+</Files>
