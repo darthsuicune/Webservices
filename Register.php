@@ -11,7 +11,7 @@ class Register {
 	public function recoverPassword($email){
 		$user = $this->isValidEmail();
 		if($user){
-			return $this->createNewPassword($user);
+			return $user->createNewPassword();
 		} else {
 			return $this->incorrectData();
 		}
@@ -20,7 +20,7 @@ class Register {
 	public function changePassword($email, $newPassword){
 		$user = $this->isValidEmail();
 		if($user){
-			return $this->changePassword($user, $newPassword);
+			return $user->changePassword($newPassword);
 		} else {
 			return $this->incorrectData();
 		}

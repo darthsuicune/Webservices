@@ -66,6 +66,10 @@ class User {
     public function changePassword($newPassword){
     	
     }
+    
+    public function createNewPassword(){
+    	
+    }
 
     function addSocorros(&$array){
         $array[] = LocationsContract::TYPE_ADAPTADAS;

@@ -24,7 +24,7 @@ class Index {
 	const REQUEST_TYPE = "q";
 	const USERNAME = "username";
 	const PASSWORD = "password";
-	
+
 	const COOKIE_NAME = "accessToken";
 
 	public function getIndex(){
@@ -63,7 +63,7 @@ class Index {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handleLoginRequest($user){
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
 		if($user->role == UsersContract::ROLE_ADMIN){
@@ -74,7 +74,7 @@ class Index {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handleAddRequest($user){
 		if($user && $user->role == UsersContract::ROLE_ADMIN){
 			$values = $this->createLocationValues();
@@ -88,7 +88,7 @@ class Index {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handleUpdateRequest($user, $id){
 		if($user && $user->role == UsersContract::ROLE_ADMIN){
 			$values = $this->createLocationValues();
@@ -102,7 +102,7 @@ class Index {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handleDeleteRequest($user, $id){
 		if($user && $user->role == UsersContract::ROLE_ADMIN){
 			LocationsService::deleteLocation($id);
@@ -111,30 +111,42 @@ class Index {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handleRegisterRequest($user) {
-		if($user && ($user->role == UsersContract::ROLE_REGISTER 
+		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			include_once('Register.php');
-			$register = new Register();
-			echo $register->register($username, $password, $email, $roles);
+			if(isset($_POST)){
+				include_once('Register.php');
+				$register = new Register();
+				echo $register->register($username, $password, $email, $roles);
+			} else {
+				//Show register webpage.
+			}
 		}
 	}
-	
+
 	function handlePasswordChangeRequest($user) {
 		if($user){
-			include_once('Register.php');
-			$register = new Register();
-			echo $register->changePassword($email, $newPassword);
+			if(isset($_POST)){
+				include_once('Register.php');
+				$register = new Register();
+				echo $register->changePassword($email, $newPassword);
+			} else {
+				//Show password change webpage.
+			}
 		} else {
 			$this->showLoginForm();
 		}
 	}
-	
+
 	function handlePasswordRecoverRequest($user){
-		include_once('Register.php');
-		$register = new Register();
-		echo $register->recoverPassword($email);
+		if(isset($_POST)){
+			include_once('Register.php');
+			$register = new Register();
+			echo $register->recoverPassword($email);
+		} else {
+			//Show password recovery webpage.
+		}
 	}
 
 	function showAdminPanel($user){
@@ -224,18 +236,18 @@ class Index {
 			$values[LocationsContract::LOCATIONS_COLUMN_OTHER] = $_POST[LocationsContract::LOCATIONS_COLUMN_OTHER];
 		}
 		$values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED] = round(microtime(true) * 1000);
-		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) 
+		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE])
 				&& $_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] > 0){
 			date_default_timezone_set("Europe/Madrid");
-			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = 
-					strtotime($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) * 1000;
+			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] =
+			strtotime($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) * 1000;
 		} else {
 			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = "0";
-				
+
 		}
 		return $values;
 	}
-	
+
 	function showErrorMessage($message){
 		echo "There was an error while processing your request: " . $message;
 	}
