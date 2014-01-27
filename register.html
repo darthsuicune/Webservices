@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title>register</title>
+  </head>
+  <body>
+    <h2>Register</h2>
+    <form accept-charset="utf8" target="_self" autocomplete="off" method="POST"
+      action="?q=register" name="Register">username: <input maxlength="60" required="required"
+        name="username" type="text"><br>
+      password: <input autocomplete="off" maxlength="60" required="required" name="password"
+        type="password"><br>
+      confirm password: <input maxlength="60" required="required" name="confirmpass"
+        type="password"><br>
+      email: <input autocomplete="on" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+        maxlength="80" required="required" name="email" type="email"><br>
+      roles:
+      <select list="'social','maritimo','socorro'" multiple="multiple" form="register"
+        required="required" name="roles">
+        <option>socorro</option>
+        <option>maritimo</option>
+        <option>social</option>
+      </select>
+      <br>
+      <input form="register" name="submit" value="Submit" type="submit"><br>
+    </form>
+  </body>
+</html>

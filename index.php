@@ -8,6 +8,7 @@ include_once('User.php');
 include_once('LocationsService.php');
 include_once('LoginService.php');
 
+// echo "\n" . "TEST" . "\n";
 
 $index = new Index();
 $index->getIndex();
@@ -17,6 +18,9 @@ class Index {
 	const UPDATE_REQUEST = "update";
 	const ADD_REQUEST = "addNew";
 	const DELETE_REQUEST = "delete";
+	const REGISTER_REQUEST = "register";
+	const CHANGE_PASSWORD_REQUEST = "changePassword";
+	const RECOVER_PASSWORD_REQUEST = "recoverPassword";
 	const REQUEST_TYPE = "q";
 	const USERNAME = "username";
 	const PASSWORD = "password";
@@ -40,10 +44,21 @@ class Index {
 				case self::UPDATE_REQUEST:
 					$this->handleUpdateRequest($user, $requestType[1]);
 					break;
+				case self::REGISTER_REQUEST:
+					$this->handleRegisterRequest($user);
+					break;
+				case self::CHANGE_PASSWORD_REQUEST:
+					$this->handlePasswordChangeRequest($user);
+					break;
+				case self::RECOVER_PASSWORD_REQUEST:
+					$this->handlePasswordRecoverRequest($user);
+					break;
 				default:
 					$this->showLoginForm();
 					break;
 			}
+		} else if ($user) {
+			$this->showMap($user);
 		} else {
 			$this->showLoginForm();
 		}
@@ -53,8 +68,10 @@ class Index {
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
 		if($user->role == UsersContract::ROLE_ADMIN){
 			$this->showAdminPanel($user);
-		} else {
+		} else if ($user) {
 			$this->showMap($user);
+		} else {
+			$this->showLoginForm();
 		}
 	}
 	
@@ -63,15 +80,12 @@ class Index {
 			$values = $this->createLocationValues();
 			if($values){
 				LocationsService::addLocation($values);
+			} else {
+				$this->showErrorMessage("Can't add location");
 			}
 			$this->showAdminPanel($user);
-		}
-	}
-	
-	function handleDeleteRequest($user, $id){
-		if($user && $user->role == UsersContract::ROLE_ADMIN){
-			LocationsService::deleteLocation($id);
-			$this->showAdminPanel($user);
+		} else {
+			$this->showLoginForm();
 		}
 	}
 	
@@ -80,9 +94,47 @@ class Index {
 			$values = $this->createLocationValues();
 			if($values){
 				LocationsService::updateLocation($id, $values);
+			} else {
+				$this->showErrorMessage("Can't update location");
 			}
 			$this->showAdminPanel($user);
+		} else {
+			$this->showLoginForm();
 		}
+	}
+	
+	function handleDeleteRequest($user, $id){
+		if($user && $user->role == UsersContract::ROLE_ADMIN){
+			LocationsService::deleteLocation($id);
+			$this->showAdminPanel($user);
+		} else {
+			$this->showLoginForm();
+		}
+	}
+	
+	function handleRegisterRequest($user) {
+		if($user && ($user->role == UsersContract::ROLE_REGISTER 
+				|| $user->role == UsersContract::ROLE_ADMIN)) {
+			include_once('Register.php');
+			$register = new Register();
+			echo $register->register($username, $password, $email, $roles);
+		}
+	}
+	
+	function handlePasswordChangeRequest($user) {
+		if($user){
+			include_once('Register.php');
+			$register = new Register();
+			echo $register->changePassword($email, $newPassword);
+		} else {
+			$this->showLoginForm();
+		}
+	}
+	
+	function handlePasswordRecoverRequest($user){
+		include_once('Register.php');
+		$register = new Register();
+		echo $register->recoverPassword($email);
 	}
 
 	function showAdminPanel($user){
@@ -156,6 +208,9 @@ class Index {
 	}
 
 	function createLocationValues(){
+		if(!isset($_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE])){
+			return false;
+		}
 		$values = array();
 		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
 		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
@@ -180,23 +235,8 @@ class Index {
 		}
 		return $values;
 	}
+	
+	function showErrorMessage($message){
+		echo "There was an error while processing your request: " . $message;
+	}
 }
-
-// echo "\n" . "TEST" . "\n";
-// include_once ('DbLayer.php');
-// include_once('Location.php');
-// $columns = array ();
-// $tables = array (LocationsContract::LOCATIONS_TABLE_NAME);
-// $where = LocationsContract::LOCATIONS_COLUMN_TYPE . "=%";
-// $whereargs = array ('cuap');
-
-// $dbLayer = new DbLayer ();
-// $dbLayer->connect ();
-// $result = $dbLayer->query ( $columns, $tables, $where, $whereargs );
-// if (result != null) {
-// 	while ($row = $result->fetch_assoc()) {
-// 		echo json_encode(new Location($row)) . "\n";
-// 		echo json_last_error() . "\n";
-// 	}
-// }
-// $dbLayer->close ();

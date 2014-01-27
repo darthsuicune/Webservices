@@ -21,6 +21,7 @@ class UsersContract {
     const ROLE_MARITIMOS = "maritimos";
     const ROLE_ADMIN = "admin";
     const ROLE_SOCORROS_MARITIMOS = "socorrosmaritimos";
+    const ROLE_REGISTER = "registrador";
 }
 
 class User {
@@ -61,6 +62,10 @@ class User {
         }
         return join("','", $types);
     }
+    
+    public function changePassword($newPassword){
+    	
+    }
 
     function addSocorros(&$array){
         $array[] = LocationsContract::TYPE_ADAPTADAS;
@@ -75,7 +80,7 @@ class User {
 
     const DB_INSERT_USER = "testinsert";
     const DB_INSERT_PASS = "testpassword";
-    public static function createUser($username, $role, $email){
+    public static function generateToken($username, $role, $email){
         $accessToken = AccessToken::createAccessToken();
         $dbLayer = new DbLayer(DbLayer::DB_ADDRESS, self::DB_INSERT_USER, self::DB_INSERT_PASS, DbLayer::DB_DATABASE);
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){

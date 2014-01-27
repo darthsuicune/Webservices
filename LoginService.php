@@ -23,7 +23,7 @@ class LoginService {
         $whereargs = array($username,$password);
         $row = self::getUserData($projection, $tables, $where, $whereargs);
         if($row != null){
-            return User::createUser($row[UsersContract::USERS_COLUMN_USERNAME],
+            return User::generateToken($row[UsersContract::USERS_COLUMN_USERNAME],
             $row[UsersContract::USERS_COLUMN_ROLE],
             $row[UsersContract::USERS_COLUMN_E_MAIL]);
         } else {
