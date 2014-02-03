@@ -206,8 +206,8 @@ class Index {
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " .
-				UsersContract::USERS_COLUMN_PASSWORD . "=%";
+		$where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " .
+				UsersContract::USERS_COLUMN_PASSWORD . "=?";
 		$whereargs = array($username,$password);
 		$row = LoginService::getUserData($projection, $tables, $where, $whereargs);
 		if($row != null){

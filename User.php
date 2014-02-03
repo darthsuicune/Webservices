@@ -60,7 +60,7 @@ class User {
                 $types[] = LocationsContract::TYPE_MARITIMO;
                 break;
         }
-        return join("','", $types);
+        return $types;
     }
     
     public function changePassword($newPassword){

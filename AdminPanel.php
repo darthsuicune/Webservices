@@ -33,14 +33,13 @@ class AdminPanel{
 		include_once('LocationsService.php');
 		$locationService = new LocationsService();
 		return $locationService->getAdminLocations($user);
-
 	}
 
 	function getLocationTable($locationList){
 		$table = "        <table>" . "\n";
 		$table .= $this->getTableHeader();
 		$table .= $this->getEmptyRow();
-		foreach($locationList as $index=>$value){
+		foreach($locationList as $value){
 			$table .= $this->getLocationRow($value);
 		}
 		$table .= "        </table>" . "\n";

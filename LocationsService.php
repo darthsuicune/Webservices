@@ -7,39 +7,34 @@ class LocationsService {
         if($user == null){
             return null;
         }
-        $where = LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">% AND " .
-        		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " .
-        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " =0" . ") AND " .
-        		LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (%)";
-        $whereArgs = array(
-        		$lastUpdateTime,
-        		round(microtime(true) * 1000),
-        		$user->getAllowedTypes()
-        );
-        return $this->getLocationsFromDb($user, $lastUpdateTime, $where, $whereArgs);
+        $types = $user->getAllowedTypes();
+        $where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
+        		implode(',', array_fill(0, count($types), '?')) . ") AND " . 
+        		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">? AND " .
+        		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
+        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " =0)";
+        $types[] = $lastUpdateTime;
+        $types[] = round(microtime(true) * 1000);
+        
+        return $this->getLocationsFromDb($user, $lastUpdateTime, $where, $types);
     }
     
-    public function  getWebLocations($user) {
-    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">% OR " .
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0";
-    	$whereArgs = array (
-    			round(microtime(true) * 1000)
-    	);
-    	return $this->getLocationsFromDb($user, 0, $where, $whereArgs);
-    	 
+    public function getWebLocations($user) {
+        $types = $user->getAllowedTypes();
+    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
+         		implode(',', array_fill(0, count($types), '?')) . ")"
+         		 . " AND (" . 
+         		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " . 
+				LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 )";
+    	$types[] = round(microtime(true) * 1000);
+    	return $this->getLocationsFromDb($user, 0, $where, $types);
     }
     
     public function getAdminLocations($user) {
-    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (%)";
-    	$whereArgs = array(
-    			$user->getAllowedTypes()
-    	);
-    	return $this->getLocationsFromDb($user, 0, $where, $whereArgs);
-    }
-
-    function getLocationList($user, $lastUpdateTime){
-    	
-    	 
+    	$types = $user->getAllowedTypes();
+    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
+        		implode(',', array_fill(0, count($types), '?')) . ")";
+    	return $this->getLocationsFromDb($user, 0, $where, $types);
     }
     
     function getLocationsFromDb($user, $lastUpdateTime, $where, array $whereArgs){
@@ -68,13 +63,12 @@ class LocationsService {
     	$tables = array(LocationsContract::LOCATIONS_TABLE_NAME);
     	
     	$result = $dbLayer->query($projection, $tables, $where, $whereArgs);
-    	
-    	if($result == null){
+    	if(!is_array($result) || $result == null){
     		return null;
     	}
     	$locationList = array();
-    	while ($row = $result->fetch_assoc()) {
-    		$locationList[] = new Location($row);
+    	foreach ($result as $value) {
+    		$locationList[] = new Location($value);
     	}
     	
     	$dbLayer->close();
@@ -94,7 +88,7 @@ class LocationsService {
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
     	}
-    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=%";
+    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
     	$whereArgs = array($id);
     	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
     			$where, $whereArgs);
@@ -106,7 +100,7 @@ class LocationsService {
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
     	}
-    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=%";
+    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
     	$whereArgs = array($id);
     	$dbLayer->update($values, LocationsContract::LOCATIONS_TABLE_NAME, 
     			$where, $whereArgs);

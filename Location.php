@@ -13,16 +13,16 @@ class Location {
      * Public constructor
      * @param mysql_assoc $row mysql row containing the relative data.
      */
-    public function __construct ( $row ) {
-    	$this->id = $row[LocationsContract::LOCATIONS_COLUMN_ID];
-        $this->latitude = $row[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
-        $this->longitude = $row[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
-        $this->name = $row[LocationsContract::LOCATIONS_COLUMN_NAME];
-        $this->type = $row[LocationsContract::LOCATIONS_COLUMN_TYPE];
-        $this->address = $row[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
-        $this->other = $row[LocationsContract::LOCATIONS_COLUMN_OTHER];
-        $this->lastUpdateTime = $row[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
-        $this->expireDate = $row[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
+    public function __construct ( array $values ) {
+    	$this->id = $values[LocationsContract::LOCATIONS_COLUMN_ID];
+        $this->latitude = $values[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
+        $this->longitude = $values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
+        $this->name = $values[LocationsContract::LOCATIONS_COLUMN_NAME];
+        $this->type = $values[LocationsContract::LOCATIONS_COLUMN_TYPE];
+        $this->address = $values[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
+        $this->other = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
+        $this->lastUpdateTime = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
+        $this->expireDate = $values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
     }
 }
 

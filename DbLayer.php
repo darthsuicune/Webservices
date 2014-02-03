@@ -12,40 +12,39 @@ class DbLayer {
 	const DB_USERNAME = 'testuser'; // TODO: Set values
 	const DB_PASSWORD = 'password'; // TODO: Set values
 	const DB_DATABASE = 'webservice';
+	const CHARSET = 'UTF8';
 
 	const RESULT_DB_CONNECTION_SUCCESFUL = 0;
 	const RESULT_DB_CONNECTION_ERROR = 1;
 
-	var $dbAddress;
+	var $dbDsn;
 	var $dbUsername;
 	var $dbPassword;
-	var $dbDatabase;
-	var $mysqli;
-
-	const DB_SELECT_USER_QUERY = 'SELECT * FROM users WHERE ';
+	var $pdo;
 
 	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME,
 			$password = self::DB_PASSWORD, $database = self::DB_DATABASE) {
-		$this->dbAddress = $address;
 		$this->dbUsername = $username;
 		$this->dbPassword = $password;
-		$this->dbDatabase = $database;
+		$this->dbDsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . self::CHARSET;
 	}
 	public function connect() {
-		$this->mysqli = new mysqli ( $this->dbAddress, $this->dbUsername, $this->dbPassword,
-				$this->dbDatabase );
-		if ($this->mysqli->connect_errno) {
-			return self::RESULT_DB_CONNECTION_ERROR;
-		} else {
-			$this->mysqli->set_charset("utf8");
+		try{
+			$this->pdo = new PDO ( $this->dbDsn, $this->dbUsername, $this->dbPassword );
 			return self::RESULT_DB_CONNECTION_SUCCESFUL;
+		} catch (PDOException $e) {
+			return self::RESULT_DB_CONNECTION_ERROR;
 		}
 	}
 	public function error() {
-		return $this->mysqli->connect_error;
+		return $this->pdo->connect_error;
 	}
+	/**
+	 * Deprecated, will be of no use in the future.
+	 */
 	public function close() {
-		$this->mysqli->close ();
+		// NOT NEEDED
+		//$this->pdo->close ();
 	}
 	/**
 	 * Abstraction layer for the query to the database.
@@ -57,6 +56,9 @@ class DbLayer {
 	 * @return mixed
 	 */
 	public function query(array $columns, array $tables, $where, array $whereArgs) {
+		if(substr_count($where, "?") != count($whereArgs)){
+			return false;
+		}
 
 		$projection;
 		if (is_array ( $columns ) && count($columns) > 0) {
@@ -76,10 +78,9 @@ class DbLayer {
 			$sources = join ( ' JOIN ', $tableList );
 		}
 
-		$query = 'SELECT ' . $projection .
-		' FROM ' . $sources .
-		$this->getCondition($where, $whereArgs);
-		return $this->mysqli->query($query);
+		$query = 'SELECT ' . $projection . ' FROM ' . $sources . ' WHERE ' . $where;
+		
+		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
 	 * Abstraction layer for the insert of rows into a database
@@ -92,17 +93,17 @@ class DbLayer {
 			return null;
 		}
 	  
+		//TODO BIG STUFF
 		$fields = array();
 		$row = array();
 		foreach($values as $index => $value){
-			$fields[] = $this->mysqli->real_escape_string($index);
-			$row[] = $this->mysqli->real_escape_string($value);
+			$fields[] = mysql_real_escape_string($index);
+			$row[] = mysql_real_escape_string($value);
 		}
 		$fields = join(',', $fields);
 		$row = '\'' . join('\',\'', $row) . '\'';
-		$query = 'INSERT INTO ' . $table . ' (' . $fields .
-				') VALUES (' . $row . ')';
-		return $this->mysqli->query($query);
+		$query = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $row . ')';
+		return $this->pdo->query($query);
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
@@ -114,20 +115,21 @@ class DbLayer {
 	 */
 	public function update(array $values, $table, $where, array $whereArgs) {
 		if($table == null || $table == "" ||
-				!is_array($values) || count($values) < 1){
+				!is_array($values) || count($values) < 1 ||
+				substr_count($where, "?") != count($whereArgs)){
 			return null;
 		}
+		//TODO BIG STUFF
+		
 		$update = "";
 		foreach($values as $index => $value){
-			$update .= $this->mysqli->real_escape_string($index);
+			$update .= mysql_real_escape_string($index);
 			$update .= "='";
-			$update .= $this->mysqli->real_escape_string($value) . "'";
+			$update .= mysql_real_escape_string($value) . "'";
 			$update .= ",";
 		}
-		$query = "UPDATE " . $table .
-		" SET " . substr($update, 0, -1) .
-		$this->getCondition($where, $whereArgs);
-		return $this->mysqli->query($query);
+		$query = "UPDATE " . $table . " SET " . substr($update, 0, -1) . ' WHERE ' . $where;
+		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
 	 * Abstraction layer for the deletion of rows from a database
@@ -137,32 +139,43 @@ class DbLayer {
 	 * @param array $whereArgs
 	 */
 	public function delete($table, $where, array $whereArgs) {
-		$query = "DELETE FROM " . $table .
-		$this->getCondition($where, $whereArgs);
-		return $this->mysqli->query($query);
-	}
-	/**
-	 * Abstraction layer for creating a new DB with all its tables.
-	 *
-	 * @param unknown $dbname
-	 * @param array $tables
-	 */
-
-	function getCondition($where, $whereArgs){
-		$selection = "";
-		if (is_string ( $where ) && $where != "") {
-			if (is_array ( $whereArgs )  && count($whereArgs) > 0) {
-				$search = "%";
-				foreach ( $whereArgs as $arg ) {
-					$where = substr_replace ( $where, "'" . $arg .
-							"'", strpos ( $where, $search ), strlen ( $search ) );
-				}
-				$selection = ' WHERE ' . $where;
-			}
+		if(substr_count($where, "?") != count($whereArgs) ||
+				$where == null || $where == "" ||
+				!is_array($whereArgs) || count($whereArgs) < 1){
+			return false;
 		}
-		return $selection;
+		$query = "DELETE FROM " . $table . ' WHERE ' . $where;
+		return $this->performParametrizedQuery($query, $whereArgs);
 	}
-
+	
+	public function bulkInsert(){
+		
+	}
+	
+	public function bulkUpdate(){
+		
+	}
+	
+	function performParametrizedQuery($query, $whereArgs){
+		$statement = false;
+		try{
+			$statement = $this->pdo->prepare($query);
+			if($statement->execute($whereArgs)){
+				$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+				$statement->closeCursor();
+				return $result;
+			} else {
+				var_dump($statement->errorInfo());
+				return false;
+			}
+		} catch (PDOException $e) {
+			if($statement){
+				echo $statement->errorInfo();
+				$statement->closeCursor();
+			}
+			return false;
+		}
+	}
 }
 
 ?>

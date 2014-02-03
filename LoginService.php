@@ -18,14 +18,14 @@ class LoginService {
         UsersContract::USERS_COLUMN_ROLE
         );
         $tables = array(UsersContract::USERS_TABLE_NAME);
-        $where = UsersContract::USERS_COLUMN_USERNAME . "=% AND " . 
-            UsersContract::USERS_COLUMN_PASSWORD . "=%";
+        $where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " . 
+            UsersContract::USERS_COLUMN_PASSWORD . "=?";
         $whereargs = array($username,$password);
-        $row = self::getUserData($projection, $tables, $where, $whereargs);
-        if($row != null){
-            return User::generateToken($row[UsersContract::USERS_COLUMN_USERNAME],
-            $row[UsersContract::USERS_COLUMN_ROLE],
-            $row[UsersContract::USERS_COLUMN_E_MAIL]);
+        $user = self::getUserData($projection, $tables, $where, $whereargs);
+        if($user != null){
+            return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
+            $user[UsersContract::USERS_COLUMN_ROLE],
+            $user[UsersContract::USERS_COLUMN_E_MAIL]);
         } else {
             return null;
         }
@@ -46,17 +46,17 @@ class LoginService {
         UsersContract::ACCESS_TOKEN_TABLE_NAME . "." . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN
         );
         $tables = array(UsersContract::USERS_TABLE_NAME, UsersContract::ACCESS_TOKEN_TABLE_NAME);
-        $where = UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=%";
+        $where = UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?";
         $whereargs = array(
         $tokenString
         );
-        $row = self::getUserData($projection, $tables, $where, $whereargs);
-        if($row != null){
+        $user = self::getUserData($projection, $tables, $where, $whereargs);
+        if($user != null){
             return new User(
-            $row[UsersContract::USERS_COLUMN_USERNAME],
-            $row[UsersContract::USERS_COLUMN_ROLE],
-            $row[UsersContract::USERS_COLUMN_E_MAIL],
-            $row[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
+            $user[UsersContract::USERS_COLUMN_USERNAME],
+            $user[UsersContract::USERS_COLUMN_ROLE],
+            $user[UsersContract::USERS_COLUMN_E_MAIL],
+            $user[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
             );
         } else {
             return null;
@@ -68,10 +68,10 @@ class LoginService {
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
             $data = $dbLayer->query($projection, $tables, $where, $whereargs);
             $row;
-            if($data == null){
+            if($data == null || !is_array($data)){
                 $row = null;
             } else {
-                $row = $data->fetch_assoc();
+                $row = $data[0];
             }
             $dbLayer->close();
             return $row;
