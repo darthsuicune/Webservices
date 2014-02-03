@@ -193,7 +193,7 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->checkUser($_POST[self::USERNAME], sha1($_POST[self::PASSWORD]));
+		return $loginService->checkUser($_POST[self::USERNAME], User::generateHash($_POST[self::PASSWORD]));
 	}
 
 	function performLogin($username, $password){

@@ -63,6 +63,10 @@ class User {
         return $types;
     }
     
+    public static function generateHash($password){
+    	return sha1($password);
+    }
+    
     public function changePassword($newPassword){
     	
     }
@@ -113,7 +117,7 @@ class AccessToken {
     }
 
     public static function createAccessToken(){
-        //This method generates the sha1 hash of the time with length 30.
+        //This method generates a random string.
         $token = new AccessToken(substr(sha1(microtime()), 0, 30)); 
         return $token;
     }
