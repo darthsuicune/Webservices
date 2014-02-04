@@ -21,7 +21,7 @@ class LoginService {
         $where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " . 
             UsersContract::USERS_COLUMN_PASSWORD . "=?";
         $whereargs = array($username,$password);
-        $user = self::getUserData($projection, $tables, $where, $whereargs);
+        $user = $this->getUserData($projection, $tables, $where, $whereargs);
         if($user != null){
             return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
             $user[UsersContract::USERS_COLUMN_ROLE],
@@ -50,7 +50,7 @@ class LoginService {
         $whereargs = array(
         $tokenString
         );
-        $user = self::getUserData($projection, $tables, $where, $whereargs);
+        $user = $this->getUserData($projection, $tables, $where, $whereargs);
         if($user != null){
             return new User(
             $user[UsersContract::USERS_COLUMN_USERNAME],
@@ -62,8 +62,29 @@ class LoginService {
             return null;
         }
     }
+    
+    public function getWebUser($username, $password){
+    	$projection = array(
+    			UsersContract::USERS_COLUMN_USERNAME,
+    			UsersContract::USERS_COLUMN_E_MAIL,
+    			UsersContract::USERS_COLUMN_ROLE
+    	);
+    	$tables = array(UsersContract::USERS_TABLE_NAME);
+    	$where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " .
+    			UsersContract::USERS_COLUMN_PASSWORD . "=?";
+    	$whereargs = array($username,$password);
+    	$row = $this->getUserData($projection, $tables, $where, $whereargs);
+    	if($row != null){
+    		return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
+    				$row[UsersContract::USERS_COLUMN_ROLE],
+    				$row[UsersContract::USERS_COLUMN_E_MAIL]);
+    	} else {
+    		return null;
+    	}
+    }
 
-    public static function getUserData($projection, $tables, $where, $whereargs){
+    
+    function getUserData($projection, $tables, $where, $whereargs){
         $dbLayer = new DbLayer();
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
             $data = $dbLayer->query($projection, $tables, $where, $whereargs);

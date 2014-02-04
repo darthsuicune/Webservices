@@ -200,23 +200,10 @@ class Index {
 		if($username == null || $username == "" || $password == null || $password == ""){
 			return null;
 		}
-		$projection = array(
-				UsersContract::USERS_COLUMN_USERNAME,
-				UsersContract::USERS_COLUMN_E_MAIL,
-				UsersContract::USERS_COLUMN_ROLE
-		);
-		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " .
-				UsersContract::USERS_COLUMN_PASSWORD . "=?";
-		$whereargs = array($username,$password);
-		$row = LoginService::getUserData($projection, $tables, $where, $whereargs);
-		if($row != null){
-			return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
-					$row[UsersContract::USERS_COLUMN_ROLE],
-					$row[UsersContract::USERS_COLUMN_E_MAIL]);
-		} else {
-			return null;
-		}
+		
+		$loginService = new LoginService();
+		return $loginService->getWebUser($username, $password);
+		
 	}
 
 	function createLocationValues(){
