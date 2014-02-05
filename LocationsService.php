@@ -20,14 +20,11 @@ class LocationsService {
     }
     
     public function getWebLocations($user) {
-        $types = $user->getAllowedTypes();
-    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
-         		implode(',', array_fill(0, count($types), '?')) . ")"
-         		 . " AND (" . 
-         		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " . 
-				LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 )";
-    	$types[] = round(microtime(true) * 1000);
-    	return $this->getLocationsFromDb($user, 0, $where, $types);
+    	if($user == null){
+    		return null;
+    	}
+    	
+    	return $this->getLocations($user, 0);
     }
     
     public function getAdminLocations($user) {
@@ -84,15 +81,15 @@ class LocationsService {
     }
     
     public static function deleteLocation($id){
-    	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
-    	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
-    		return null;
-    	}
-    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
-    	$whereArgs = array($id);
-    	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
-    			$where, $whereArgs);
-    	$dbLayer->close();
+//     	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
+//     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
+//     		return null;
+//     	}
+//     	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
+//     	$whereArgs = array($id);
+//     	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
+//     			$where, $whereArgs);
+//     	$dbLayer->close();
     }
     
     public static function updateLocation($id, array $values){

@@ -8,10 +8,9 @@ include_once('User.php');
 include_once('LocationsService.php');
 include_once('LoginService.php');
 
-// echo "\n" . "TEST" . "\n";
-
 $index = new Index();
 $index->getIndex();
+
 
 class Index {
 	const LOGIN_REQUEST = "login";
