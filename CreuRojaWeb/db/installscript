@@ -1,0 +1,71 @@
+-- phpMyAdmin SQL Dump
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jan 16, 2014 at 03:37 PM
+-- Server version: 5.5.33-1
+-- PHP Version: 5.5.7-2
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `webservice`
+--
+CREATE DATABASE IF NOT EXISTS `webservice` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+USE `webservice`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accesstoken`
+--
+
+DROP TABLE IF EXISTS `accesstoken`;
+CREATE TABLE IF NOT EXISTS `accesstoken` (
+  `username` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `accesstoken` varchar(30) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `locations`
+--
+
+DROP TABLE IF EXISTS `locations`;
+CREATE TABLE IF NOT EXISTS `locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
+  `name` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `type` enum('adaptadas','asamblea','bravo','cuap','hospital','maritimo','nostrum','social','terrestre') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Valid values: ''adaptadas'',''asamblea'',''bravo'',''cuap'',''hospital'',''maritimo'',''nostrum'',''social'',''terrestre''',
+  `address` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `other` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `lastupdated` bigint(20) NOT NULL,
+  `expiredate` bigint(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `latitude` (`latitude`,`longitude`),
+  KEY `name` (`name`),
+  KEY `lastupdated` (`lastupdated`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=204 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `password` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `role` enum('social','socorros','socialsocorros','acuaticos','admin','socorrosmaritimos') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'socorros',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `username` (`username`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
+

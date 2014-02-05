@@ -4,9 +4,8 @@
  *
  * @package Webserver
  */
-include_once('Location.php');
-include_once('User.php');
-class DbLayer {
+
+class DbLayer implements DataStorageAdapter {
 
 	const DB_ADDRESS = 'localhost'; // TODO: Set values
 	const DB_USERNAME = 'testuser'; // TODO: Set values
