@@ -1,8 +1,13 @@
 <?php
 require_once('LoginProvider.php');
-require_once('LocationsProvider.php');
 
-$androidConnection = new WebService();
+interface WebService {
+	public function requestAccess($username, $password);
+	public function changePassword($user);
+	public function recoverPassword($user);
+	public function getLastUpdates($user, $lastUpdateTime);
+	public function getFullLocationList($user);
+}
 
 class CreuRojaWebService implements WebService {
 	const ACCESS_REQUEST = "";
@@ -11,28 +16,27 @@ class CreuRojaWebService implements WebService {
 	const LAST_UPDATES_REQUEST = "";
 	const LOCATION_LIST_REQUEST = "";
 	
-	var $clientType;
+	var $mClientType;
+	var $mLoginProvider;
 	
-	var $loginProvider;
-	var $locationsProvider;
-	
-	public function __construct(ClientType $clientType){
+	public function __construct(ClientType $clientType, LoginProvider $loginProvider){
 		$this->mClientType = $clientType;
+		$this->mLoginProvider = $loginProvider;		
 	}
 	
-	public function requestAccess(){
+	public function requestAccess($username, $password){
 		
 	}
-	public function changePassword(){
+	public function changePassword($user){
 		
 	}
-	public function recoverPassword(){
+	public function recoverPassword($user){
 		
 	}
-	public function getLastUpdates(){
+	public function getLastUpdates($user, $lastUpdateTime){
 		
 	}
-	public function getFullLocationList(){
+	public function getFullLocationList($user){
 		
 	}
 	
@@ -41,12 +45,4 @@ class CreuRojaWebService implements WebService {
 abstract class ClientType {
 	const ANDROID = 0;
 	const WEB = 1;
-}
-
-interface LoginProvider {
-	
-}
-
-interface LocationsProvider {
-	
 }

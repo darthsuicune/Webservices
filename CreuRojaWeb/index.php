@@ -1,25 +1,40 @@
 <?php
 require_once("webservice.php");
 
-$index = new WebClient(new WebService(ClientType::WEB));
-$index->handleWebAccess();
+$webClient = initializeObjects();
+echo handleWebAccess();
 
-class WebClient{
+function handleWebAccess(){
+	$webClient->showLogin();
+}
+
+function initializeObjects(){
+	$dsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . DbLayer::CHARSET;
+	$pdo = new PDO($dsn, DbLayer::DB_USERNAME, DbLayer::DB_PASSWORD);
+	$dataStorage = new DbLayer();
+	$dataStorage->connect($pdo);
+	$loginProvider = new LoginProviderImpl($dataStorage);
+	$webService = new CreuRojaWebService(ClientType::WEB, $loginProvider);
+	return new WebClientImpl($webService);
+}
+
+interface WebClient {
+	public function showLogin();
+	public function getMap($user);
+}
+
+class WebClientImpl implements WebClient {
 	var $mWebService;
 	
 	public function __construct(WebService $webService){
 		$this->mWebService = $webService;
 	}
 	
-	public function handleWebAccess(){
+	public function showLogin(){
 		
 	}
-}
-
-interface WebService {
-	public function requestAccess();
-	public function changePassword();
-	public function recoverPassword();
-	public function getLastUpdates();
-	public function getFullLocationList();
+	
+	public function showMap(User $user){
+		
+	}
 }
