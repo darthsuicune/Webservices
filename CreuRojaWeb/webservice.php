@@ -16,11 +16,9 @@ class CreuRojaWebService implements WebService {
 	const LAST_UPDATES_REQUEST = "";
 	const LOCATION_LIST_REQUEST = "";
 	
-	var $mClientType;
 	var $mLoginProvider;
 	
-	public function __construct(ClientType $clientType, LoginProvider $loginProvider){
-		$this->mClientType = $clientType;
+	public function __construct(LoginProvider $loginProvider){
 		$this->mLoginProvider = $loginProvider;		
 	}
 	
@@ -40,9 +38,4 @@ class CreuRojaWebService implements WebService {
 		
 	}
 	
-}
-
-abstract class ClientType {
-	const ANDROID = 0;
-	const WEB = 1;
 }

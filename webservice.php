@@ -16,7 +16,6 @@ class Webservice {
 	const QUERY_REQUEST = 'q';
 	const QUERY_REQUEST_LOCATIONS = 'get_locations';
 	const QUERY_REQUEST_ACCESS_TOKEN = 'request_access';
-	const QUERY_REQUEST_SALT = 'request_salt';
 
 	const PARAMETER_USERNAME = "username";
 	const PARAMETER_PASSWORD = "password";
@@ -40,8 +39,6 @@ class Webservice {
 				case self::QUERY_REQUEST_ACCESS_TOKEN :
 					$response = $this->handleAccessRequest ();
 					break;
-				case self::QUERY_REQUEST_SALT:
-					$response = $this->handleSaltRequest();
 				default :
 					$response = new ErrorResponse ( Response::ERROR_WRONG_REQUEST );
 					break;
@@ -112,17 +109,5 @@ class Webservice {
 		}
 		header("Content-Type: application/json");
 		return json_encode($response);
-	}
-	
-	function handleSaltRequest(){
-		if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
-			$response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
-		}
-		if (! isset ( $_POST [self::PARAMETER_USERNAME] ) ||
-				isset ( $_POST [self::PARAMETER_PASSWORD] )) {
-			$response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
-		}
-		
-		$username = $_POST [self::PARAMETER_USERNAME];
 	}
 }

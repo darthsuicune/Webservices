@@ -11,7 +11,7 @@ interface DataStorage{
 	public function delete($table, $where, array $whereArgs);
 }
 
-class DbLayer implements DataStorage {
+class MySqlDao implements DataStorage {
 
 	const DB_ADDRESS = 'localhost'; // TODO: Set values
 	const DB_USERNAME = 'wait'; // TODO: Set values
@@ -24,10 +24,7 @@ class DbLayer implements DataStorage {
 
 	var $pdo;
 
-	public function __construct() {
-	}
-	
-	public function connect(PDO $pdo) {
+	public function __construct(PDO $pdo) {
 		try{
 			$this->pdo = $pdo ;
 			return self::RESULT_DB_CONNECTION_SUCCESFUL;
@@ -35,7 +32,9 @@ class DbLayer implements DataStorage {
 			return self::RESULT_DB_CONNECTION_ERROR;
 		}
 	}
+	
 	public function getLastError() {
+		//TODO: stateful, return errors from method calls or just log them.
 		return $this->pdo->connect_error;
 	}
 	/**

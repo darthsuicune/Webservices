@@ -11,8 +11,7 @@ function handleWebAccess(){
 function initializeObjects(){
 	$dsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . DbLayer::CHARSET;
 	$pdo = new PDO($dsn, DbLayer::DB_USERNAME, DbLayer::DB_PASSWORD);
-	$dataStorage = new DbLayer();
-	$dataStorage->connect($pdo);
+	$dataStorage = new MySqlDao($pdo);
 	$loginProvider = new LoginProviderImpl($dataStorage);
 	$webService = new CreuRojaWebService(ClientType::WEB, $loginProvider);
 	return new WebClientImpl($webService);

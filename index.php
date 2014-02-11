@@ -23,6 +23,9 @@ class Index {
 	const REQUEST_TYPE = "q";
 	const USERNAME = "username";
 	const PASSWORD = "password";
+	const CONFIRM_PASS = "confirmpass";
+	const EMAIL = "email";
+	const ROLES = "roles";
 
 	const COOKIE_NAME = "accessToken";
 
@@ -112,15 +115,29 @@ class Index {
 	}
 
 	function handleRegisterRequest($user) {
+		echo "AAAAA";
 		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			if(isset($_POST)){
-				include_once('Register.php');
-				$register = new Register();
-				echo $register->register($username, $password, $email, $roles);
+			echo "AAAAA";
+			if(isset($_POST[self::USERNAME])){
+				echo "AAAAA";
+				if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
+					echo "AAAAA";
+					include_once('Register.php');
+					$register = new Register();
+					$username = $_POST[self::USERNAME];
+					$password = User::generateHash($_POST[self::PASSWORD]);
+					$email = $_POST[self::EMAIL];
+					$roles = $_POST[self::ROLES];
+					var_dump($_POST);
+					echo $register->registerUser($username, $password, $email, $roles);
+				}
 			} else {
 				//Show register webpage.
+				require_once('register.html');
 			}
+		} else {
+			echo "BBBBB";
 		}
 	}
 
@@ -199,10 +216,10 @@ class Index {
 		if($username == null || $username == "" || $password == null || $password == ""){
 			return null;
 		}
-		
+
 		$loginService = new LoginService();
 		return $loginService->getWebUser($username, $password);
-		
+
 	}
 
 	function createLocationValues(){

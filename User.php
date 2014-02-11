@@ -62,6 +62,17 @@ class User {
         }
         return $types;
     }
+
+    function addSocorros(&$array){
+        $array[] = LocationsContract::TYPE_ADAPTADAS;
+        $array[] = LocationsContract::TYPE_ASAMBLEA;
+        $array[] = LocationsContract::TYPE_BRAVO;
+        $array[] = LocationsContract::TYPE_CUAP;
+        $array[] = LocationsContract::TYPE_HOSPITAL;
+        $array[] = LocationsContract::TYPE_NOSTRUM;
+        $array[] = LocationsContract::TYPE_TERRESTRE;
+        return $array;
+    }
     
     public static function generateHash($password){
     	return sha1($password);
@@ -73,17 +84,6 @@ class User {
     
     public function createNewPassword(){
     	
-    }
-
-    function addSocorros(&$array){
-        $array[] = LocationsContract::TYPE_ADAPTADAS;
-        $array[] = LocationsContract::TYPE_ASAMBLEA;
-        $array[] = LocationsContract::TYPE_BRAVO;
-        $array[] = LocationsContract::TYPE_CUAP;
-        $array[] = LocationsContract::TYPE_HOSPITAL;
-        $array[] = LocationsContract::TYPE_NOSTRUM;
-        $array[] = LocationsContract::TYPE_TERRESTRE;
-        return $array;
     }
 
     const DB_INSERT_USER = "testinsert";
