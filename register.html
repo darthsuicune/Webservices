@@ -6,22 +6,22 @@
   </head>
   <body>
     <h2>Register</h2>
-    <form accept-charset="utf8" autocomplete="off" method="POST"
-      action="?q=register" name="Register">
-      username: <input maxlength="60" required="required"
-        name="username" type="text"><br>
-      password: <input autocomplete="off" maxlength="60" required="required" name="password"
-        type="password"><br>
-      confirm password: <input maxlength="60" required="required" name="confirmpass"
-        type="password"><br>
-      email: <input autocomplete="on" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
-        maxlength="80" required="required" name="email" type="email"><br>
-      roles:
-      <select list="'social','maritimo','socorro'" multiple="multiple" form="register"
-        required="required" name="roles">
-        <option>socorro</option>
-        <option>maritimo</option>
-        <option>social</option>
+    <form accept-charset="utf8" autocomplete="off" method="POST" action="?q=register" name="Register">
+      username: 
+      <input maxlength="60" required="required" name="username" type="text"><br>
+      password: 
+      <input autocomplete="off" maxlength="60" required="required" name="password" type="password"><br>
+      confirm password: 
+      <input maxlength="60" required="required" name="confirmpass" type="password"><br>
+      email: 
+      <input autocomplete="on" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$" maxlength="80" required="required" name="email" type="email"><br>
+      roles: 
+      <select required="required" name="roles">
+        <option value="socorrosmaritimos">Socorros + maritimos</option>
+        <option value="socialsocorros">Socorros + social</option>
+        <option value="socorros">Socorro</option>
+        <option value="maritimos">Maritimo</option>
+        <option value="social">Social</option>
       </select>
       <br>
       <input name="send" type="submit"><br>

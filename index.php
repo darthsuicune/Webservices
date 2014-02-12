@@ -30,6 +30,7 @@ class Index {
 	const COOKIE_NAME = "accessToken";
 
 	public function getIndex(){
+		$this->updateUsers();
 		$user = $this->getUserDetails();
 		if($user && isset($_GET[self::REQUEST_TYPE])){
 			$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
@@ -115,29 +116,32 @@ class Index {
 	}
 
 	function handleRegisterRequest($user) {
-		echo "AAAAA";
 		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			echo "AAAAA";
 			if(isset($_POST[self::USERNAME])){
-				echo "AAAAA";
 				if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
-					echo "AAAAA";
 					include_once('Register.php');
 					$register = new Register();
 					$username = $_POST[self::USERNAME];
-					$password = User::generateHash($_POST[self::PASSWORD]);
+					$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
 					$email = $_POST[self::EMAIL];
 					$roles = $_POST[self::ROLES];
-					var_dump($_POST);
-					echo $register->registerUser($username, $password, $email, $roles);
-				}
+  					if ($register->registerUser($username, $password, $email, $roles)) {
+  						echo "Success!";
+  					} else {
+  						echo "Failure";
+  					}
+  					require_once('register.html');
+				} else {
+				//Show register webpage.
+				require_once('register.html');
+			}
 			} else {
 				//Show register webpage.
 				require_once('register.html');
 			}
 		} else {
-			echo "BBBBB";
+			require_once('login.html');
 		}
 	}
 
@@ -209,7 +213,7 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->checkUser($_POST[self::USERNAME], User::generateHash($_POST[self::PASSWORD]));
+		return $loginService->checkUser($_POST[self::USERNAME], $_POST[self::PASSWORD]);
 	}
 
 	function performLogin($username, $password){
@@ -253,5 +257,25 @@ class Index {
 
 	function showErrorMessage($message){
 		echo "There was an error while processing your request: " . $message;
+	}
+	
+	function updateUsers(){
+		$dbLayer = new DbLayer("localhost", "testinsert", "testpassword");
+		$dbLayer->connect();
+		$values = array(
+				UsersContract::USERS_COLUMN_PASSWORD=>password_hash("test2", PASSWORD_BCRYPT)
+				);
+		$table = UsersContract::USERS_TABLE_NAME;
+		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+		$whereArgs = array(sha1("test1"));
+		$dbLayer->update($values, $table, $where, $whereArgs);
+		$values = array(
+				UsersContract::USERS_COLUMN_PASSWORD=>password_hash("admin", PASSWORD_BCRYPT)
+		);
+		$table = UsersContract::USERS_TABLE_NAME;
+		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+		$whereArgs = array(sha1("admin"));
+		$dbLayer->update($values, $table, $where, $whereArgs);
+		echo "UPDATED!";
 	}
 }

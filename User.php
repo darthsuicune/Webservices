@@ -74,10 +74,6 @@ class User {
         return $array;
     }
     
-    public static function generateHash($password){
-    	return sha1($password);
-    }
-    
     public function changePassword($newPassword){
     	
     }

@@ -20,7 +20,7 @@ class LoginService {
         $tables = array(UsersContract::USERS_TABLE_NAME);
         $where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " . 
             UsersContract::USERS_COLUMN_PASSWORD . "=?";
-        $whereargs = array($username,$password);
+        $whereargs = array($username, $password);
         $user = $this->getUserData($projection, $tables, $where, $whereargs);
         if($user != null){
             return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],

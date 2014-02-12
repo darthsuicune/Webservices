@@ -1,8 +1,8 @@
 <?php
 class Register {
-	public function registerUser($username, $password, $email, array $roles){
+	public function registerUser($username, $password, $email, $roles){
 		if($this->isValidData($username, $password, $email, $roles)){
-			return $this->createUser($username, $password, $email, $this->getRole($roles));
+			return $this->createUser($username, $password, $email, $roles);
 		} else {
 			return $this->incorrectData();
 		}
@@ -27,12 +27,13 @@ class Register {
 	}
 
 	function incorrectData(){
-		return "ERROR";
+		return false;
 	}
 
 	function createUser($username, $password, $email, $role){
 		require_once('DbLayer.php');
 		$dbLayer = new DbLayer();
+		$dbLayer->connect();
 		$values = array (
 			UsersContract::USERS_COLUMN_USERNAME=>$username,
 			UsersContract::USERS_COLUMN_PASSWORD=>$password,
@@ -42,23 +43,18 @@ class Register {
 		$dbLayer->insert(UsersContract::USERS_TABLE_NAME, $values);
 	}
 
-	function getRole(array $roles){
-		if(count($roles) == 1 ){
-			return $roles[0];
-		} else if (count($roles) == 2) {
-			
-		}
-	}
-
-	function isValidData($username, $password, $email, array $roles){
+	function isValidData($username, $password, $email, $roles){
 		if($username == "" || $username == null || strlen($username) < 3) {
 			return false;
 		}
 
-		if($password == "" || $password == null || $password == User::generateHash("")) {
+		if($password == "" || $password == null || $password == password_hash("", PASSWORD_BCRYPT)) {
 			return false;
 		}
 		if($email == "" || $email == null || (!$this->isValidEmail($email))) {
+			return false;
+		}
+		if($roles == "" || $roles == null || (!$this->isValidRole($roles))) {
 			return false;
 		}
 		return true;
@@ -66,5 +62,12 @@ class Register {
 
 	function isValidEmail($email){
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
+	}
+	function isValidRole($roles){
+		return ($roles == UsersContract::ROLE_MARITIMOS 
+				|| $roles == UsersContract::ROLE_SOCIAL
+				|| $roles == UsersContract::ROLE_SOCIAL_SOCORROS
+				|| $roles == UsersContract::ROLE_SOCORROS
+				|| $roles == UsersContract::ROLE_SOCORROS_MARITIMOS);
 	}
 }
