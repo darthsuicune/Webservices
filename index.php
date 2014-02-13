@@ -30,7 +30,7 @@ class Index {
 	const COOKIE_NAME = "accessToken";
 
 	public function getIndex(){
-		$this->updateUsers();
+// 		$this->updateUsers();
 		$user = $this->getUserDetails();
 		if($user && isset($_GET[self::REQUEST_TYPE])){
 			$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
@@ -213,19 +213,9 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->checkUser($_POST[self::USERNAME], $_POST[self::PASSWORD]);
+		return $loginService->getWebUser($_POST[self::USERNAME], $_POST[self::PASSWORD]);
 	}
-
-	function performLogin($username, $password){
-		if($username == null || $username == "" || $password == null || $password == ""){
-			return null;
-		}
-
-		$loginService = new LoginService();
-		return $loginService->getWebUser($username, $password);
-
-	}
-
+	
 	function createLocationValues(){
 		if(!isset($_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE])){
 			return false;
@@ -263,18 +253,18 @@ class Index {
 		$dbLayer = new DbLayer("localhost", "testinsert", "testpassword");
 		$dbLayer->connect();
 		$values = array(
-				UsersContract::USERS_COLUMN_PASSWORD=>password_hash("test2", PASSWORD_BCRYPT)
+				UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("test2"), PASSWORD_BCRYPT)
 				);
 		$table = UsersContract::USERS_TABLE_NAME;
 		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereArgs = array(sha1("test1"));
+		$whereArgs = array("test1");
 		$dbLayer->update($values, $table, $where, $whereArgs);
 		$values = array(
-				UsersContract::USERS_COLUMN_PASSWORD=>password_hash("admin", PASSWORD_BCRYPT)
+				UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("admin"), PASSWORD_BCRYPT)
 		);
 		$table = UsersContract::USERS_TABLE_NAME;
 		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereArgs = array(sha1("admin"));
+		$whereArgs = array("admin");
 		$dbLayer->update($values, $table, $where, $whereArgs);
 		echo "UPDATED!";
 	}

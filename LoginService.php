@@ -14,15 +14,16 @@ class LoginService {
         }
         $projection = array(
         UsersContract::USERS_COLUMN_USERNAME,
+        UsersContract::USERS_COLUMN_PASSWORD,
         UsersContract::USERS_COLUMN_E_MAIL,
         UsersContract::USERS_COLUMN_ROLE
         );
         $tables = array(UsersContract::USERS_TABLE_NAME);
-        $where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " . 
-            UsersContract::USERS_COLUMN_PASSWORD . "=?";
-        $whereargs = array($username, $password);
+        $where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+        $whereargs = array($username);
         $user = $this->getUserData($projection, $tables, $where, $whereargs);
-        if($user != null){
+        if($user != null && 
+        		password_verify(sha1($password), $user[UsersContract::USERS_COLUMN_PASSWORD])){
             return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
             $user[UsersContract::USERS_COLUMN_ROLE],
             $user[UsersContract::USERS_COLUMN_E_MAIL]);
@@ -66,16 +67,17 @@ class LoginService {
     public function getWebUser($username, $password){
     	$projection = array(
     			UsersContract::USERS_COLUMN_USERNAME,
+    			UsersContract::USERS_COLUMN_PASSWORD,
     			UsersContract::USERS_COLUMN_E_MAIL,
     			UsersContract::USERS_COLUMN_ROLE
     	);
     	$tables = array(UsersContract::USERS_TABLE_NAME);
-    	$where = UsersContract::USERS_COLUMN_USERNAME . "=? AND " .
-    			UsersContract::USERS_COLUMN_PASSWORD . "=?";
-    	$whereargs = array($username,$password);
+    	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+    	$whereargs = array($username);
     	$row = $this->getUserData($projection, $tables, $where, $whereargs);
-    	if($row != null){
-    		return User::createWebUser($row[UsersContract::USERS_COLUMN_USERNAME],
+    	if($row != null && 
+        		password_verify(sha1($password), $row[UsersContract::USERS_COLUMN_PASSWORD])){
+    		return User::generateToken($row[UsersContract::USERS_COLUMN_USERNAME],
     				$row[UsersContract::USERS_COLUMN_ROLE],
     				$row[UsersContract::USERS_COLUMN_E_MAIL]);
     	} else {

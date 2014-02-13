@@ -79,7 +79,6 @@ class DbLayer {
 		}
 
 		$query = 'SELECT ' . $projection . ' FROM ' . $sources . ' WHERE ' . $where;
-		echo $query;
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
