@@ -21,7 +21,8 @@ class Index {
 	const CHANGE_PASSWORD_REQUEST = "changePassword";
 	const RECOVER_PASSWORD_REQUEST = "recoverPassword";
 	const REQUEST_TYPE = "q";
-	const USERNAME = "username";
+	const NAME = "name";
+	const SURNAME = "surname";
 	const PASSWORD = "password";
 	const CONFIRM_PASS = "confirmpass";
 	const EMAIL = "email";
@@ -118,7 +119,8 @@ class Index {
 	function handleRegisterRequest($user) {
 		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			if(isset($_POST[self::USERNAME])){
+			//Second form passed already
+			if(isset($_POST[self::EMAIL])) {
 				if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
 					include_once('Register.php');
 					$register = new Register();
@@ -126,18 +128,21 @@ class Index {
 					$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
 					$email = $_POST[self::EMAIL];
 					$roles = $_POST[self::ROLES];
-  					if ($register->registerUser($username, $password, $email, $roles)) {
-  						echo "Success!";
-  					} else {
-  						echo "Failure";
-  					}
-  					require_once('register.html');
+					if ($register->registerUser($username, $password, $email, $roles)) {
+						echo "Success!";
+						require_once('register.html');
+					} else {
+						echo "Failure";
+						require_once('register2.php');
+					}
 				} else {
-				//Show register webpage.
-				require_once('register.html');
-			}
+					//Show register webpage.
+					require_once('register2.php');
+				}
+			//First form passed, second not yet.
+			} else if (isset($_POST[self::ROLES])) {
+				require_once('register2.php');
 			} else {
-				//Show register webpage.
 				require_once('register.html');
 			}
 		} else {
