@@ -125,11 +125,12 @@ class Index {
 				if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
 					include_once('Register.php');
 					$register = new Register();
-					$username = $_POST[self::USERNAME];
+					$name = $_POST[self::NAME];
+					$surname = $_POST[self::SURNAME];
 					$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
 					$email = $_POST[self::EMAIL];
 					$roles = $_POST[self::ROLES];
-					if ($register->registerUser($username, $password, $email, $roles)) {
+					if ($register->registerUser($password, $email, $roles, $name, $surname)) {
 						echo "Success!";
 						require_once('register.html');
 					} else {

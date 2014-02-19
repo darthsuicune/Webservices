@@ -1,8 +1,8 @@
 <?php
 class Register {
-	public function registerUser($username, $password, $email, $roles){
-		if($this->isValidData($username, $password, $email, $roles)){
-			return $this->createUser($username, $password, $email, $roles);
+	public function registerUser($password, $email, $roles, $name, $surname){
+		if($this->isValidData($name . "." . $surname, $password, $email, $roles)){
+			return $this->createUser($name . "." . $surname, $password, $email, $roles);
 		} else {
 			return $this->incorrectData();
 		}
