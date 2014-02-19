@@ -21,6 +21,7 @@ class Index {
 	const CHANGE_PASSWORD_REQUEST = "changePassword";
 	const RECOVER_PASSWORD_REQUEST = "recoverPassword";
 	const REQUEST_TYPE = "q";
+	const USERNAME = "username";
 	const NAME = "name";
 	const SURNAME = "surname";
 	const PASSWORD = "password";
