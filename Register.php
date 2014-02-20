@@ -4,7 +4,7 @@ class Register {
 		if($this->isValidData($name . "." . $surname, $password, $email, $roles)){
 			return $this->createUser($name . "." . $surname, $password, $email, $roles);
 		} else {
-			return $this->incorrectData();
+			return false;
 		}
 	}
 
@@ -26,10 +26,6 @@ class Register {
 		}
 	}
 
-	function incorrectData(){
-		return false;
-	}
-
 	function createUser($username, $password, $email, $role){
 		require_once('DbLayer.php');
 		$dbLayer = new DbLayer();
@@ -40,7 +36,8 @@ class Register {
 			UsersContract::USERS_COLUMN_E_MAIL=>$email,
 			UsersContract::USERS_COLUMN_ROLE=>$role
 		);
-		$dbLayer->insert(UsersContract::USERS_TABLE_NAME, $values);
+		return $dbLayer->insert(UsersContract::USERS_TABLE_NAME, $values);
+		
 	}
 
 	function isValidData($username, $password, $email, $roles){

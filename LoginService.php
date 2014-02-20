@@ -96,7 +96,6 @@ class LoginService {
             } else {
                 $row = $data[0];
             }
-            $dbLayer->close();
             return $row;
         } else {
             return null;

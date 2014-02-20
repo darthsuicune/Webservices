@@ -68,7 +68,6 @@ class LocationsService {
     		$locationList[] = new Location($value);
     	}
     	
-    	$dbLayer->close();
     	return $locationList;
     }
     public static function addLocation(array $values){
@@ -77,7 +76,6 @@ class LocationsService {
     		return null;
     	}
     	$dbLayer->insert(LocationsContract::LOCATIONS_TABLE_NAME, $values);
-    	$dbLayer->close();
     }
     
     public static function deleteLocation($id){
@@ -89,7 +87,6 @@ class LocationsService {
 //     	$whereArgs = array($id);
 //     	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
 //     			$where, $whereArgs);
-//     	$dbLayer->close();
     }
     
     public static function updateLocation($id, array $values){
@@ -101,6 +98,5 @@ class LocationsService {
     	$whereArgs = array($id);
     	$dbLayer->update($values, LocationsContract::LOCATIONS_TABLE_NAME, 
     			$where, $whereArgs);
-    	$dbLayer->close();
     }
 }

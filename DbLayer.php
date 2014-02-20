@@ -36,16 +36,6 @@ class DbLayer {
 			return self::RESULT_DB_CONNECTION_ERROR;
 		}
 	}
-	public function error() {
-		return $this->pdo->connect_error;
-	}
-	/**
-	 * Deprecated, will be of no use in the future.
-	 */
-	public function close() {
-		// NOT NEEDED
-		//$this->pdo->close ();
-	}
 	/**
 	 * Abstraction layer for the query to the database.
 	 *

@@ -15,7 +15,9 @@
 		<h4>Hint: Enter a new password for this service. It is suggested that is not shared with other services, such as mail or social networks.</h4>
 		<h4>We are *NOT* asking for your e-mail password.</h4>
 		<?php 
-			putHiddenFields();
+			echo "<input type=\"hidden\" name=\"name\" value=\"" . $_POST[Index::NAME]. "\" >\n";
+			echo "<input type=\"hidden\" name=\"surname\" value=\"" . $_POST[Index::SURNAME]. "\" >\n";
+			echo "<input type=\"hidden\" name=\"roles\" value=\"" . $_POST[Index::ROLES]. "\" >\n";
 		?>
 
 		password: <input autocomplete="off"
@@ -27,9 +29,3 @@
 	</form>
 </body>
 </html>
-<?php 
-function putHiddenFields(){
-	echo "<input type=\"hidden\" name=\"name\" value=\"" . $_POST[Index::NAME]. "\" >";
-	echo "<input type=\"hidden\" name=\"surname\" value=\"" . $_POST[Index::SURNAME]. "\" >";
-	echo "<input type=\"hidden\" name=\"roles\" value=\"" . $_POST[Index::ROLES]. "\" >";
-}

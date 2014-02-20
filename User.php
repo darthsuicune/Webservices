@@ -93,7 +93,6 @@ class User {
              UsersContract::ACCESS_TOKEN_USERNAME=>$username,
              UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
              ));
-            $dbLayer->close();
             return new User($username, $role, $email, $accessToken->accessTokenString);
         } else {
             return null;
