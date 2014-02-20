@@ -38,7 +38,7 @@ class User {
     }
 
     public function getAllowedTypes(){
-        $types;
+        $types = array();
         switch($this->role){
             case UsersContract::ROLE_SOCIAL_SOCORROS:
                 $types[] = LocationsContract::TYPE_SOCIAL;
