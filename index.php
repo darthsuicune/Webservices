@@ -127,7 +127,7 @@ class Index {
 					$register = new Register();
 					$name = $_POST[self::NAME];
 					$surname = $_POST[self::SURNAME];
-					$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
+					$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
 					$email = $_POST[self::EMAIL];
 					$roles = $_POST[self::ROLES];
 					if ($register->registerUser($password, $email, $roles, $name, $surname)) {
