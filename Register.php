@@ -45,7 +45,7 @@ class Register {
 			return false;
 		}
 
-		if($password == "" || $password == null || $password == password_hash("", PASSWORD_BCRYPT)) {
+		if($password == "" || $password == null) {
 			return false;
 		}
 		if($email == "" || $email == null || (!$this->isValidEmail($email))) {
