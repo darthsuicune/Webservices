@@ -88,8 +88,6 @@ class LocationsService {
     	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
     	$whereArgs = array($id);
     	$dbLayer->update($values, LocationsContract::LOCATIONS_TABLE_NAME, $where, $whereArgs);
-//     	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
-//     			$where, $whereArgs);
     }
     
     public static function updateLocation($id, array $values){

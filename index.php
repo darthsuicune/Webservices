@@ -228,8 +228,10 @@ class Index {
 			return false;
 		}
 		$values = array();
-		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
-		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] = $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
+		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] = 
+				str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE]);
+		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] = 
+				str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE]);
 		$values[LocationsContract::LOCATIONS_COLUMN_NAME] = $_POST[LocationsContract::LOCATIONS_COLUMN_NAME];
 		$values[LocationsContract::LOCATIONS_COLUMN_TYPE] = $_POST[LocationsContract::LOCATIONS_COLUMN_TYPE];
 		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_OTHER])){
