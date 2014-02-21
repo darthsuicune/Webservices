@@ -59,7 +59,8 @@ class Webservice {
 		if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
 		} else {
-			$user = LoginService::validateAccessToken ($_POST [self::PARAMETER_ACCESS_TOKEN]);
+			$loginService = new LoginService ();
+			$user = $loginService->validateAccessToken ($_POST [self::PARAMETER_ACCESS_TOKEN]);
 
 			if ($user == null || (!$user->accessToken->isValid())) {
 				$response = new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
@@ -97,8 +98,8 @@ class Webservice {
 		if ($username == "" || $password == "") {
 			$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 		} else {
-			$LoginService = new LoginService ();
-			$user = $LoginService->checkUser ($username, $password);
+			$loginService = new LoginService ();
+			$user = $loginService->checkUser ($username, $password);
 			if($user == null || !($user->accessToken->isValid())){
 				$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 			} else {
