@@ -79,12 +79,15 @@ class LocationsService {
     }
     
     public static function deleteLocation($id){
-//     	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
-//     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
-//     		return null;
-//     	}
-//     	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
-//     	$whereArgs = array($id);
+    	$dbLayer = new DbLayer(DbLayer::DB_ADDRESS, User::DB_INSERT_USER, User::DB_INSERT_PASS, DbLayer::DB_DATABASE);
+    	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
+    		return false;
+    	}
+    	$values = array(
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE=>"1");
+    	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
+    	$whereArgs = array($id);
+    	$dbLayer->update($values, LocationsContract::LOCATIONS_TABLE_NAME, $where, $whereArgs);
 //     	$dbLayer->delete(LocationsContract::LOCATIONS_TABLE_NAME, 
 //     			$where, $whereArgs);
     }
