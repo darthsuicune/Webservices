@@ -23,7 +23,7 @@ class LoginService {
         $whereargs = array($username);
         $user = $this->getUserData($projection, $tables, $where, $whereargs);
         if($user != null && 
-        		password_verify(sha1($password), $user[UsersContract::USERS_COLUMN_PASSWORD])){
+        		password_verify($password, $user[UsersContract::USERS_COLUMN_PASSWORD])){
             return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
             $user[UsersContract::USERS_COLUMN_ROLE],
             $user[UsersContract::USERS_COLUMN_E_MAIL]);
