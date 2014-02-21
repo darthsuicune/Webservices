@@ -84,6 +84,7 @@ class LocationsService {
     		return false;
     	}
     	$values = array(
+    			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED=>round(microtime(true) * 1000),
     			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE=>"1");
     	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
     	$whereArgs = array($id);
