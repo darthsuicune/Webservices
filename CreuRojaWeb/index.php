@@ -1,5 +1,6 @@
 <?php
 require_once("webservice.php");
+require_once("inc/*.php");
 
 $webClient = initializeObjects();
 echo handleWebAccess();
