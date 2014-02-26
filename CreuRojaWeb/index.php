@@ -1,6 +1,5 @@
 <?php
 require_once("webservice.php");
-require_once("inc/*.php");
 
 $webClient = initializeObjects();
 echo handleWebAccess();
@@ -9,32 +8,18 @@ function handleWebAccess(){
 	$webClient->showLogin();
 }
 
+const DB_ADDRESS = 'localhost'; // TODO: Set values
+const DB_USERNAME = 'wait'; // TODO: Set values
+const DB_PASSWORD = 'wat'; // TODO: Set values
+const DB_DATABASE = 'webservice';
+const CHARSET = 'UTF8';
+
 function initializeObjects(){
-	$dsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . DbLayer::CHARSET;
-	$pdo = new PDO($dsn, DbLayer::DB_USERNAME, DbLayer::DB_PASSWORD);
+	$dsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . self::CHARSET;
+	$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
 	$dataStorage = new MySqlDao($pdo);
 	$loginProvider = new LoginProviderImpl($dataStorage);
 	$webService = new CreuRojaWebService(ClientType::WEB, $loginProvider);
 	return new WebClientImpl($webService);
 }
 
-interface WebClient {
-	public function showLogin();
-	public function getMap($user);
-}
-
-class WebClientImpl implements WebClient {
-	var $mWebService;
-	
-	public function __construct(WebService $webService){
-		$this->mWebService = $webService;
-	}
-	
-	public function showLogin(){
-		
-	}
-	
-	public function showMap(User $user){
-		
-	}
-}
