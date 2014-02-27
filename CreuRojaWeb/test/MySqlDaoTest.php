@@ -3,15 +3,21 @@
 function testMySqlDao(){
 	$pdo = new MockPDO();
 	$dao = new MySqlDao($pdo);
+	echo "<td> MySQLDao tests";
+	echo "<td>testMySqlDaoQuery<br>\n";
 	echo testMySqlDaoQuery($dao);
+	echo "</td>\n<td>testMySqlDaoInsert<br>\n";
 	echo testMySqlDaoInsert($dao);
+	echo "</td>\n<td>testMySqlDaoUpdate<br>\n";
 	echo testMySqlDaoUpdate($dao);
+	echo "</td>\n<td>testMySqlDaoDelete<br>\n";
 	echo testMySqlDaoDelete($dao);
+	echo "</td>\n<td>testMySqlDaoBulkInsert<br>\n";
 	echo testMySqlDaoBulkInsert($dao);
+	echo "</td>";
 }
 
 function testMySqlDaoQuery(MySqlDao $dao){
-	echo "testMySqlDaoQuery<br>\n";
 	$columns = array();
 	$tables = array();
 	$where = "";
@@ -23,13 +29,13 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$tables = array(UsersContract::USERS_TABLE_NAME);
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Single table, empty where ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users TYPE: 2");
+	assertTrue($result, "SELECT * FROM users");
 	
 	$tables = array(UsersContract::USERS_TABLE_NAME, AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
 	$where = "myass=yourass' OR 1=1;";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Multi table, Invalid where ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken WHERE myass=yourass' OR 1=1; TYPE: 2");
+	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken WHERE myass=yourass' OR 1=1;");
 	
 	$tables = array(UsersContract::USERS_TABLE_NAME);
 	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
@@ -43,11 +49,9 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users WHERE username=? TYPE: 2");
+	assertTrue($result, "SELECT * FROM users WHERE username=?");
 }
 function testMySqlDaoInsert(MySqlDao $dao){
-	echo "testMySqlDaoInsert<br>\n";
-	
 	$table = "";
 	$values = array();
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty values ";
@@ -55,8 +59,6 @@ function testMySqlDaoInsert(MySqlDao $dao){
 	assertIsFalse($result);
 }
 function testMySqlDaoUpdate(MySqlDao $dao){
-	echo "testMySqlDaoUpdate<br>\n";
-	
 	$values = array();
 	$table = "";
 	$where = "";
@@ -66,8 +68,6 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	assertIsFalse($result);
 }
 function testMySqlDaoDelete(MySqlDao $dao){
-	echo "testMySqlDaoDelete<br>\n";
-	
 	$table = "";
 	$where = "";
 	$whereArgs = array();
@@ -76,8 +76,6 @@ function testMySqlDaoDelete(MySqlDao $dao){
 	assertIsFalse($result);
 }
 function testMySqlDaoBulkInsert(MySqlDao $dao){
-	echo "testMySqlDaoBulkInsert<br>\n";
-	
 	$table = "";
 	$values = array();
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty values ";
@@ -113,6 +111,6 @@ class MockPdoStatement extends PDOStatement {
 		return $this->query;
 	}
 	public function fetchAll($type){
-		return $this->query . " TYPE: " . $type;
+		return $this->query;
 	}
 }

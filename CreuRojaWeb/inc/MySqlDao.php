@@ -11,7 +11,7 @@ class MySqlDao implements DataStorage {
 	 * Abstraction layer for the query to the database.
 	 *
 	 * @param array $columns
-	 * @param array $tables
+	 * @param array $tables Needs to contain at least one value
 	 * @param String $where
 	 * @param array $whereArgs
 	 * @return mixed
