@@ -2,11 +2,11 @@
 include_once('LocationsService.php');
 include_once('User.php');
 
- = test1;
- = admin;
- = meh;
- = new AccessToken(whatever);
- = new User(, , , );
+$username = "test1";
+$role = "admin";
+$email = "meh";
+$accessToken = new AccessToken("whatever");
+$user = new User($username, $role, $email, $accessToken);
 
- = new LocationsService();
-print json_encode(->getLocations(, 1393731020114));
+$ls = new LocationsService();
+print json_encode($ls->getLocations($user, 1393731020114));

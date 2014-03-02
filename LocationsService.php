@@ -12,7 +12,6 @@ class LocationsService {
         		implode(',', array_fill(0, count($types), '?')) . ") AND " . 
         		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">?";
         $types[] = $lastUpdateTime;
-        $types[] = round(microtime(true) * 1000);
         
         return $this->getLocationsFromDb($user, $where, $types);
     }
