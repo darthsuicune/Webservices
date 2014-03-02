@@ -10,13 +10,11 @@ class LocationsService {
         $types = $user->getAllowedTypes();
         $where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
         		implode(',', array_fill(0, count($types), '?')) . ") AND " . 
-        		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">? AND " .
-        		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
-        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0)";
+        		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">?";
         $types[] = $lastUpdateTime;
         $types[] = round(microtime(true) * 1000);
         
-        return $this->getLocationsFromDb($user, $lastUpdateTime, $where, $types);
+        return $this->getLocationsFromDb($user, $where, $types);
     }
     
     public function getWebLocations($user) {
@@ -31,20 +29,16 @@ class LocationsService {
     	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
         		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0";
     	$whereArgs = array(round(microtime(true) * 1000));
-    	return $this->getLocationsFromDb($user, 0, $where, $whereArgs);
+    	return $this->getLocationsFromDb($user, $where, $whereArgs);
     }
     
-    function getLocationsFromDb($user, $lastUpdateTime, $where, array $whereArgs){
+    function getLocationsFromDb($user, $where, array $whereArgs){
     	if($user == null){
     		return null;
     	}
     	$dbLayer = new DbLayer();
     	if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_ERROR) {
     		return null;
-    	}
-    	
-    	if($lastUpdateTime == null){
-    		$lastUpdateTime = 0;
     	}
     	$projection = array(
     			LocationsContract::LOCATIONS_COLUMN_ID,
