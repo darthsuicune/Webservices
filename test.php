@@ -9,4 +9,4 @@ $accessToken = new AccessToken("whatever");
 $user = new User($username, $role, $email, $accessToken);
 
 $ls = new LocationsService();
-print json_encode($ls->getLocations($user, 1393731020114));
+print json_encode($ls->getLocations($user, $_GET['lup']));
