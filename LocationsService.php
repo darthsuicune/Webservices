@@ -12,7 +12,7 @@ class LocationsService {
         		implode(',', array_fill(0, count($types), '?')) . ") AND " . 
         		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">? AND " .
         		"(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
-        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " =0)";
+        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0)";
         $types[] = $lastUpdateTime;
         $types[] = round(microtime(true) * 1000);
         
@@ -28,8 +28,8 @@ class LocationsService {
     }
     
     public function getAdminLocations($user) {
-    	$where = "(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
-        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . " =0)";
+    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
+        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0";
     	$whereArgs = array(round(microtime(true) * 1000));
     	return $this->getLocationsFromDb($user, 0, $where, $whereArgs);
     }
