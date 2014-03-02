@@ -32,7 +32,6 @@ class Index {
 	const COOKIE_NAME = "accessToken";
 
 	public function getIndex(){
-// 		$this->updateUsers();
 		$user = $this->getUserDetails();
 		if($user && isset($_GET[self::REQUEST_TYPE])){
 			$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
@@ -256,25 +255,5 @@ class Index {
 
 	function showErrorMessage($message){
 		echo "There was an error while processing your request: " . $message;
-	}
-	
-	function updateUsers(){
-		$dbLayer = new DbLayer("localhost", "testinsert", "testpassword");
-		$dbLayer->connect();
-		$values = array(
-				UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("test2"), PASSWORD_BCRYPT)
-				);
-		$table = UsersContract::USERS_TABLE_NAME;
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereArgs = array("test1");
-		$dbLayer->update($values, $table, $where, $whereArgs);
-		$values = array(
-				UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("admin"), PASSWORD_BCRYPT)
-		);
-		$table = UsersContract::USERS_TABLE_NAME;
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereArgs = array("admin");
-		$dbLayer->update($values, $table, $where, $whereArgs);
-		echo "UPDATED!";
 	}
 }

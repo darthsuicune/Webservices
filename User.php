@@ -82,11 +82,9 @@ class User {
     	
     }
 
-    const DB_INSERT_USER = "testinsert";
-    const DB_INSERT_PASS = "testpassword";
     public static function generateToken($username, $role, $email){
         $accessToken = AccessToken::createAccessToken();
-        $dbLayer = new DbLayer(DbLayer::DB_ADDRESS, self::DB_INSERT_USER, self::DB_INSERT_PASS, DbLayer::DB_DATABASE);
+        $dbLayer = new DbLayer();
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
              $result = $dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME,
              array(

@@ -22,8 +22,7 @@ class DbLayer {
 	var $dbPassword;
 	var $pdo;
 
-	public function __construct($address = self::DB_ADDRESS, $username = self::DB_USERNAME,
-			$password = self::DB_PASSWORD, $database = self::DB_DATABASE) {
+	public function __construct() {
 		$this->dbUsername = $username;
 		$this->dbPassword = $password;
 		$this->dbDsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . self::CHARSET;
