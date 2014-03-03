@@ -31,11 +31,13 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertTrue($result, "SELECT * FROM users");
 	
-	$tables = array(UsersContract::USERS_TABLE_NAME, AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
+	$tables = array(UsersContract::USERS_TABLE_NAME, 
+			AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
 	$where = "myass=yourass' OR 1=1;'";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Multi table, Invalid where: ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken WHERE myass=yourass' OR 1=1;'");
+	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken" 
+			. " WHERE myass=yourass' OR 1=1;'");
 	
 	$tables = array(UsersContract::USERS_TABLE_NAME);
 	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
@@ -44,8 +46,6 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	assertIsFalse($result);
 	
 	$columns = array();
-	$tables = array(UsersContract::USERS_TABLE_NAME);
-	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs: ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
@@ -78,34 +78,41 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$table = "";
 	$where = "";
 	$whereArgs = array();
-	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty values: ";
-	$result = $dao->update($values, $table, $where, $whereArgs);
+	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty everything: ";
+	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse($result);
 	
-	$tables = array(UsersContract::USERS_TABLE_NAME);
-	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Single table, empty where: ";
-	$result = $dao->update($values, $table, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users");
+	$table = UsersContract::USERS_TABLE_NAME;
+	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty values, set table: ";
+	$result = $dao->update($table, $values, $where, $whereArgs);
+	assertIsFalse($result);
 	
-	$tables = array(UsersContract::USERS_TABLE_NAME, AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
-	$where = "myass=yourass' OR 1=1;'";
-	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Multi table, Invalid where: ";
-	$result = $dao->update($values, $table, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken WHERE myass=yourass' OR 1=1;'");
+	$values = array("somevalue");
+	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Undefined indexes: ";
+	$result = $dao->update($table, $values, $where, $whereArgs);
+	assertIsFalse($result);
 	
-	$tables = array(UsersContract::USERS_TABLE_NAME);
+	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue");
+	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid single value: ";
+	$result = $dao->update($table, $values, $where, $whereArgs);
+	assertTrue($result, "UPDATE users SET (email=somevalue)");
+	
+	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue", 
+			UsersContract::USERS_COLUMN_ROLE=>"admin");
+	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid multiple values: ";
+	$result = $dao->update($table, $values, $where, $whereArgs);
+	assertTrue($result, "UPDATE users SET (email=somevalue,role=admin)");
+	
 	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, empty whereArgs: ";
-	$result = $dao->update($values, $table, $where, $whereArgs);
+	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse($result);
 	
-	$columns = array();
-	$tables = array(UsersContract::USERS_TABLE_NAME);
-	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs: ";
-	$result = $dao->update($values, $table, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users WHERE username=?");
+	$result = $dao->update($table, $values, $where, $whereArgs);
+	assertTrue($result, "UPDATE users SET (email=somevalue,role=admin) " 
+			. "WHERE username=test1");
 }
 function testMySqlDaoDelete(MySqlDao $dao){
 	$table = "";
@@ -120,7 +127,8 @@ function testMySqlDaoDelete(MySqlDao $dao){
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertTrue($result, "INSERT INTO users VALUES ()");
 	
-	$tables = array(UsersContract::USERS_TABLE_NAME, AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
+	$tables = array(UsersContract::USERS_TABLE_NAME, 
+			AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
 	$where = "myass=yourass' OR 1=1;'";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Multi table, Invalid where: ";
 	$result = $dao->delete($table, $where, $whereArgs);
@@ -170,7 +178,7 @@ function testMySqlDaoBulkInsert(MySqlDao $dao){
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs: ";
 	$result = $dao->bulkInsert($table, $values);
-	assertTrue($result, "SELECT * FROM users WHERE username=?");
+	assertTrue($result, "SELECT * FROM users WHERE username=test1");
 }
 
 class MockPDO extends PDO {
@@ -182,15 +190,6 @@ class MockPDO extends PDO {
 	}
 	public function prepare($query){
 		return new MockPdoStatement($query);
-	}
-	public function beginTransaction(){
-		return true;
-	}
-	public function commit(){
-		return true;
-	}
-	public function rollBack(){
-		return false;
 	}
 }
 

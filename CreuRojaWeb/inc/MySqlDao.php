@@ -18,7 +18,7 @@ class MySqlDao implements DataStorage {
 	 */
 	public function query(array $columns, array $tables, $where, array $whereArgs) {
 		if(substr_count($where, "?") != count($whereArgs)
-				|| (!is_array ( $tables )) || count($tables) == 0) {
+				|| count($tables) < 1) {
 			return false;
 		}
 
@@ -31,9 +31,9 @@ class MySqlDao implements DataStorage {
 
 		$sources = join ( ' NATURAL JOIN ', $tables );
 
-		$query = 'SELECT ' . $projection . ' FROM ' . $sources;
+		$query = "SELECT $projection FROM $sources";
 		if($where != ""){
-			$query .= ' WHERE ' . $where;
+			$query .= " WHERE $where";
 		}
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
@@ -51,7 +51,7 @@ class MySqlDao implements DataStorage {
 		$fields = array();
 		foreach($values as $index => $value){
 			if($index===0){
-				error_log("Index hasn't been defined. "  
+				error_log("INSERT -> Index hasn't been defined. "
 						. "Pass an assoc array with columns as indices");
 				return false;
 			}
@@ -59,28 +59,31 @@ class MySqlDao implements DataStorage {
 		}
 		$fields = join(',', $fields);
 		$row = implode(',', array_fill(0, count($values), '?'));
-		$query = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $row . ')';
+		$query = "INSERT INTO $table ($fields) VALUES ($row)";
 		return $this->performParametrizedQuery($query, $values);
 	}
 
 	/**
 	 * Abstraction layer for bulk inserting values into the database
-	 * 
+	 *
 	 * @param string $table
 	 * @param array $values -> Must contain only arrays.
 	 */
 	public function bulkInsert($table, array $values){
-		if($table == null || $table == ""){
+		if($table == null || $table == "" || count($values) < 1){
 			return false;
 		}
 
-		$result = $this->pdo->beginTransaction();
-		if($result){
-			return $this->pdo->commit();
-		} else {
-			$this->pdo->rollBack();
-			return false;
+		$parameters = array();
+		foreach($values as $set){
+			if(!is_array($set)){
+				return false;
+			}
 		}
+		
+		
+		$query = "INSERT INTO $table ($fields) VALUES ($row)";
+		return $this->performParametrizedQuery($query, $values);
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
@@ -89,15 +92,28 @@ class MySqlDao implements DataStorage {
 	 * @param string $where
 	 * @param array $whereArgs
 	 */
-	public function update(array $values, $table, $where, array $whereArgs) {
-		if($table == null || $table == "" ||
-				!is_array($values) || count($values) < 1 ||
-				substr_count($where, "?") != count($whereArgs)){
+	public function update($table, array $values, $where, array $whereArgs) {
+		if($table == null || $table == "" || count($values) < 1 
+				|| substr_count($where, "?") != count($whereArgs)){
 			return false;
 		}
-		
-		$query = "UPDATE " . $table . " SET " .  ' WHERE ' . $where;
-		return $this->performParametrizedQuery($query, $whereArgs);
+
+		$set = "";
+		foreach($values as $index => $value){
+			if($index===0){
+				error_log("UPDATE -> Index hasn't been defined. "
+						. "Pass an assoc array with columns as indices");
+				return false;
+			}
+			$set .= "$index=?,";
+		}
+		$set = substr($set, 0, -1);
+		$parameters = array_merge(array_values($values), $whereArgs);
+		$query = "UPDATE $table SET ($set)";
+		if($where != null && (strcmp($where, "") != 0)){
+			$query .= " WHERE $where";
+		}
+		return $this->performParametrizedQuery($query, $parameters);
 	}
 	/**
 	 * Abstraction layer for the deletion of rows from a database
@@ -107,10 +123,9 @@ class MySqlDao implements DataStorage {
 	 * @param array $whereArgs
 	 */
 	public function delete($table, $where, array $whereArgs) {
-		if(substr_count($where, "?") != count($whereArgs) 
-				|| $table == "" || $table == null 
-				|| $where == null || $where == ""
-				|| !is_array($whereArgs) || count($whereArgs) < 1){
+		if(substr_count($where, "?") != count($whereArgs) || $table == "" 
+				|| $table == null || $where == null || $where == ""
+				|| count($whereArgs) < 1){
 			return false;
 		}
 		$query = "DELETE FROM " . $table . ' WHERE ' . $where;
