@@ -10,10 +10,11 @@ require_once("inc/LocationsContract.php");
 echo "<table border='1'><tr>\n";
 testMySqlDao();
 echo "</tr>\n";
-// echo "<table><tr>" . testLocationsProviderImpl() . "</tr>\n";
-// echo "<table><tr>" . testLoginProviderImpl() . "</tr>\n";
-// echo "<table><tr>" . testWebClientImpl() . "</tr>\n";
-// echo "<table><tr>" . testUser() . "</tr>\n";
+// echo "<tr>" . testLocationsProviderImpl() . "</tr>\n";
+// echo "<tr>" . testLoginProviderImpl() . "</tr>\n";
+// echo "<tr>" . testWebClientImpl() . "</tr>\n";
+// echo "<tr>" . testUser() . "</tr>\n";
+echo "</table>";
 
 function assertTrue($result, $expected){
 	if(strcmp($result, $expected) === 0){
