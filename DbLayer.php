@@ -18,18 +18,15 @@ class DbLayer {
 	const RESULT_DB_CONNECTION_ERROR = 1;
 
 	var $dbDsn;
-	var $dbUsername;
-	var $dbPassword;
 	var $pdo;
 
 	public function __construct() {
-		$this->dbUsername = $username;
-		$this->dbPassword = $password;
-		$this->dbDsn = 'mysql:dbname=' . $database . ';host='.$address . ';charset=' . self::CHARSET;
+		$this->dbDsn = 'mysql:dbname=' . self::DB_DATABASE . ';host=' . self::DB_ADDRESS 
+				. ';charset=' . self::CHARSET;
 	}
 	public function connect() {
 		try{
-			$this->pdo = new PDO ( $this->dbDsn, $this->dbUsername, $this->dbPassword );
+			$this->pdo = new PDO ( $this->dbDsn, self::DB_USERNAME, self::DB_PASSWORD );
 			return self::RESULT_DB_CONNECTION_SUCCESFUL;
 		} catch (PDOException $e) {
 			return self::RESULT_DB_CONNECTION_ERROR;
