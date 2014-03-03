@@ -35,7 +35,6 @@ class MySqlDao implements DataStorage {
 		if($where != ""){
 			$query .= ' WHERE ' . $where;
 		}
-
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
@@ -45,25 +44,49 @@ class MySqlDao implements DataStorage {
 	 * @param array $values
 	 */
 	public function insert($table, array $values) {
-		if($table == null || $table == "" || count($values < 1)){
+		if($table == null || $table == "" || count($values) < 1){
 			return false;
 		}
 			
 		$fields = array();
 		foreach($values as $index => $value){
+			if($index===0){
+				error_log("Index hasn't been defined. "  
+						. "Pass an assoc array with columns as indices");
+				return false;
+			}
 			$fields[] = $index;
 		}
 		$fields = join(',', $fields);
 		$row = implode(',', array_fill(0, count($values), '?'));
 		$query = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $row . ')';
-		return $this->performParametrizedQuery($query);
+		return $this->performParametrizedQuery($query, $values);
+	}
+
+	/**
+	 * Abstraction layer for bulk inserting values into the database
+	 * 
+	 * @param string $table
+	 * @param array $values -> Must contain only arrays.
+	 */
+	public function bulkInsert($table, array $values){
+		if($table == null || $table == ""){
+			return false;
+		}
+
+		$result = $this->pdo->beginTransaction();
+		if($result){
+			return $this->pdo->commit();
+		} else {
+			$this->pdo->rollBack();
+			return false;
+		}
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
 	 * @param array $values
-	 * @param array $columns
-	 * @param $table
-	 * @param unknown $where
+	 * @param string $table
+	 * @param string $where
 	 * @param array $whereArgs
 	 */
 	public function update(array $values, $table, $where, array $whereArgs) {
@@ -72,23 +95,15 @@ class MySqlDao implements DataStorage {
 				substr_count($where, "?") != count($whereArgs)){
 			return false;
 		}
-		//TODO BIG STUFF
-
-		$update = "";
-		foreach($values as $index => $value){
-			$update .= mysql_real_escape_string($index);
-			$update .= "='";
-			$update .= mysql_real_escape_string($value) . "'";
-			$update .= ",";
-		}
-		$query = "UPDATE " . $table . " SET " . substr($update, 0, -1) . ' WHERE ' . $where;
+		
+		$query = "UPDATE " . $table . " SET " .  ' WHERE ' . $where;
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
 	 * Abstraction layer for the deletion of rows from a database
 	 *
-	 * @param $table
-	 * @param unknown $where
+	 * @param string $table
+	 * @param string $where
 	 * @param array $whereArgs
 	 */
 	public function delete($table, $where, array $whereArgs) {
@@ -102,13 +117,6 @@ class MySqlDao implements DataStorage {
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 
-	public function bulkInsert($table, array $values){
-		if($table == null || $table == ""){
-			return false;
-		}
-
-	}
-
 	function performParametrizedQuery($query, array $whereArgs){
 		$statement = false;
 		try{
@@ -118,12 +126,11 @@ class MySqlDao implements DataStorage {
 				$statement->closeCursor();
 				return $result;
 			} else {
-				var_dump($statement->errorInfo());
 				return false;
 			}
 		} catch (PDOException $e) {
 			if($statement){
-				echo $statement->errorInfo();
+				error_log($statement->errorInfo());
 				$statement->closeCursor();
 			}
 			return false;

@@ -21,7 +21,16 @@ class LocationsService {
     		return null;
     	}
     	
-    	return $this->getLocations($user, 0);
+    	$types = $user->getAllowedTypes();
+    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" .
+    			implode(',', array_fill(0, count($types), '?')) . ") AND " .
+    			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">? AND (" . 
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?)";
+    	$types[] = $lastUpdateTime;
+    	$types[] = round(microtime(true)* 1000);
+    	
+    	return $this->getLocationsFromDb($user, $where, $types);
     }
     
     public function getAdminLocations($user) {
