@@ -9,7 +9,7 @@ interface DataStorage{
 	 * @param array $tables Needs to contain at least one value
 	 * @param String $where
 	 * @param array $whereArgs
-	 * @return mixed
+	 * @return associative array with the result set.
 	 */
 	public function query(array $columns, array $tables, $where, array $whereArgs);
 	
@@ -18,6 +18,7 @@ interface DataStorage{
 	 *
 	 * @param string $table
 	 * @param array $values
+	 * @return true if successful, false if an error happened
 	 */
 	public function insert($table, array $values);
 	
@@ -31,6 +32,7 @@ interface DataStorage{
 	 *
 	 * Example: $values = array(array("key1"=>"value1", "key2"=>"value2"),
 	 * array("value3", "value4"));
+	 * @return true if successful, false if an error happened
 	 */
 	public function bulkInsert($table, array $values);
 	
@@ -40,6 +42,7 @@ interface DataStorage{
 	 * @param string $table
 	 * @param string $where
 	 * @param array $whereArgs
+	 * @return true if successful, false if an error happened
 	 */
 	public function update($table, array $values, $where, array $whereArgs);
 	
@@ -49,6 +52,7 @@ interface DataStorage{
 	 * @param string $table
 	 * @param string $where
 	 * @param array $whereArgs
+	 * @return true if successful, false if an error happened
 	 */
 	public function delete($table, $where, array $whereArgs);
 }

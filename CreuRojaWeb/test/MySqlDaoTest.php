@@ -29,14 +29,14 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$tables = array(UsersContract::USERS_TABLE_NAME);
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Single table, empty where: ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users");
+	assertEquals($result, "SELECT * FROM users");
 
 	$tables = array(UsersContract::USERS_TABLE_NAME,
 			AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
 	$where = "mytest=yourtest OR 1=1";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Multi table, Where without ?: ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users NATURAL JOIN accesstoken"
+	assertEquals($result, "SELECT * FROM users NATURAL JOIN accesstoken"
 			. " WHERE mytest=yourtest OR 1=1");
 
 	$tables = array(UsersContract::USERS_TABLE_NAME);
@@ -49,7 +49,7 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs: ";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertTrue($result, "SELECT * FROM users WHERE username=test1");
+	assertEquals($result, "SELECT * FROM users WHERE username=test1");
 }
 
 function testMySqlDaoInsert(MySqlDao $dao){
@@ -72,7 +72,7 @@ function testMySqlDaoInsert(MySqlDao $dao){
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid values: ";
 	$result = $dao->insert($table, $values);
-	assertTrue($result, "INSERT INTO users (email) VALUES (somevalue)");
+	assertEquals($result, "INSERT INTO users (email) VALUES (somevalue)");
 }
 
 function testMySqlDaoBulkInsert(MySqlDao $dao){
@@ -103,7 +103,7 @@ function testMySqlDaoBulkInsert(MySqlDao $dao){
 	$values = array($values1, $values2);
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid request: ";
 	$result = $dao->bulkInsert($table, $values);
-	assertTrue($result, "INSERT INTO locations (locpar1,locpar2) VALUES (locval1,locval2),(locpara1,locpara2)");
+	assertEquals($result, "INSERT INTO locations (locpar1,locpar2) VALUES (locval1,locval2),(locpara1,locpara2)");
 	
 	$values2 = array("locpara1", "locpara2", "locpara3");
 	$values = array($values1, $values2);
@@ -134,13 +134,13 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid single value: ";
 	$result = $dao->update($table, $values, $where, $whereArgs);
-	assertTrue($result, "UPDATE users SET (email=somevalue)");
+	assertEquals($result, "UPDATE users SET (email=somevalue)");
 
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue",
 			UsersContract::USERS_COLUMN_ROLE=>"admin");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid multiple values: ";
 	$result = $dao->update($table, $values, $where, $whereArgs);
-	assertTrue($result, "UPDATE users SET (email=somevalue,role=admin)");
+	assertEquals($result, "UPDATE users SET (email=somevalue,role=admin)");
 
 	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, empty whereArgs: ";
@@ -150,7 +150,7 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$whereArgs = array("test1");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Valid where, valid whereArgs: ";
 	$result = $dao->update($table, $values, $where, $whereArgs);
-	assertTrue($result, "UPDATE users SET (email=somevalue,role=admin) "
+	assertEquals($result, "UPDATE users SET (email=somevalue,role=admin) "
 			. "WHERE username=test1");
 }
 
@@ -179,13 +179,13 @@ function testMySqlDaoDelete(MySqlDao $dao){
 	$whereArgs = array();
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty table, valid where, empty whereArgs: ";
 	$result = $dao->delete($table, $where, $whereArgs);
-	assertTrue($result, "DELETE FROM users WHERE role=admin");
+	assertEquals($result, "DELETE FROM users WHERE role=admin");
 	
 	$where = UsersContract::USERS_COLUMN_ROLE ."=?";
 	$whereArgs = array("admin");
 	echo "\t&nbsp;&nbsp;&nbsp;&nbsp;Empty table, valid where, matching whereArgs: ";
 	$result = $dao->delete($table, $where, $whereArgs);
-	assertTrue($result, "DELETE FROM users WHERE role=admin");
+	assertEquals($result, "DELETE FROM users WHERE role=admin");
 }
 
 class MockPDO extends PDO {
