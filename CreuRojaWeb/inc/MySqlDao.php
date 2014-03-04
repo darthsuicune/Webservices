@@ -6,16 +6,7 @@ class MySqlDao implements DataStorage {
 	public function __construct(PDO $pdo) {
 		$this->pdo = $pdo ;
 	}
-
-	/**
-	 * Abstraction layer for the query to the database.
-	 *
-	 * @param array $columns
-	 * @param array $tables Needs to contain at least one value
-	 * @param String $where
-	 * @param array $whereArgs
-	 * @return mixed
-	 */
+	
 	public function query(array $columns, array $tables, $where, array $whereArgs) {
 		if(substr_count($where, "?") != count($whereArgs)
 				|| count($tables) < 1) {
@@ -37,12 +28,7 @@ class MySqlDao implements DataStorage {
 		}
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
-	/**
-	 * Abstraction layer for the insert of rows into a database
-	 *
-	 * @param string $table
-	 * @param array $values
-	 */
+	
 	public function insert($table, array $values) {
 		if($table == null || $table == "" || count($values) < 1){
 			return false;
@@ -62,18 +48,7 @@ class MySqlDao implements DataStorage {
 		$query = "INSERT INTO $table ($fields) VALUES ($row)";
 		return $this->performParametrizedQuery($query, $values);
 	}
-
-	/**
-	 * Abstraction layer for bulk inserting values into the database
-	 *
-	 * @param string $table
-	 * @param array $values -> Must contain only arrays. The first sub-array
-	 * must provide through keys the parameters to use as columns. The second and further
-	 * can then omit the keys or include them (they will be ignored anyway)
-	 *
-	 * Example: $values = array(array("key1"=>"value1", "key2"=>"value2"),
-	 * array("value3", "value4"));
-	 */
+	
 	public function bulkInsert($table, array $values){
 		if($table == null || $table == "" || count($values) < 1){
 			return false;
@@ -105,13 +80,7 @@ class MySqlDao implements DataStorage {
 		$query = "INSERT INTO $table ($parameters) VALUES ($rows)";
 		return $this->performParametrizedQuery($query, $valuesToInsert);
 	}
-	/**
-	 * Abstraction layer for the update of rows from a database
-	 * @param array $values
-	 * @param string $table
-	 * @param string $where
-	 * @param array $whereArgs
-	 */
+	
 	public function update($table, array $values, $where, array $whereArgs) {
 		if($table == null || $table == "" || count($values) < 1
 				|| substr_count($where, "?") != count($whereArgs)){
@@ -135,13 +104,7 @@ class MySqlDao implements DataStorage {
 		}
 		return $this->performParametrizedQuery($query, $parameters);
 	}
-	/**
-	 * Abstraction layer for the deletion of rows from a database
-	 *
-	 * @param string $table
-	 * @param string $where
-	 * @param array $whereArgs
-	 */
+	
 	public function delete($table, $where, array $whereArgs) {
 		if($table == "" || $table == null || $where == null || $where == ""
 				|| substr_count($where, "?") != count($whereArgs)){

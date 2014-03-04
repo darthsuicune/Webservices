@@ -2,18 +2,22 @@
 require_once("test/MySqlDaoTest.php");
 require_once("inc/DataStorage.php");
 require_once("inc/MySqlDao.php");
-
 require_once("inc/UsersContract.php");
 require_once("inc/AccessTokenContract.php");
 require_once("inc/LocationsContract.php");
 
-echo "<table border='1'><tr>\n";
-testMySqlDao();
-echo "</tr>\n";
-// echo "<tr>" . testLocationsProviderImpl() . "</tr>\n";
-// echo "<tr>" . testLoginProviderImpl() . "</tr>\n";
-// echo "<tr>" . testWebClientImpl() . "</tr>\n";
-// echo "<tr>" . testUser() . "</tr>\n";
+require_once("test/LocationsProviderTest.php");
+require_once("inc/LocationsProvider.php");
+require_once("inc/LocationsProviderImpl.php");
+require_once("inc/User.php");
+require_once("inc/Location.php");
+
+echo "<table border='1'>\n";
+echo "\t<tr>" . testMySqlDao() . "</tr>\n";
+echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
+// echo "\t<tr>" . testLoginProviderImpl() . "</tr>\n";
+// echo "\t<tr>" . testWebClientImpl() . "</tr>\n";
+// echo "\t<tr>" . testUser() . "</tr>\n";
 echo "</table>";
 
 function assertTrue($result, $expected){
