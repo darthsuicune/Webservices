@@ -3,7 +3,7 @@ class Map {
 	const API_KEY = 'AIzaSyBfi8KVys-Vo9uea-i_IKNMRgfB6EXI5dk';
 	const JQUERY = 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js';
 	const CENTER = 'new google.maps.LatLng(41.3958, 2.1739)';
-	const MAP_DEFAULT_ZOOM = '12';
+	const MAP_DEFAULT_ZOOM = '13';
 	const MAP_DEFAULT_TYPE = 'google.maps.MapTypeId.ROADMAP';
 	public function parseRequest($user) {
 		return $this->getMap($user);
