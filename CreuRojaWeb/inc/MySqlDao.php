@@ -51,7 +51,7 @@ class MySqlDao implements DataStorage {
 		$fields = array();
 		foreach($values as $index => $value){
 			if($index===0){
-				error_log("INSERT -> Index hasn't been defined. "
+				error_log("INSERT -> Indices aren't defined. "
 						. "Pass an assoc array with columns as indices");
 				return false;
 			}
@@ -67,7 +67,12 @@ class MySqlDao implements DataStorage {
 	 * Abstraction layer for bulk inserting values into the database
 	 *
 	 * @param string $table
-	 * @param array $values -> Must contain only arrays.
+	 * @param array $values -> Must contain only arrays. The first sub-array
+	 * must provide through keys the parameters to use as columns. The second and further
+	 * can then omit the keys or include them (they will be ignored anyway)
+	 *
+	 * Example: $values = array(array("key1"=>"value1", "key2"=>"value2"),
+	 * array("value3", "value4"));
 	 */
 	public function bulkInsert($table, array $values){
 		if($table == null || $table == "" || count($values) < 1){
@@ -75,15 +80,30 @@ class MySqlDao implements DataStorage {
 		}
 
 		$parameters = array();
+		$valuesToInsert = array();
+		$rows = array();
 		foreach($values as $set){
 			if(!is_array($set)){
+				error_log("BULK INSERT -> values must be an array containing sub-arrays".
+						" with the values to insert in each row");
+				return false;
+			} else if (count($parameters) === 0 && (!array_key_exists("0", $set))) {
+				$parameters = array_keys($set);
+			}
+			if(count($parameters) != count($set)){
+				error_log("The amount of parameters does not match.");
 				return false;
 			}
+			//Add ? for each value
+			$rows[] = implode(',', array_fill(0, count($set), '?'));
+			//Then add the values to the array sent as parameters
+			$valuesToInsert = array_merge($valuesToInsert, array_values($set));
 		}
-		
-		
-		$query = "INSERT INTO $table ($fields) VALUES ($row)";
-		return $this->performParametrizedQuery($query, $values);
+
+		$parameters = join(",", $parameters);
+		$rows = join("),(", $rows);
+		$query = "INSERT INTO $table ($parameters) VALUES ($rows)";
+		return $this->performParametrizedQuery($query, $valuesToInsert);
 	}
 	/**
 	 * Abstraction layer for the update of rows from a database
@@ -93,7 +113,7 @@ class MySqlDao implements DataStorage {
 	 * @param array $whereArgs
 	 */
 	public function update($table, array $values, $where, array $whereArgs) {
-		if($table == null || $table == "" || count($values) < 1 
+		if($table == null || $table == "" || count($values) < 1
 				|| substr_count($where, "?") != count($whereArgs)){
 			return false;
 		}
@@ -101,7 +121,7 @@ class MySqlDao implements DataStorage {
 		$set = "";
 		foreach($values as $index => $value){
 			if($index===0){
-				error_log("UPDATE -> Index hasn't been defined. "
+				error_log("UPDATE -> Indices aren't defined. "
 						. "Pass an assoc array with columns as indices");
 				return false;
 			}
@@ -123,9 +143,9 @@ class MySqlDao implements DataStorage {
 	 * @param array $whereArgs
 	 */
 	public function delete($table, $where, array $whereArgs) {
-		if(substr_count($where, "?") != count($whereArgs) || $table == "" 
-				|| $table == null || $where == null || $where == ""
-				|| count($whereArgs) < 1){
+		if($table == "" || $table == null || $where == null || $where == ""
+				|| substr_count($where, "?") != count($whereArgs)){
+			error_log("DELETE -> Pass valid values. No defaults are provided for deletion.");
 			return false;
 		}
 		$query = "DELETE FROM " . $table . ' WHERE ' . $where;
@@ -141,6 +161,7 @@ class MySqlDao implements DataStorage {
 				$statement->closeCursor();
 				return $result;
 			} else {
+				error_log("Statement did not parse correctly");
 				return false;
 			}
 		} catch (PDOException $e) {
