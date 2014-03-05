@@ -20,34 +20,44 @@ echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 // echo "\t<tr>" . testUser() . "</tr>\n";
 echo "</table>";
 
-function assertEquals($result, $expected){
-	if(strcmp($result, $expected) === 0){
-		echo "<font color=\"green\">PASSED </font><br>\n";
-	} else {
-		echo "<font color=\"red\"><b>FAILED</b></font><br>\n";
+function assertEquals($condition, $result, $expected){
+	$isEqual = false;
+	if(is_array($result) && is_array($expected)){
+		$isEqual = ($result === $expected);
+	} else if (!is_array($result) && !is_array($expected)){
+		if(strcmp($result, $expected) == 0){
+			$isEqual = true;
+		}
 	}
+	passTest($condition, $isEqual);
 }
 
-function assertFalse($result, $expected){
-	if(!strcmp($result, $expected) === 0){
-		echo "<font color=\"green\">PASSED </font><br>\n";
+function assertNotEquals($condition, $result, $expected){
+	$isEqual = false;
+	if(is_array($result) && is_array($expected)){
+		$isEqual = ($result !== $expected);
+	} else if (!is_array($result) && !is_array($expected)){
+		if(strcmp($result, $expected) != 0){
+			$isEqual = true;
+		}
 	} else {
-		echo "<font color=\"red\"><b>FAILED</b></font><br>\n";
+		$isEqual = true;
 	}
+	passTest($condition, $isEqual);
 }
 
-function assertIsTrue($result){
-	if($result === true){
-		echo "<font color=\"green\">PASSED </font><br>\n";
-	} else {
-		echo "<font color=\"red\"><b>FAILED</b></font><br>\n";
-	}
+function assertIsTrue($condition, $result){
+	passTest($condition, $result);
 }
 
-function assertIsFalse($result){
-	if($result === false){
-		echo "<font color=\"green\">PASSED </font><br>\n";
+function assertIsFalse($condition, $result){
+	passTest($condition, !$result);
+}
+
+function passTest($condition, $isPassed){
+	if($isPassed === true){
+		echo "\t&nbsp;&nbsp;&nbsp;&nbsp;$condition: <font color=\"green\">PASSED</font><br>\n";
 	} else {
-		echo "<font color=\"red\"><b>FAILED</b></font><br>\n";
+		echo "\t&nbsp;&nbsp;&nbsp;&nbsp;$condition: <font color=\"red\"><b>FAILED</b></font><br>\n";
 	}
 }

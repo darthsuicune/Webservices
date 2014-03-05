@@ -8,7 +8,12 @@ class LocationsProviderImpl implements LocationsProvider {
 	}
 
 	public function getLocationList(User $user, $lastUpdateTime = 0){
-
+		$columns = array();
+		$tables = array();
+		$where = "";
+		$whereArgs = "";
+		$result = array();
+		return $result;
 	}
 	
 	public function addLocation(Location $location){
@@ -22,13 +27,13 @@ class LocationsProviderImpl implements LocationsProvider {
 		$values = array();
 		$where = "";
 		$whereArgs = array();
-		$this->dataStorage->update($table, $values, $where, $whereArgs);
+		return $this->dataStorage->update($table, $values, $where, $whereArgs);
 	}
 	
 	public function deleteLocation(Location $location){
 		$table = LocationsContract::LOCATIONS_TABLE_NAME;
 		$where = "";
 		$whereArgs = array();
-		$this->dataStorage->delete($table, $where, $whereArgs);
+		return $this->dataStorage->delete($table, $where, $whereArgs);
 	}
 }

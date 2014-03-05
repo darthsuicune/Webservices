@@ -4,7 +4,7 @@ class UsersContract {
 	 * Users table
 	 */
 	const USERS_TABLE_NAME = "users";
-	const USERS_COLUMN_ID = "ID";
+	const USERS_COLUMN_ID = "id";
 	const USERS_COLUMN_USERNAME = "username";
 	const USERS_COLUMN_PASSWORD = "password";
 	const USERS_COLUMN_E_MAIL = "email";

@@ -1,5 +1,6 @@
 <?php
 class Location{
+	var $id;
 	var $latitude;
 	var $longitude;
 	var $name;
@@ -12,7 +13,8 @@ class Location{
 	 * Public constructor
 	 */
 	public function __construct ( $latitude, $longitude, $name, $type, $address,
-			$other, $lastUpdateTime, $expireDate ) {
+			$other, $lastUpdateTime, $expireDate, $id = 0 ) {
+		$this->id = $id;
 		$this->latitude = $latitude;
 		$this->longitude = $longitude;
 		$this->name = $name;
