@@ -21,7 +21,6 @@ class Index {
 	const CHANGE_PASSWORD_REQUEST = "changePassword";
 	const RECOVER_PASSWORD_REQUEST = "recoverPassword";
 	const REQUEST_TYPE = "q";
-	const USERNAME = "username";
 	const NAME = "name";
 	const SURNAME = "surname";
 	const PASSWORD = "password";
@@ -210,7 +209,7 @@ class Index {
 	}
 
 	function getUserFromForm(){
-		if(!isset($_POST[self::USERNAME]) || $_POST[self::USERNAME] == ""){
+		if(!isset($_POST[self::EMAIL]) || $_POST[self::EMAIL] == ""){
 			$this->showLoginForm();
 			return;
 		}
@@ -219,7 +218,7 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->getWebUser($_POST[self::USERNAME], $_POST[self::PASSWORD]);
+		return $loginService->getWebUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
 	}
 	
 	function createLocationValues(){

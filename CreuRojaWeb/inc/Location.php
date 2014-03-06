@@ -9,7 +9,7 @@ class Location{
 	var $other;
 	var $lastUpdateTime;
 	var $expireDate;
-	
+
 	/**
 	 * Public constructor
 	 */
@@ -26,8 +26,21 @@ class Location{
 		$this->expireDate = $expireDate;
 	}
 
-	public function to_array(){
-		return array(LocationsContract::COLUMN_LATITUDE=>$this->latitude,
+	public static function createFromCursor($entry){
+		return new Location($entry[LocationsContract::COLUMN_LATITUDE],
+				$entry[LocationsContract::COLUMN_LONGITUDE],
+				$entry[LocationsContract::COLUMN_NAME],
+				$entry[LocationsContract::COLUMN_TYPE],
+				$entry[LocationsContract::COLUMN_ADDRESS],
+				$entry[LocationsContract::COLUMN_OTHER],
+				$entry[LocationsContract::COLUMN_LAST_UPDATED],
+				$entry[LocationsContract::COLUMN_EXPIRE_DATE],
+				$entry[LocationsContract::COLUMN_ID]);
+
+	}
+
+	public function to_array($withId = true){
+		$location = array(LocationsContract::COLUMN_LATITUDE=>$this->latitude,
 				LocationsContract::COLUMN_LONGITUDE=>$this->longitude,
 				LocationsContract::COLUMN_NAME=>$this->name,
 				LocationsContract::COLUMN_TYPE=>$this->type,
@@ -35,5 +48,10 @@ class Location{
 				LocationsContract::COLUMN_OTHER=>$this->other,
 				LocationsContract::COLUMN_LAST_UPDATED=>$this->lastUpdateTime,
 				LocationsContract::COLUMN_EXPIRE_DATE=>$this->expireDate);
+		if($withId){
+			$location[LocationsContract::COLUMN_ID] = $this->id;
+		}
+		return $location;
 	}
+
 }

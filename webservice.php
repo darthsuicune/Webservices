@@ -17,7 +17,7 @@ class Webservice {
 	const QUERY_REQUEST_LOCATIONS = 'get_locations';
 	const QUERY_REQUEST_ACCESS_TOKEN = 'request_access';
 
-	const PARAMETER_USERNAME = "username";
+	const PARAMETER_EMAIL = "email";
 	const PARAMETER_PASSWORD = "password";
 	const PARAMETER_ACCESS_TOKEN = "access_token";
 	const PARAMETER_LAST_UPDATE_TIME = 'last_update';
@@ -88,18 +88,18 @@ class Webservice {
 		if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
 		}
-		if (! isset ( $_POST [self::PARAMETER_USERNAME] ) ||
+		if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
 				! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
 		}
 
-		$username = $_POST [self::PARAMETER_USERNAME];
+		$email = $_POST [self::PARAMETER_EMAIL];
 		$password = $_POST [self::PARAMETER_PASSWORD];
-		if ($username == "" || $password == "") {
+		if ($email == "" || $password == "") {
 			$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 		} else {
 			$loginService = new LoginService ();
-			$user = $loginService->checkUser ($username, $password);
+			$user = $loginService->checkUser ($email, $password);
 			if($user == null || !($user->accessToken->isValid())){
 				$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 			} else {

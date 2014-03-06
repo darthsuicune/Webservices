@@ -1,8 +1,8 @@
 <?php
 class Register {
 	public function registerUser($password, $email, $roles, $name, $surname){
-		if($this->isValidData($name . "." . $surname, $password, $email, $roles)){
-			return $this->createUser($name . "." . $surname, $password, $email, $roles);
+		if($this->isValidData($name, $surname, $password, $email, $roles)){
+			return $this->createUser($name, $surname, $password, $email, $roles);
 		} else {
 			return false;
 		}
@@ -26,12 +26,13 @@ class Register {
 		}
 	}
 
-	function createUser($username, $password, $email, $role){
+	function createUser($name, $surname, $password, $email, $role){
 		require_once('DbLayer.php');
 		$dbLayer = new DbLayer();
 		$dbLayer->connect();
 		$values = array (
-			UsersContract::USERS_COLUMN_USERNAME=>$username,
+			UsersContract::USERS_COLUMN_NAME=>$name,
+			UsersContract::USERS_COLUMN_SURNAME=>$surname,
 			UsersContract::USERS_COLUMN_PASSWORD=>$password,
 			UsersContract::USERS_COLUMN_E_MAIL=>$email,
 			UsersContract::USERS_COLUMN_ROLE=>$role
@@ -40,11 +41,11 @@ class Register {
 		
 	}
 
-	function isValidData($username, $password, $email, $roles){
-		if($username == "" || $username == null || strlen($username) < 3) {
+	function isValidData($name, $surname, $password, $email, $roles){
+		if($name == "" || $name == null || $surname == "" || $surname == null) {
 			return false;
 		}
-
+		
 		if($password == "" || $password == null) {
 			return false;
 		}

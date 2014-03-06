@@ -8,23 +8,26 @@ class LoginService {
 	/**
 	 *
 	 */
-	public function checkUser($username, $password) {
-		if($username == null || $username == "" || $password == null || $password == ""){
+	public function checkUser($email, $password) {
+		if($email == null || $email == "" || $password == null || $password == ""
+				|| filter_var($email, FILTER_VALIDATE_EMAIL) == false){
 			return null;
 		}
 		$projection = array(
-				UsersContract::USERS_COLUMN_USERNAME,
+				UsersContract::USERS_COLUMN_NAME,
+				UsersContract::USERS_COLUMN_SURNAME,
 				UsersContract::USERS_COLUMN_PASSWORD,
 				UsersContract::USERS_COLUMN_E_MAIL,
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereargs = array($username);
+		$where = UsersContract::USERS_COLUMN_EMAIL . "=?";
+		$whereargs = array($email);
 		$user = $this->getUserData($projection, $tables, $where, $whereargs);
 		if($user != null &&
 				password_verify($password, $user[UsersContract::USERS_COLUMN_PASSWORD])){
-			return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
+			return User::generateToken($user[UsersContract::USERS_COLUMN_NAME],
+					$user[UsersContract::USERS_COLUMN_SURNAME],
 					$user[UsersContract::USERS_COLUMN_ROLE],
 					$user[UsersContract::USERS_COLUMN_E_MAIL]);
 		} else {
@@ -41,8 +44,7 @@ class LoginService {
 			return null;
 		}
 		$projection = array(
-				UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_USERNAME,
-				UsersContract::USERS_COLUMN_E_MAIL,
+				UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_E_MAIL,
 				UsersContract::USERS_COLUMN_ROLE,
 				UsersContract::ACCESS_TOKEN_TABLE_NAME . "." . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN
 		);
@@ -54,7 +56,8 @@ class LoginService {
 		$user = $this->getUserData($projection, $tables, $where, $whereargs);
 		if($user != null){
 			return new User(
-					$user[UsersContract::USERS_COLUMN_USERNAME],
+					$user[UsersContract::USERS_COLUMN_NAME],
+					$user[UsersContract::USERS_COLUMN_SURNAME],
 					$user[UsersContract::USERS_COLUMN_ROLE],
 					$user[UsersContract::USERS_COLUMN_E_MAIL],
 					$user[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
@@ -64,20 +67,22 @@ class LoginService {
 		}
 	}
 
-	public function getWebUser($username, $password){
+	public function getWebUser($email, $password){
 		$projection = array(
-				UsersContract::USERS_COLUMN_USERNAME,
+				UsersContract::USERS_COLUMN_NAME,
+				UsersContract::USERS_COLUMN_SURNAME,
 				UsersContract::USERS_COLUMN_PASSWORD,
 				UsersContract::USERS_COLUMN_E_MAIL,
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
-		$whereargs = array($username);
+		$where = UsersContract::USERS_COLUMN_E_MAIL. "=?";
+		$whereargs = array($email);
 		$user = $this->getUserData($projection, $tables, $where, $whereargs);
 		if($user != null &&
 				password_verify(sha1($password), $user[UsersContract::USERS_COLUMN_PASSWORD])){
-			return User::generateToken($user[UsersContract::USERS_COLUMN_USERNAME],
+			return User::generateToken($user[UsersContract::USERS_COLUMN_NAME],
+					$user[UsersContract::USERS_COLUMN_SURNAME],
 					$user[UsersContract::USERS_COLUMN_ROLE],
 					$user[UsersContract::USERS_COLUMN_E_MAIL]);
 		} else {

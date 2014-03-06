@@ -9,8 +9,8 @@ require_once("inc/LocationsContract.php");
 require_once("inc/Location.php");
 require_once("test/LocationsProviderTest.php");
 require_once("inc/LocationsProvider.php");
-require_once("inc/LocationsProviderImpl.php");
 require_once("inc/User.php");
+require_once("inc/LocationsProviderImpl.php");
 
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
@@ -23,7 +23,13 @@ echo "</table>";
 function assertEquals($condition, $result, $expected){
 	$isEqual = false;
 	if(is_array($result) && is_array($expected)){
-		$isEqual = ($result === $expected);
+		$isEqual = true;
+		for($i = 0; $i < count($result); $i++){
+			if($result[$i] != $expected[$i]){
+				$isEqual = false;
+				break;
+			}
+		}
 	} else if (!is_array($result) && !is_array($expected)){
 		if(strcmp($result, $expected) == 0){
 			$isEqual = true;
@@ -35,7 +41,9 @@ function assertEquals($condition, $result, $expected){
 function assertNotEquals($condition, $result, $expected){
 	$isEqual = false;
 	if(is_array($result) && is_array($expected)){
-		$isEqual = ($result !== $expected);
+		if(count($result) != 0 || count($expected) != 0){
+			$isEqual = ($result != $expected);
+		}
 	} else if (!is_array($result) && !is_array($expected)){
 		if(strcmp($result, $expected) != 0){
 			$isEqual = true;

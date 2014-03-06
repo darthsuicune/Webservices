@@ -24,7 +24,7 @@ USE `webservice`;
 
 DROP TABLE IF EXISTS `accesstoken`;
 CREATE TABLE IF NOT EXISTS `accesstoken` (
-  `username` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `accesstoken` varchar(30) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -60,7 +60,8 @@ CREATE TABLE IF NOT EXISTS `locations` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `surname` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `role` enum('social','socorros','socialsocorros','maritimos','admin','socorrosmaritimos','registrador') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'socorros',

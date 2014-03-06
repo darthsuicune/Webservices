@@ -6,13 +6,14 @@ class UsersContract {
      */
     const USERS_TABLE_NAME = "users";
     const USERS_COLUMN_ID = "ID";
-    const USERS_COLUMN_USERNAME = "username";
+    const USERS_COLUMN_NAME = "name";
+    const USERS_COLUMN_SURNAME = "surname";
     const USERS_COLUMN_PASSWORD = "password";
     const USERS_COLUMN_E_MAIL = "email";
     const USERS_COLUMN_ROLE = "role";
 
     const ACCESS_TOKEN_TABLE_NAME = "accesstoken";
-    const ACCESS_TOKEN_USERNAME = "username";
+    const ACCESS_TOKEN_EMAIL = "email";
     const ACCESS_TOKEN_COLUMN_LOGIN_TOKEN = "accesstoken";
 
     const ROLE_SOCIAL = "social";
@@ -25,13 +26,14 @@ class UsersContract {
 }
 
 class User {
-    var $username;
+    var $name;
+    var $surname;
     var $role;
     var $email;
     var $accessToken;
 
-    function __construct( $username, $role, $email, $accessToken){
-        $this->username = $username;
+    function __construct( $name, $surname, $role, $email, $accessToken){
+        $this->name = $name;
         $this->role = $role;
         $this->email = $email;
         $this->accessToken = new AccessToken($accessToken);
@@ -82,16 +84,16 @@ class User {
     	
     }
 
-    public static function generateToken($username, $role, $email){
+    public static function generateToken($id, $name, $surname, $role, $email){
         $accessToken = AccessToken::createAccessToken();
         $dbLayer = new DbLayer();
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
              $result = $dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME,
              array(
-             UsersContract::ACCESS_TOKEN_USERNAME=>$username,
+             UsersContract::ACCESS_TOKEN_EMAIL=>$email,
              UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
              ));
-            return new User($username, $role, $email, $accessToken->accessTokenString);
+            return new User($name, $surname, $role, $email, $accessToken->accessTokenString);
         } else {
             return null;
         }
