@@ -25,19 +25,19 @@ function testMySqlDaoQuery(MySqlDao $dao){
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertIsFalse("Empty values", $result);
 
-	$tables = array(UsersContract::USERS_TABLE_NAME);
+	$tables = array(UsersContract::TABLE_NAME);
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertEquals("Single table, empty where", $result, "SELECT * FROM users");
 
-	$tables = array(UsersContract::USERS_TABLE_NAME,
-			AccessTokenContract::ACCESS_TOKEN_TABLE_NAME);
+	$tables = array(UsersContract::TABLE_NAME,
+			AccessTokenContract::TABLE_NAME);
 	$where = "mytest=yourtest OR 1=1";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertEquals("Multi table, Where without ?", $result, "SELECT * FROM users NATURAL JOIN accesstoken"
 			. " WHERE mytest=yourtest OR 1=1");
 
-	$tables = array(UsersContract::USERS_TABLE_NAME);
-	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+	$tables = array(UsersContract::TABLE_NAME);
+	$where = UsersContract::COLUMN_USERNAME . "=?";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertIsFalse("Valid where, empty whereArgs", $result);
 
@@ -53,7 +53,7 @@ function testMySqlDaoInsert(MySqlDao $dao){
 	$result = $dao->insert($table, $values);
 	assertIsFalse("No table, Empty values", $result);
 
-	$table = UsersContract::USERS_TABLE_NAME;
+	$table = UsersContract::TABLE_NAME;
 	$result = $dao->insert($table, $values);
 	assertIsFalse("Table defined, empty values", $result);
 
@@ -61,7 +61,7 @@ function testMySqlDaoInsert(MySqlDao $dao){
 	$result = $dao->insert($table, $values);
 	assertIsFalse("Undefined indexes", $result);
 
-	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue");
+	$values = array(UsersContract::COLUMN_E_MAIL=>"somevalue");
 	$result = $dao->insert($table, $values);
 	assertEquals("Valid values", $result, "INSERT INTO users (email) VALUES (somevalue)");
 }
@@ -72,7 +72,7 @@ function testMySqlDaoBulkInsert(MySqlDao $dao){
 	$result = $dao->bulkInsert($table, $values);
 	assertIsFalse("Empty values", $result);
 	
-	$table = LocationsContract::LOCATIONS_TABLE_NAME;
+	$table = LocationsContract::TABLE_NAME;
 	$values = array("locpara1", "locpara2");
 	$result = $dao->bulkInsert($table, $values);
 	assertIsFalse("Passing array with values", $result);
@@ -105,7 +105,7 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse("Empty everything", $result);
 
-	$table = UsersContract::USERS_TABLE_NAME;
+	$table = UsersContract::TABLE_NAME;
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse("Empty values, set table", $result);
 
@@ -113,16 +113,16 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse("Undefined indexes", $result);
 
-	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue");
+	$values = array(UsersContract::COLUMN_E_MAIL=>"somevalue");
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertEquals("Valid single value", $result, "UPDATE users SET (email=somevalue)");
 
-	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"somevalue",
-			UsersContract::USERS_COLUMN_ROLE=>"admin");
+	$values = array(UsersContract::COLUMN_E_MAIL=>"somevalue",
+			UsersContract::COLUMN_ROLE=>"admin");
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertEquals("Valid multiple values", $result, "UPDATE users SET (email=somevalue,role=admin)");
 
-	$where = UsersContract::USERS_COLUMN_USERNAME . "=?";
+	$where = UsersContract::COLUMN_USERNAME . "=?";
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse("Valid where, empty whereArgs", $result);
 
@@ -139,23 +139,23 @@ function testMySqlDaoDelete(MySqlDao $dao){
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertIsFalse("Empty values", $result);
 
-	$table = UsersContract::USERS_TABLE_NAME;
+	$table = UsersContract::TABLE_NAME;
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertIsFalse("Single table, empty where", $result);
 
 	$table = "";
-	$where = UsersContract::USERS_COLUMN_ROLE ."=?";
+	$where = UsersContract::COLUMN_ROLE ."=?";
 	$whereArgs = array("admin");
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertIsFalse("Empty table, valid where", $result);
 	
-	$table = UsersContract::USERS_TABLE_NAME;
-	$where = UsersContract::USERS_COLUMN_ROLE ."=admin";
+	$table = UsersContract::TABLE_NAME;
+	$where = UsersContract::COLUMN_ROLE ."=admin";
 	$whereArgs = array();
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertEquals("Empty table, valid where, empty whereArgs", $result, "DELETE FROM users WHERE role=admin");
 	
-	$where = UsersContract::USERS_COLUMN_ROLE ."=?";
+	$where = UsersContract::COLUMN_ROLE ."=?";
 	$whereArgs = array("admin");
 	$result = $dao->delete($table, $where, $whereArgs);
 	assertEquals("Empty table, valid where, matching whereArgs", $result, "DELETE FROM users WHERE role=admin");

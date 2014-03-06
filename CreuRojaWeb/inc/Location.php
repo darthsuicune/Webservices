@@ -9,6 +9,7 @@ class Location{
 	var $other;
 	var $lastUpdateTime;
 	var $expireDate;
+	
 	/**
 	 * Public constructor
 	 */
@@ -23,5 +24,16 @@ class Location{
 		$this->other = $other;
 		$this->lastUpdateTime = $lastUpdateTime;
 		$this->expireDate = $expireDate;
+	}
+
+	public function to_array(){
+		return array(LocationsContract::COLUMN_LATITUDE=>$this->latitude,
+				LocationsContract::COLUMN_LONGITUDE=>$this->longitude,
+				LocationsContract::COLUMN_NAME=>$this->name,
+				LocationsContract::COLUMN_TYPE=>$this->type,
+				LocationsContract::COLUMN_ADDRESS=>$this->address,
+				LocationsContract::COLUMN_OTHER=>$this->other,
+				LocationsContract::COLUMN_LAST_UPDATED=>$this->lastUpdateTime,
+				LocationsContract::COLUMN_EXPIRE_DATE=>$this->expireDate);
 	}
 }

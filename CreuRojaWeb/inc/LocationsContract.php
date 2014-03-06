@@ -3,16 +3,16 @@ class LocationsContract {
 	/**
 	 * Locations Table
 	 */
-	const LOCATIONS_TABLE_NAME = "locations";
-	const LOCATIONS_COLUMN_ID = "id";
-	const LOCATIONS_COLUMN_LATITUDE = "latitude";
-	const LOCATIONS_COLUMN_LONGITUDE = "longitude";
-	const LOCATIONS_COLUMN_NAME = "name";
-	const LOCATIONS_COLUMN_TYPE = "type";
-	const LOCATIONS_COLUMN_ADDRESS = "address";
-	const LOCATIONS_COLUMN_OTHER = "other";
-	const LOCATIONS_COLUMN_LAST_UPDATED = "lastupdated";
-	const LOCATIONS_COLUMN_EXPIRE_DATE = "expiredate";
+	const TABLE_NAME = "locations";
+	const COLUMN_ID = "id";
+	const COLUMN_LATITUDE = "latitude";
+	const COLUMN_LONGITUDE = "longitude";
+	const COLUMN_NAME = "name";
+	const COLUMN_TYPE = "type";
+	const COLUMN_ADDRESS = "address";
+	const COLUMN_OTHER = "other";
+	const COLUMN_LAST_UPDATED = "lastupdated";
+	const COLUMN_EXPIRE_DATE = "expiredate";
 
 	const TYPE_ADAPTADAS = "adaptadas";
 	const TYPE_ASAMBLEA = "asamblea";
