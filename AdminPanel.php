@@ -48,13 +48,13 @@ class AdminPanel{
 	
 	function getTableHeader(){
 		$header = "            <tr>" . "\n";
-		$header .= '                <th>Latitude</th>' . "\n";
-		$header .= '                <th>Longitude</th>' . "\n";
-		$header .= '                <th>Name</th>' . "\n";
-		$header .= '                <th>Type</th>' . "\n";
-		$header .= '                <th>Address</th>' . "\n";
-		$header .= '                <th>Other</th>' . "\n";
-		$header .= '                <th>Expire Date</th>' . "\n";
+		$header .= '                <th>Latitud</th>' . "\n";
+		$header .= '                <th>Longitud</th>' . "\n";
+		$header .= '                <th>Nom</th>' . "\n";
+		$header .= '                <th>Tipus</th>' . "\n";
+		$header .= '                <th>Direcció</th>' . "\n";
+		$header .= '                <th>Telèfon/Horari</th>' . "\n";
+		$header .= '                <th>Data de expiració</th>' . "\n";
 		$header .= "            </tr>" . "\n";
 		return $header;
 	}
