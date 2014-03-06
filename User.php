@@ -84,7 +84,7 @@ class User {
     	
     }
 
-    public static function generateToken($id, $name, $surname, $role, $email){
+    public static function generateToken($name, $surname, $role, $email){
         $accessToken = AccessToken::createAccessToken();
         $dbLayer = new DbLayer();
         if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
