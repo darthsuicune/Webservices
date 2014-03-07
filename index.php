@@ -72,7 +72,7 @@ class Index {
 		if($user->role == UsersContract::ROLE_ADMIN){
 			$this->showAdminPanel($user);
 		} else if ($user->role == UsersContract::ROLE_REGISTER){
-			$this->showRegister($user);
+			$this->showRegister();
 		} else if ($user) {
 			$this->showMap($user);
 		} else {
@@ -122,7 +122,7 @@ class Index {
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
 			$this->showRegister();
 		} else {
-			require_once('login.html');
+			$this->showLoginForm();
 		}
 	}
 
@@ -158,7 +158,7 @@ class Index {
 	
 	function showRegister(){
 		//Second form passed already
-		if(isset($_POST[self::EMAIL])) {
+		if(isset($_POST[self::EMAIL]) && isset($_POST[self::PASSWORD])) {
 			if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
 				include_once('Register.php');
 				$register = new Register();
