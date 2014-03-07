@@ -120,7 +120,7 @@ class Index {
 	function handleRegisterRequest($user) {
 		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			$this->showRegister($user);
+			$this->showRegister();
 		} else {
 			require_once('login.html');
 		}
@@ -156,7 +156,7 @@ class Index {
 		echo $adminPanel->getAdminPanel($user);
 	}
 	
-	function showRegister($user){
+	function showRegister(){
 		//Second form passed already
 		if(isset($_POST[self::EMAIL])) {
 			if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
@@ -187,7 +187,7 @@ class Index {
 	}
 
 	function showMap($user){
-		include_once('Map.php');
+		requite_once('Map.php');
 		$map = new Map();
 		echo $map->parseRequest($user);
 	}
@@ -201,7 +201,7 @@ class Index {
 	}
 
 	function showLoginForm(){
-		include_once 'login.html';
+		require_once 'login.html';
 	}
 
 	function getUserFromCookies(){
