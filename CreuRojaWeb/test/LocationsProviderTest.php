@@ -23,22 +23,22 @@ function testGetLocationList(LocationsProvider $provider) {
 
 	$email = "a";
 	$role = UsersContract::ROLE_ADMIN;
-	$user = new User($email, $role);
+	$user = new User("a", "a", $email, $role);
 	$result = $provider->getLocationList($user, 0);
 	assertEquals("LastUpdateTime 0, admin", $result, array($location1, $location2, $location3));
 
 	$role = UsersContract::ROLE_SOCORROS;
-	$user = new User($email, $role);
+	$user = new User("a", "a", $email, $role);
 	$result = $provider->getLocationList($user, 2);
 	assertEquals("LastUpdateTime 2, socorro", $result, array($location2));
 
 	$role = UsersContract::ROLE_MARITIMOS;
-	$user = new User($email, $role);
+	$user = new User("a", "a", $email, $role);
 	$result = $provider->getLocationList($user, 4);
 	assertEquals("LastUpdateTime 4, maritimo", $result, array($location3, $location4));
 
 	$role = UsersContract::ROLE_SOCORROS;
-	$user = new User($email, $role);
+	$user = new User("a", "a", $email, $role);
 	$result = $provider->getLocationList($user, 6);
 	assertEquals("LastUpdateTime 6, socorro", $result, array());
 }

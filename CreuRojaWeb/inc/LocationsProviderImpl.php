@@ -8,8 +8,9 @@ class LocationsProviderImpl implements LocationsProvider {
 	public function getLocationList(User $user, $lastUpdateTime = 0){
 		$columns = array();
 		$tables = array(LocationsContract::TABLE_NAME);
-		$where = "";
-		$whereArgs = array();
+		$where = LocationsContract::COLUMN_TYPE . " IN ("
+			. implode(',', array_fill(0, count($user->allowedTypes), '?')) . ") AND ";
+		$whereArgs = $user->allowedTypes;
 
 		/*The presence of a last update time indicates that the petition
 		 * came from a phone that already stores information, so only updated
@@ -21,21 +22,15 @@ class LocationsProviderImpl implements LocationsProvider {
 		* LastUpdateTime != 0 -> Don't check expire date
 		*/
 		if($lastUpdateTime == 0){
-			$where = LocationsContract::COLUMN_TYPE . " IN ("
-			. implode(',', array_fill(0, count($user->allowedTypes), '?')) . ") AND ("
-			. LocationsContract::COLUMN_EXPIRE_DATE . "=0 OR "
+			$where .= "(" . LocationsContract::COLUMN_EXPIRE_DATE . "=0 OR "
 			. LocationsContract::COLUMN_EXPIRE_DATE . ">?)";
-			$whereArgs = $user->allowedTypes;
 			$whereArgs[LocationsContract::COLUMN_EXPIRE_DATE] = round(microtime(true) * 1000);
 		} else {
-			$where = LocationsContract::COLUMN_TYPE . " IN ("
-			. implode(',', array_fill(0, count($user->allowedTypes), '?')) . ") AND "
-			. LocationsContract::COLUMN_LAST_UPDATED . ">?";
-			$whereArgs = $user->allowedTypes;
+			$where .= LocationsContract::COLUMN_LAST_UPDATED . ">?";
 			$whereArgs[LocationsContract::COLUMN_LAST_UPDATED] = $lastUpdateTime;
 		}
 		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
-		return $this->getListFromCursor($result);
+		return $this->getLocationListFromCursor($result);
 	}
 
 	public function addLocation(Location $location){
@@ -60,7 +55,7 @@ class LocationsProviderImpl implements LocationsProvider {
 		return $this->dataStorage->delete($table, $where, $whereArgs);
 	}
 
-	function getListFromCursor(array $cursor){
+	function getLocationListFromCursor(array $cursor){
 		$result = array();
 		foreach($cursor as $entry){
 			$result[] = Location::createFromCursor($entry);

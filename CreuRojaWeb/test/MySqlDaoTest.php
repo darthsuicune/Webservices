@@ -37,14 +37,14 @@ function testMySqlDaoQuery(MySqlDao $dao){
 			. " WHERE mytest=yourtest OR 1=1");
 
 	$tables = array(UsersContract::TABLE_NAME);
-	$where = UsersContract::COLUMN_USERNAME . "=?";
+	$where = UsersContract::COLUMN_NAME . "=?";
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
 	assertIsFalse("Valid where, empty whereArgs", $result);
 
 	$columns = array();
 	$whereArgs = array("test1");
 	$result = $dao->query($columns, $tables, $where, $whereArgs);
-	assertEquals("Valid where, valid whereArgs", $result, "SELECT * FROM users WHERE username=test1");
+	assertEquals("Valid where, valid whereArgs", $result, "SELECT * FROM users WHERE name=test1");
 }
 
 function testMySqlDaoInsert(MySqlDao $dao){
@@ -122,14 +122,14 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertEquals("Valid multiple values", $result, "UPDATE users SET (email=somevalue,role=admin)");
 
-	$where = UsersContract::COLUMN_USERNAME . "=?";
+	$where = UsersContract::COLUMN_NAME . "=?";
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertIsFalse("Valid where, empty whereArgs", $result);
 
 	$whereArgs = array("test1");
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertEquals("Valid where, valid whereArgs", $result, "UPDATE users SET (email=somevalue,role=admin) "
-			. "WHERE username=test1");
+			. "WHERE name=test1");
 }
 
 function testMySqlDaoDelete(MySqlDao $dao){
