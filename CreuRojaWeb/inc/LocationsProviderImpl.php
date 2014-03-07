@@ -20,7 +20,6 @@ class LocationsProviderImpl implements LocationsProvider {
 		* LastUpdateTime = 0 -> Check expire date
 		* LastUpdateTime != 0 -> Don't check expire date
 		*/
-			
 		if($lastUpdateTime == 0){
 			$where = LocationsContract::COLUMN_TYPE . " IN ("
 			. implode(',', array_fill(0, count($user->allowedTypes), '?')) . ") AND ("

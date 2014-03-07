@@ -16,5 +16,5 @@ class UsersContract {
 	const ROLE_MARITIMOS = "maritimos";
 	const ROLE_ADMIN = "admin";
 	const ROLE_SOCORROS_MARITIMOS = "socorrosmaritimos";
-	const ROLE_REGISTER = "registrador";
+	const ROLE_REGISTER = "register";
 }

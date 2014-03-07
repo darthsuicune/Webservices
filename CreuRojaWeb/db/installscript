@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `role` enum('social','socorros','socialsocorros','acuaticos','admin','socorrosmaritimos') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'socorros',
+  `role` enum('social','socorros','socialsocorros','acuaticos','admin','socorrosmaritimos','register') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'socorros',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `username` (`username`),
   KEY `email` (`email`)
