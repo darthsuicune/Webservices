@@ -187,7 +187,7 @@ class Index {
 	}
 
 	function showMap($user){
-		requite_once('Map.php');
+		require_once('Map.php');
 		$map = new Map();
 		echo $map->parseRequest($user);
 	}

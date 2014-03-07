@@ -45,6 +45,8 @@ class LoginService {
 		}
 		$projection = array(
 				UsersContract::USERS_TABLE_NAME . "." . UsersContract::USERS_COLUMN_E_MAIL,
+				UsersContract::USERS_COLUMN_NAME,
+				UsersContract::USERS_COLUMN_SURNAME,
 				UsersContract::USERS_COLUMN_ROLE,
 				UsersContract::ACCESS_TOKEN_TABLE_NAME . "." . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN
 		);
