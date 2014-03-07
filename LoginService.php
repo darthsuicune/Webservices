@@ -21,7 +21,7 @@ class LoginService {
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_EMAIL . "=?";
+		$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 		$whereargs = array($email);
 		$user = $this->getUserData($projection, $tables, $where, $whereargs);
 		if($user != null &&

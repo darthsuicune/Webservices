@@ -22,7 +22,7 @@ class UsersContract {
     const ROLE_MARITIMOS = "maritimos";
     const ROLE_ADMIN = "admin";
     const ROLE_SOCORROS_MARITIMOS = "socorrosmaritimos";
-    const ROLE_REGISTER = "registrador";
+    const ROLE_REGISTER = "register";
 }
 
 class User {
@@ -61,6 +61,9 @@ class User {
                 $types[] = LocationsContract::TYPE_SOCIAL;
                 $types[] = LocationsContract::TYPE_MARITIMO;
                 break;
+            case UsersContract::ROLE_REGISTER:
+            	// The register users don't see points
+            	break;
         }
         return $types;
     }
