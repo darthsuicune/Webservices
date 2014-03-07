@@ -158,7 +158,7 @@ class Index {
 	
 	function showRegister(){
 		//Second form passed already
-		if(isset($_POST[self::EMAIL]) && isset($_POST[self::PASSWORD])) {
+		if(isset($_POST[self::EMAIL]) && isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])) {
 			if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
 				include_once('Register.php');
 				$register = new Register();
