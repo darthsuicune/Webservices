@@ -71,6 +71,8 @@ class Index {
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
 		if($user->role == UsersContract::ROLE_ADMIN){
 			$this->showAdminPanel($user);
+		} else if ($user->role == UsersContract::ROLE_REGISTER){
+			$this->showRegister($user);
 		} else if ($user) {
 			$this->showMap($user);
 		} else {
@@ -118,33 +120,7 @@ class Index {
 	function handleRegisterRequest($user) {
 		if($user && ($user->role == UsersContract::ROLE_REGISTER
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
-			//Second form passed already
-			if(isset($_POST[self::EMAIL])) {
-				if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
-					include_once('Register.php');
-					$register = new Register();
-					$name = $_POST[self::NAME];
-					$surname = $_POST[self::SURNAME];
-					$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
-					$email = $_POST[self::EMAIL];
-					$roles = $_POST[self::ROLES];
-					if ($register->registerUser($password, $email, $roles, $name, $surname)) {
-						echo "Success!";
-						require_once('register.html');
-					} else {
-						echo "Failure";
-						require_once('register2.php');
-					}
-				} else {
-					//Show register webpage.
-					require_once('register2.php');
-				}
-			//First form passed, second not yet.
-			} else if (isset($_POST[self::ROLES])) {
-				require_once('register2.php');
-			} else {
-				require_once('register.html');
-			}
+			$this->showRegister($user);
 		} else {
 			require_once('login.html');
 		}
@@ -178,7 +154,36 @@ class Index {
 		include_once('AdminPanel.php');
 		$adminPanel = new AdminPanel();
 		echo $adminPanel->getAdminPanel($user);
-
+	}
+	
+	function showRegister($user){
+		//Second form passed already
+		if(isset($_POST[self::EMAIL])) {
+			if ($_POST[self::PASSWORD] == $_POST[self::CONFIRM_PASS]){
+				include_once('Register.php');
+				$register = new Register();
+				$name = $_POST[self::NAME];
+				$surname = $_POST[self::SURNAME];
+				$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
+				$email = $_POST[self::EMAIL];
+				$roles = $_POST[self::ROLES];
+				if ($register->registerUser($password, $email, $roles, $name, $surname)) {
+					echo "Success!";
+					require_once('register.html');
+				} else {
+					echo "Failure";
+					require_once('register2.php');
+				}
+			} else {
+				//Show register webpage.
+				require_once('register2.php');
+			}
+			//First form passed, second not yet.
+		} else if (isset($_POST[self::ROLES])) {
+			require_once('register2.php');
+		} else {
+			require_once('register.html');
+		}
 	}
 
 	function showMap($user){
