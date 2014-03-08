@@ -163,7 +163,7 @@ class Index {
 			}
 		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
 				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
-			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
+			if($loginService->updateUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]))){
 				echo "Success!";
 			} else {
 				echo "Failure!";
@@ -171,8 +171,11 @@ class Index {
 		} else if (isset($_POST[self::EMAIL])) {
 			require_once('Register.php');
 			$register = new Register();
-			$register->recoverPassword($_POST[self::EMAIL]);
-			echo "An Email has been sent to your account";
+			if($register->recoverPassword($_POST[self::EMAIL])){
+				echo "An Email has been sent to your account";
+			} else {
+				echo "An error ocurred";
+			}
 		} else {
 			require_once('passRecover.html');
 		}
