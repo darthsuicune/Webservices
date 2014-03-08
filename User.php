@@ -104,7 +104,7 @@ class User {
 			Se le envia este correo para confirmar que ha sido usted y no un tercero."
 			. "Este link expira tras pasar las 4 horas siguientes a su peticion. En caso ".
 			"de que necesite mas tiempo, necesitara solicitarlo de nuevo: "
-			. "<a href='http://voluntarios.tk/index.php?q=recoverPassword&email=$email&token=$token'>Cambio de contrasenya</a>";
+			. "<a href='http://voluntarios.tk/index.php?q=recoverPassword&email=$email&token=" . substr($token, 0, 30) ."'>Cambio de contrasenya</a>";
 			echo "$message";
 			//return mail($to, $subject, $message);
 		} else {

@@ -7,13 +7,12 @@
 <body>
 	<h2>Recuperar contrasenya</h2>
 	<form accept-charset="utf8" target="_self" autocomplete="off"
-		method="POST" action="?q=recoverPassword" name="PassRecover">
+		method="POST" action="?q=recoverPassword">
 		<input hidden="hidden" name="email" value="<?php echo $_GET['email']; ?>"/>
 		Contrasenya: <input autocomplete="off" maxlength="60"
 			required="required" name="password" type="password"><br>
 		Confirmeu contrasenya: <input maxlength="60" required="required"
-			name="confirmpass" type="password"><br> <br> <input
-			form="register" name="submit" value="Enviar" type="submit"><br>
+			name="confirmpass" type="password"><br> <br> <input name="submit" value="Enviar" type="submit"><br>
 	</form>
 	<p>
 		<br>
