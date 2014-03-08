@@ -26,15 +26,15 @@ class LocationsContract {
 
 	public static function getLocationTypes(){
 		return array(
-				'adaptadas',
-				'asamblea',
-				'bravo',
-				'cuap',
-				'hospital',
-				'maritimo',
-				'nostrum',
-				'social',
-				'terrestre'
+				self::TYPE_ADAPTADAS,
+				self::TYPE_ASAMBLEA,
+				self::TYPE_BRAVO,
+				self::TYPE_CUAP,
+				self::TYPE_HOSPITAL,
+				self::TYPE_MARITIMO,
+				self::TYPE_NOSTRUM,
+				self::TYPE_SOCIAL,
+				self::TYPE_TERRESTRE
 		);
 	}
 }

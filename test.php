@@ -11,5 +11,5 @@ $user = new User($name, $surname, $role, $email, $accessToken);
 
 $ls = new LocationsService();
 
-print json_encode($ls->getLocations($user, (isset($_GET['lup'])) ? $_GET['lup'] : 0));
+// print json_encode($ls->getLocations($user, (isset($_GET['lup'])) ? $_GET['lup'] : 0));
 

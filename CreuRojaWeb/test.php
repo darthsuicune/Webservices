@@ -1,16 +1,19 @@
 <?php
-require_once("test/MySqlDaoTest.php");
-require_once("inc/DataStorage.php");
-require_once("inc/MySqlDao.php");
-require_once("inc/UsersContract.php");
-require_once("inc/AccessTokenContract.php");
-require_once("inc/LocationsContract.php");
 
-require_once("inc/Location.php");
+require_once("model/DataStorage.php");
+require_once("model/MySqlDao.php");
+require_once("model/Location.php");
+require_once("model/LocationsProvider.php");
+require_once("model/User.php");
+require_once("model/LocationsProviderImpl.php");
+
+require_once("db/UsersContract.php");
+require_once("db/AccessTokenContract.php");
+require_once("db/LocationsContract.php");
+
+require_once("test/MySqlDaoTest.php");
 require_once("test/LocationsProviderTest.php");
-require_once("inc/LocationsProvider.php");
-require_once("inc/User.php");
-require_once("inc/LocationsProviderImpl.php");
+
 
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
@@ -20,41 +23,29 @@ echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 echo "</table>";
 
 function assertEquals($condition, $result, $expected){
-	$isEqual = false;
-	if(is_array($result) && is_array($expected)){
-		$isEqual = true;
-		for($i = 0; $i < count($result); $i++){
-			if($result[$i] != $expected[$i]){
-				$isEqual = false;
-				break;
-			}
-		}
-	} else if (!is_array($result) && !is_array($expected)){
-		if(strcmp($result, $expected) == 0){
-			$isEqual = true;
-		}
-	}
-	passTest($condition, $isEqual);
+	passTest($condition, areEqual($result, $expected));
 }
 
 function assertNotEquals($condition, $result, $expected){
+	passTest($condition, !areEqual($result, $expected));
+}
+
+function areEqual($obj_a, $obj_b){
 	$isEqual = false;
-	if(is_array($result) && is_array($expected)){
+	if(is_array($obj_a) && is_array($obj_b)){
 		$isEqual = true;
-		for($i = 0; $i < count($result); $i++){
-			if($result[$i] != $expected[$i]){
+		for($i = 0; $i < count($obj_a); $i++){
+			if($obj_a[$i] != $obj_b[$i]){
 				$isEqual = false;
 				break;
 			}
 		}
-	} else if (!is_array($result) && !is_array($expected)){
-		if(strcmp($result, $expected) != 0){
+	} else if (!is_array($obj_a) && !is_array($obj_b)){
+		if(strcmp($obj_a, $obj_b) == 0){
 			$isEqual = true;
 		}
-	} else {
-		$isEqual = true;
 	}
-	passTest($condition, !$isEqual);
+	return $isEqual;
 }
 
 function assertIsTrue($condition, $result){

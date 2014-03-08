@@ -1,4 +1,5 @@
 <?php
+require_once('WebClient.php');
 
 class WebClientImpl implements WebClient {
 	var $webService;

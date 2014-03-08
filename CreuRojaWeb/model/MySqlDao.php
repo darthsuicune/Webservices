@@ -1,4 +1,5 @@
 <?php
+require_once('DataStorage.php');
 
 class MySqlDao implements DataStorage {
 	var $pdo;
