@@ -1,0 +1,10 @@
+Web workflows:
+-Standard
+  <-Login
+  ->ValidateLogin
+  <-Map (expireDate>0 && <time)
+
+Android workflows
+-Standard
+  ->ValidateLogin
+  <-JSON (lastUpdated > lastUpdateTime)
