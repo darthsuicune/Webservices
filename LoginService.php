@@ -123,7 +123,7 @@ class LoginService {
 			$table = UsersContract::USERS_TABLE_NAME;
 			$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 			$whereArgs = array($email);
-			$userRow = $dbLayer->update($values, $table, $where, $whereArgs)
+			return $dbLayer->update($values, $table, $where, $whereArgs);
 		}
 		return false;
 	}
