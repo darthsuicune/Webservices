@@ -163,7 +163,7 @@ class Index {
 			}
 		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
 				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
-			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
+			if($loginService->updateUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]))){
 				echo "Success!";
 			} else {
 				echo "Failure!";

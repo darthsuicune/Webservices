@@ -89,7 +89,8 @@ class User {
 			$table = UsersContract::USERS_TABLE_NAME;
 			$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 			$whereArgs = array($this->email);
-			return $dbLayer->update($values, $table, $where, $whereArgs);
+			$dbLayer->update($values, $table, $where, $whereArgs);
+			return true;
 		}
 		return false;
 	}

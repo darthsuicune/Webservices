@@ -138,13 +138,10 @@ class LoginService {
 		$dbLayer = new DbLayer();
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 			$data = $dbLayer->query($projection, $tables, $where, $whereargs);
-			$row;
-			if($data == null || !is_array($data)){
-				$row = null;
-			} else {
-				$row = $data[0];
+			if($data != null && is_array($data)){
+				$data = $data[0];
 			}
-			return $row;
+			return $data;
 		} else {
 			return null;
 		}
