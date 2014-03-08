@@ -34,7 +34,7 @@ class Index {
 
 	public function getIndex(){
 		//Special case
-		if(isset($_GET[self::RECOVER_PASSWORD_REQUEST])){
+		if(isset($_GET[self::REQUEST_TYPE]) && $_GET[self::REQUEST_TYPE] == self::RECOVER_PASSWORD_REQUEST){
 			$loginService = new LoginService();
 			if (isset($_GET[self::EMAIL]) && isset($_GET[self::TOKEN])){
 				if($loginService->canResetPassword($_GET[self::EMAIL], $_GET[self::TOKEN])){
