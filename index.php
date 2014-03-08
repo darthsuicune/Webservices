@@ -171,8 +171,11 @@ class Index {
 		} else if (isset($_POST[self::EMAIL])) {
 			require_once('Register.php');
 			$register = new Register();
-			$register->recoverPassword($_POST[self::EMAIL]);
-			echo "An Email has been sent to your account";
+			if($register->recoverPassword($_POST[self::EMAIL])){
+				echo "An Email has been sent to your account";
+			} else {
+				echo "An error ocurred";
+			}
 		} else {
 			require_once('passRecover.html');
 		}

@@ -92,18 +92,38 @@ class LoginService {
 					$userRow[UsersContract::USERS_COLUMN_E_MAIL],
 					"");
 		}
+		return false;
 	}
 	
 	public function canResetPassword($email, $token){
 		$dbLayer = new DbLayer();
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+			$columns = array();
+			$tables = array(UsersContract::USERS_TABLE_NAME);
+			$where = UsersContract::USERS_COLUMN_E_MAIL . "=? AND "
+					. UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN . "=?";
+			$whereArgs = array($email, $token);
 			$userRow = $dbLayer->query($columns, $tables, $where, $whereArgs);
 			if($userRow != null
 					&& $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN] == $token) {
 				$time = $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME];
-				//1 hour * 60 mins * 60 secs * 1000 milisecs 
-				return ($time + 1*60*60*1000 >= round(microtime(true) * 1000)); 
+				//1 hour * 60 mins * 60 secs * 1000 milisecs
+				$isStillValid = ($time + 1*60*60*1000 >= round(microtime(true) * 1000));
+				$this->resetPasswordToken($email); 
+				return  $isStillValid;
 			}
+		}
+		return false;
+	}
+	
+	function resetPasswordToken($email){
+		$dbLayer = new DbLayer();
+		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+			$values = array(UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>0);
+			$table = UsersContract::USERS_TABLE_NAME;
+			$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
+			$whereArgs = array($email);
+			$userRow = $dbLayer->update($values, $table, $where, $whereArgs)
 		}
 		return false;
 	}

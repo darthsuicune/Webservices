@@ -12,7 +12,7 @@ class Register {
 		$loginService = new LoginService();
 		$user = $loginService->getUserFromEmail($email);
 		if($user){
-			return $user->createNewPassword();
+			return $user->createNewPassword($email);
 		} else {
 			return $this->incorrectData();
 		}
@@ -72,5 +72,9 @@ class Register {
 				|| $roles == UsersContract::ROLE_SOCIAL_SOCORROS
 				|| $roles == UsersContract::ROLE_SOCORROS
 				|| $roles == UsersContract::ROLE_SOCORROS_MARITIMOS);
+	}
+	
+	function incorrectData(){
+		return "An error happened. No data available for such user.";
 	}
 }
