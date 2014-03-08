@@ -140,9 +140,9 @@ class Index {
 				$register = new Register();
 				$newPassword = sha1($_POST[self::PASSWORD]);
 				if($register->changePassword($email, $newPassword)){
-					echo "SUCCESS!";
+					echo "Canvi de contrasenya completat amb èxit";
 				} else {
-					echo "Failure!";
+					echo "Error en el canvi de contrasenya";
 					require_once('changePassword.html');
 				}
 			}else {
@@ -165,9 +165,9 @@ class Index {
 		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
 				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
 			if($loginService->updateUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]))){
-				echo "Success!";
+				echo "Canvi de contrasenya completat amb èxit";
 			} else {
-				echo "Failure!";
+				echo "Error en el canvi de contrasenya";
 			}
 		} else if (isset($_POST[self::EMAIL])) {
 			require_once('Register.php');
