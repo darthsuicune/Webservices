@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `locations` (
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `surname` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `password` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` enum('social','socorros','socialsocorros','maritimos','admin','socorrosmaritimos','registrador') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'socorros',
   `resettoken` varchar(30) COLLATE utf8_spanish_ci DEFAULT NULL,
   `resettime` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;

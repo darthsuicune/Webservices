@@ -63,7 +63,7 @@ class Register {
 
 	function isValidEmail($email, $password){
 		$loginService = new LoginService();
-		return $loginService->getWebUser($email, $password);
+		return $loginService->checkUser($email, sha1($password));
 	}
 	
 	function isValidRole($roles){

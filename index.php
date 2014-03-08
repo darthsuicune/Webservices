@@ -38,6 +38,7 @@ class Index {
 			$this->handlePasswordRecoveryRequest();
 		} else {
 			$user = $this->getUserDetails();
+				
 			if($user && isset($_GET[self::REQUEST_TYPE])){
 				$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
 				switch($requestType[0]){
@@ -181,6 +182,10 @@ class Index {
 		}
 	}
 
+	function showLoginForm(){
+		require_once 'login.html';
+	}
+
 	function showAdminPanel($user){
 		include_once('AdminPanel.php');
 		$adminPanel = new AdminPanel();
@@ -231,10 +236,6 @@ class Index {
 		return $user;
 	}
 
-	function showLoginForm(){
-		require_once 'login.html';
-	}
-
 	function getUserFromCookies(){
 		$user = null;
 		if(isset($_COOKIE[self::COOKIE_NAME])){
@@ -254,7 +255,7 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->getWebUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
+		return $loginService->checkUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]));
 	}
 
 	function createLocationValues(){
