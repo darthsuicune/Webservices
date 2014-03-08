@@ -25,45 +25,49 @@ class Index {
 	const SURNAME = "surname";
 	const PASSWORD = "password";
 	const CONFIRM_PASS = "confirmpass";
+	const OLD_PASSWORD = "oldpassword";
 	const EMAIL = "email";
 	const ROLES = "roles";
+	const TOKEN = "token";
 
 	const COOKIE_NAME = "accessToken";
 
 	public function getIndex(){
-		$user = $this->getUserDetails();
-		if($user && isset($_GET[self::REQUEST_TYPE])){
-			$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
-			switch($requestType[0]){
-				case self::LOGIN_REQUEST:
-					$this->handleLoginRequest($user);
-					break;
-				case self::ADD_REQUEST:
-					$this->handleAddRequest($user);
-					break;
-				case self::DELETE_REQUEST:
-					$this->handleDeleteRequest($user, $requestType[1]);
-					break;
-				case self::UPDATE_REQUEST:
-					$this->handleUpdateRequest($user, $requestType[1]);
-					break;
-				case self::REGISTER_REQUEST:
-					$this->handleRegisterRequest($user);
-					break;
-				case self::CHANGE_PASSWORD_REQUEST:
-					$this->handlePasswordChangeRequest($user);
-					break;
-				case self::RECOVER_PASSWORD_REQUEST:
-					$this->handlePasswordRecoverRequest($user);
-					break;
-				default:
-					$this->showLoginForm();
-					break;
-			}
-		} else if ($user) {
-			$this->showMap($user);
+		//Special case
+		if(isset($_GET[self::REQUEST_TYPE]) && $_GET[self::REQUEST_TYPE] == self::RECOVER_PASSWORD_REQUEST){
+			$this->handlePasswordRecoveryRequest();
 		} else {
-			$this->showLoginForm();
+			$user = $this->getUserDetails();
+			if($user && isset($_GET[self::REQUEST_TYPE])){
+				$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
+				switch($requestType[0]){
+					case self::LOGIN_REQUEST:
+						$this->handleLoginRequest($user);
+						break;
+					case self::ADD_REQUEST:
+						$this->handleAddRequest($user);
+						break;
+					case self::DELETE_REQUEST:
+						$this->handleDeleteRequest($user, $requestType[1]);
+						break;
+					case self::UPDATE_REQUEST:
+						$this->handleUpdateRequest($user, $requestType[1]);
+						break;
+					case self::REGISTER_REQUEST:
+						$this->handleRegisterRequest($user);
+						break;
+					case self::CHANGE_PASSWORD_REQUEST:
+						$this->handlePasswordChangeRequest($user);
+						break;
+					default:
+						$this->showLoginForm();
+						break;
+				}
+			} else if ($user) {
+				$this->showMap($user);
+			} else {
+				$this->showLoginForm();
+			}
 		}
 	}
 
@@ -128,25 +132,49 @@ class Index {
 
 	function handlePasswordChangeRequest($user) {
 		if($user){
-			if(isset($_POST)){
+			if(isset($_POST[self::EMAIL]) && isset($_POST[self::OLD_PASSWORD])
+					&& isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
+					&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
 				include_once('Register.php');
 				$register = new Register();
-				echo $register->changePassword($email, $newPassword);
-			} else {
-				//Show password change webpage.
+				$newPassword = sha1($_POST[self::PASSWORD]);
+				if($register->changePassword($email, $newPassword)){
+					echo "SUCCESS!";
+				} else {
+					echo "Failure!";
+					require_once('changePassword.html');
+				}
+			}else {
+				require_once('changePassword.html');
 			}
 		} else {
 			$this->showLoginForm();
 		}
 	}
-
-	function handlePasswordRecoverRequest($user){
-		if(isset($_POST)){
-			include_once('Register.php');
+	
+	function handlePasswordRecoveryRequest(){
+		$loginService = new LoginService();
+		if (isset($_GET[self::EMAIL]) && isset($_GET[self::TOKEN])){
+			if($loginService->canResetPassword($_GET[self::EMAIL], $_GET[self::TOKEN])){
+				require_once 'passRecover2.php';
+			} else {
+				echo "Your token has expired! Ask for one again";
+				require_once('passRecover.html');
+			}
+		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
+				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
+			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
+				echo "Success!";
+			} else {
+				echo "Failure!";
+			}
+		} else if (isset($_POST[self::EMAIL])) {
+			require_once('Register.php');
 			$register = new Register();
-			echo $register->recoverPassword($email);
+			$register->recoverPassword($_POST[self::EMAIL]);
+			echo "An Email has been sent to your account";
 		} else {
-			//Show password recovery webpage.
+			require_once('passRecover.html');
 		}
 	}
 
@@ -155,7 +183,7 @@ class Index {
 		$adminPanel = new AdminPanel();
 		echo $adminPanel->getAdminPanel($user);
 	}
-	
+
 	function showRegister(){
 		//Second form passed already
 		if(isset($_POST[self::EMAIL]) && isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])) {
@@ -225,16 +253,16 @@ class Index {
 		$loginService = new LoginService();
 		return $loginService->getWebUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
 	}
-	
+
 	function createLocationValues(){
 		if(!isset($_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE])){
 			return false;
 		}
 		$values = array();
-		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] = 
-				str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE]);
-		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] = 
-				str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE]);
+		$values[LocationsContract::LOCATIONS_COLUMN_LATITUDE] =
+		str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LATITUDE]);
+		$values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE] =
+		str_replace(",", ".", $_POST[LocationsContract::LOCATIONS_COLUMN_LONGITUDE]);
 		$values[LocationsContract::LOCATIONS_COLUMN_NAME] = $_POST[LocationsContract::LOCATIONS_COLUMN_NAME];
 		$values[LocationsContract::LOCATIONS_COLUMN_TYPE] = $_POST[LocationsContract::LOCATIONS_COLUMN_TYPE];
 		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_OTHER])){

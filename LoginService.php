@@ -23,16 +23,20 @@ class LoginService {
 		$tables = array(UsersContract::USERS_TABLE_NAME);
 		$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 		$whereargs = array($email);
-		$user = $this->getUserData($projection, $tables, $where, $whereargs);
-		if($user != null &&
-				password_verify($password, $user[UsersContract::USERS_COLUMN_PASSWORD])){
-			return User::generateToken($user[UsersContract::USERS_COLUMN_NAME],
-					$user[UsersContract::USERS_COLUMN_SURNAME],
-					$user[UsersContract::USERS_COLUMN_ROLE],
-					$user[UsersContract::USERS_COLUMN_E_MAIL]);
+		$userRow = $this->getUserData($projection, $tables, $where, $whereargs);
+		if($userRow != null &&
+				password_verify($password, $userRow[UsersContract::USERS_COLUMN_PASSWORD])){
+			return User::generateToken($userRow[UsersContract::USERS_COLUMN_NAME],
+					$userRow[UsersContract::USERS_COLUMN_SURNAME],
+					$userRow[UsersContract::USERS_COLUMN_ROLE],
+					$userRow[UsersContract::USERS_COLUMN_E_MAIL]);
 		} else {
 			return null;
 		}
+	}
+
+	public function getWebUser($email, $password){
+		$this->checkUser($email, sha1($password));
 	}
 
 	/**
@@ -55,43 +59,59 @@ class LoginService {
 		$whereargs = array(
 				$tokenString
 		);
-		$user = $this->getUserData($projection, $tables, $where, $whereargs);
-		if($user != null){
+		$userRow = $this->getUserData($projection, $tables, $where, $whereargs);
+		if($userRow != null){
 			return new User(
-					$user[UsersContract::USERS_COLUMN_NAME],
-					$user[UsersContract::USERS_COLUMN_SURNAME],
-					$user[UsersContract::USERS_COLUMN_ROLE],
-					$user[UsersContract::USERS_COLUMN_E_MAIL],
-					$user[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
+					$userRow[UsersContract::USERS_COLUMN_NAME],
+					$userRow[UsersContract::USERS_COLUMN_SURNAME],
+					$userRow[UsersContract::USERS_COLUMN_ROLE],
+					$userRow[UsersContract::USERS_COLUMN_E_MAIL],
+					$userRow[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
 			);
 		} else {
 			return null;
 		}
 	}
 
-	public function getWebUser($email, $password){
+	public function getUserFromEmail($email){
 		$projection = array(
 				UsersContract::USERS_COLUMN_NAME,
 				UsersContract::USERS_COLUMN_SURNAME,
-				UsersContract::USERS_COLUMN_PASSWORD,
 				UsersContract::USERS_COLUMN_E_MAIL,
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_E_MAIL. "=?";
+		$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 		$whereargs = array($email);
-		$user = $this->getUserData($projection, $tables, $where, $whereargs);
-		if($user != null &&
-				password_verify(sha1($password), $user[UsersContract::USERS_COLUMN_PASSWORD])){
-			return User::generateToken($user[UsersContract::USERS_COLUMN_NAME],
-					$user[UsersContract::USERS_COLUMN_SURNAME],
-					$user[UsersContract::USERS_COLUMN_ROLE],
-					$user[UsersContract::USERS_COLUMN_E_MAIL]);
-		} else {
-			return null;
+		$userRow = $this->getUserData($projection, $tables, $where, $whereargs);
+		if($userRow != null){
+			return new User(
+					$userRow[UsersContract::USERS_COLUMN_NAME],
+					$userRow[UsersContract::USERS_COLUMN_SURNAME],
+					$userRow[UsersContract::USERS_COLUMN_ROLE],
+					$userRow[UsersContract::USERS_COLUMN_E_MAIL],
+					"");
 		}
 	}
-
+	
+	public function canResetPassword($email, $token){
+		$dbLayer = new DbLayer();
+		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
+			$userRow = $dbLayer->query($columns, $tables, $where, $whereArgs);
+			if($userRow != null
+					&& $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN] == $token) {
+				$time = $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME];
+				//1 hour * 60 mins * 60 secs * 1000 milisecs 
+				return ($time + 1*60*60*1000 >= round(microtime(true) * 1000)); 
+			}
+		}
+		return false;
+	}
+	
+	public function updateUser($email, $newPassword){
+		$user = $this->getUserFromEmail($email);
+		return $user->changePassword($newPassword);
+	}
 
 	function getUserData($projection, $tables, $where, $whereargs){
 		$dbLayer = new DbLayer();

@@ -1,16 +1,13 @@
 <?php
-require_once("webservice.php");
+require_once("controller/WebClient.php");
+require_once("controller/WebClientImpl.php");
 
-$webClient = initializeObjects();
-echo handleWebAccess();
-
-function handleWebAccess(){
-	$webClient->showLogin();
-}
+$webClient = new WebClientImpl();
+$webClient->handleRequest();
 
 const DB_ADDRESS = 'localhost'; // TODO: Set values
-const DB_USERNAME = 'wait'; // TODO: Set values
-const DB_PASSWORD = 'wat'; // TODO: Set values
+const DB_USERNAME = 'testuser'; // TODO: Set values
+const DB_PASSWORD = 'testpass'; // TODO: Set values
 const DB_DATABASE = 'webservice';
 const CHARSET = 'UTF8';
 
@@ -19,7 +16,7 @@ function initializeObjects(){
 	$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
 	$dataStorage = new MySqlDao($pdo);
 	$loginProvider = new LoginProviderImpl($dataStorage);
-	$webService = new CreuRojaWebService(ClientType::WEB, $loginProvider);
+	$webService = new CreuRojaWebService($loginProvider);
 	return new WebClientImpl($webService);
 }
 

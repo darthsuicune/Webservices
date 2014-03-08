@@ -17,7 +17,6 @@ echo "\t<tr>" . testMySqlDao() . "</tr>\n";
 echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 // echo "\t<tr>" . testLoginProviderImpl() . "</tr>\n";
 // echo "\t<tr>" . testWebClientImpl() . "</tr>\n";
-// echo "\t<tr>" . testUser() . "</tr>\n";
 echo "</table>";
 
 function assertEquals($condition, $result, $expected){
@@ -41,8 +40,12 @@ function assertEquals($condition, $result, $expected){
 function assertNotEquals($condition, $result, $expected){
 	$isEqual = false;
 	if(is_array($result) && is_array($expected)){
-		if(count($result) != 0 || count($expected) != 0){
-			$isEqual = ($result != $expected);
+		$isEqual = true;
+		for($i = 0; $i < count($result); $i++){
+			if($result[$i] != $expected[$i]){
+				$isEqual = false;
+				break;
+			}
 		}
 	} else if (!is_array($result) && !is_array($expected)){
 		if(strcmp($result, $expected) != 0){
@@ -51,7 +54,7 @@ function assertNotEquals($condition, $result, $expected){
 	} else {
 		$isEqual = true;
 	}
-	passTest($condition, $isEqual);
+	passTest($condition, !$isEqual);
 }
 
 function assertIsTrue($condition, $result){
