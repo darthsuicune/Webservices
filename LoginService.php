@@ -108,7 +108,7 @@ class LoginService {
 					&& $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN] == $token) {
 				$time = $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME];
 				//1 hour * 60 mins * 60 secs * 1000 milisecs
-				$isStillValid = ($time + 1*60*60*1000 >= round(microtime(true) * 1000));
+				$isStillValid = (($time + 1*60*60*1000) > round(microtime(true) * 1000));
 				$this->resetPasswordToken($email); 
 				return  $isStillValid;
 			}
