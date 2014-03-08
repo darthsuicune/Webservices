@@ -35,24 +35,7 @@ class Index {
 	public function getIndex(){
 		//Special case
 		if(isset($_GET[self::REQUEST_TYPE]) && $_GET[self::REQUEST_TYPE] == self::RECOVER_PASSWORD_REQUEST){
-			$loginService = new LoginService();
-			if (isset($_GET[self::EMAIL]) && isset($_GET[self::TOKEN])){
-				if($loginService->canResetPassword($_GET[self::EMAIL], $_GET[self::TOKEN])){
-					require_once 'passRecover2.php';
-				} else {
-					echo "Your token has expired! Ask for one again";
-					require_once('passRecover.html');
-				}
-			} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
-					&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
-				if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
-					echo "Success!";
-				} else {
-					echo "Failure!";
-				}
-			} else {
-				require_once('passRecover.html');
-			}
+			$this->handlePasswordRecoveryRequest();
 		} else {
 			$user = $this->getUserDetails();
 			if($user && isset($_GET[self::REQUEST_TYPE])){
@@ -166,6 +149,30 @@ class Index {
 			}
 		} else {
 			$this->showLoginForm();
+		}
+	}
+	
+	function handlePasswordRecoveryRequest(){
+		$loginService = new LoginService();
+		if (isset($_GET[self::EMAIL]) && isset($_GET[self::TOKEN])){
+			if($loginService->canResetPassword($_GET[self::EMAIL], $_GET[self::TOKEN])){
+				require_once 'passRecover2.php';
+			} else {
+				echo "Your token has expired! Ask for one again";
+				require_once('passRecover.html');
+			}
+		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
+				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
+			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
+				echo "Success!";
+			} else {
+				echo "Failure!";
+			}
+		} else if (isset($_POST[self::EMAIL])) {
+			$register = new Register();
+			$register->recoverPassword($_POST[self::EMAIL]);
+		} else {
+			require_once('passRecover.html');
 		}
 	}
 
