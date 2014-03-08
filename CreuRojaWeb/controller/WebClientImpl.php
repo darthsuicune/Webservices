@@ -1,10 +1,10 @@
 <?php
 
 class WebClientImpl implements WebClient {
-	var $mWebService;
+	var $webService;
 
 	public function __construct(WebService $webService){
-		$this->mWebService = $webService;
+		$this->webService = $webService;
 	}
 
 	public function showLogin(){
