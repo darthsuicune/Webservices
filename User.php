@@ -94,7 +94,7 @@ class User {
 		return false;
 	}
 
-	public static function createNewPassword($email){
+	public function createNewPassword($email){
 		$token = self::createPasswordValidationToken($email);
 		if($token){
 			$to = $email;
@@ -110,6 +110,7 @@ class User {
 		} else {
 			return false;
 		}
+		return true;
 		
 	}
 	
@@ -128,7 +129,7 @@ class User {
 		}
 	}
 	
-	static function createPasswordValidationToken($email){
+	function createPasswordValidationToken($email){
 		$dbLayer = new DbLayer();
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 			$currentTime = round(microtime(true) * 1000);
@@ -137,7 +138,8 @@ class User {
 			$table = UsersContract::USERS_TABLE_NAME;
 			$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 			$whereArgs = array($email);
-			return $dbLayer->update($values, $table, $where, $whereArgs);
+			$dbLayer->update($values, $table, $where, $whereArgs);
+			return sha1($currentTime);
 		}
 		return false;
 	}
