@@ -139,9 +139,9 @@ class Index {
 				$register = new Register();
 				$newPassword = sha1($_POST[self::PASSWORD]);
 				if($register->changePassword($email, $newPassword)){
-					echo "SUCCESS!";
+					echo "Canvi de contrasenya completat amb èxit";
 				} else {
-					echo "Failure!";
+					echo "Error en el canvi de contrasenya";
 					require_once('changePassword.html');
 				}
 			}else {
