@@ -1,4 +1,5 @@
 <?php
+require_once('l10n/languages.php');
 class ClientConfiguration{
 	const DB_ADDRESS = 'localhost'; // TODO: Set values
 	const DB_USERNAME = 'testuser'; // TODO: Set values
