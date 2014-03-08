@@ -17,7 +17,7 @@ class LocationsService {
     }
     
     public function getWebLocations($user) {
-    	if($user == null){
+    	if($user == null || $user->role == UsersContract::ROLE_REGISTER){
     		return null;
     	}
     	

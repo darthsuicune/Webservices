@@ -52,7 +52,7 @@ class Register {
 		if($password == "" || $password == null) {
 			return false;
 		}
-		if($email == "" || $email == null || (!$this->isValidEmail($email))) {
+		if($email == "" || $email == null) {
 			return false;
 		}
 		if($roles == "" || $roles == null || (!$this->isValidRole($roles))) {
