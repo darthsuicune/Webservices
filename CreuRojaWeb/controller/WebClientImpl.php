@@ -2,17 +2,13 @@
 require_once('WebClient.php');
 
 class WebClientImpl implements WebClient {
-	var $webService;
+	var $requestController;
 
-	public function __construct(WebService $webService){
-		$this->webService = $webService;
+	public function __construct(RequestController $requestController){
+		$this->requestController = $requestController;
 	}
 
-	public function showLogin(){
-
-	}
-
-	public function showMap(User $user){
+	public function handleRequest() {
 
 	}
 }

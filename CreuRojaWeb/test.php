@@ -1,4 +1,7 @@
 <?php
+require_once("l10n/languages.php");
+
+require_once("controller/RequestController.php");
 
 require_once("model/DataStorage.php");
 require_once("model/MySqlDao.php");
@@ -13,11 +16,13 @@ require_once("db/LocationsContract.php");
 
 require_once("test/MySqlDaoTest.php");
 require_once("test/LocationsProviderTest.php");
+require_once("test/L10nTest.php");
 
 
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
 echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
+echo "\t<tr>" . testLocalization() . "</tr>\n";
 // echo "\t<tr>" . testLoginProviderImpl() . "</tr>\n";
 // echo "\t<tr>" . testWebClientImpl() . "</tr>\n";
 echo "</table>";

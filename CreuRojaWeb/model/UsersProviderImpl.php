@@ -1,4 +1,5 @@
 <?php
+require_once('UsersProvider.php');
 
 class UsersProviderImpl implements UsersProvider {
 	var $dataStorage;
