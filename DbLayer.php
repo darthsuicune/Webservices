@@ -63,8 +63,14 @@ class DbLayer {
 			);
 			$sources = join ( ' JOIN ', $tableList );
 		}
-
-		$query = 'SELECT ' . $projection . ' FROM ' . $sources . ' WHERE ' . $where;
+		
+		$query = "";
+		if($where != ""){
+			$query = 'SELECT ' . $projection . ' FROM ' . $sources . ' WHERE ' . $where;			
+		} else {
+			$query = 'SELECT ' . $projection . ' FROM ' . $sources;
+		}
+		
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 	/**
