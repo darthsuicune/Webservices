@@ -47,12 +47,13 @@ function testInsert(DbLayer $dbLayer){
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"asdfasdf",
 			UsersContract::USERS_COLUMN_ROLE=>"social",
 			UsersContract::USERS_COLUMN_SURNAME=>"example");
-	
+
 	$result = $dbLayer->insert($table, $values);
 	var_dump($result);
 	if($result){
 		pass();
 	} else {
+		var_dump($dbLayer->pdo->errorInfo());
 		fail();
 	}
 }
@@ -66,15 +67,16 @@ function testUpdate(DbLayer $dbLayer){
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"fdasfdsa",
 			UsersContract::USERS_COLUMN_ROLE=>"socorros",
 			UsersContract::USERS_COLUMN_SURNAME=>"what");
-	
+
 	$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 	$whereArgs = array("user@example.com");
 	$result = $dbLayer->update($values, $table, $where, $whereArgs);
-	
+
 	var_dump($result);
 	if($result == array()){
 		pass();
 	} else {
+		var_dump($dbLayer->pdo->errorInfo());
 		fail();
 	}
 }
@@ -89,6 +91,7 @@ function testQuery(DbLayer $dbLayer){
 	if($result){
 		pass();
 	} else {
+		var_dump($dbLayer->pdo->errorInfo());
 		fail();
 	}
 }
@@ -102,6 +105,7 @@ function testDelete(DbLayer $dbLayer){
 	if($result == array()){
 		pass();
 	} else {
+		var_dump($dbLayer->pdo->errorInfo());
 		fail();
 	}
 }
