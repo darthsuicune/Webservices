@@ -50,7 +50,8 @@ function testInsert(DbLayer $dbLayer){
 
 	$result = $dbLayer->insert($table, $values);
 	var_dump($result);
-	if($result){
+
+	if($result === array()){
 		pass();
 	} else {
 		var_dump($dbLayer->pdo->errorInfo());
@@ -61,19 +62,17 @@ function testInsert(DbLayer $dbLayer){
 function testUpdate(DbLayer $dbLayer){
 	$table = UsersContract::USERS_TABLE_NAME;
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"valid@email.de",
-			UsersContract::USERS_COLUMN_NAME=>"other_user",
 			UsersContract::USERS_COLUMN_PASSWORD=>password_hash("other_password", PASSWORD_BCRYPT),
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>2,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"fdasfdsa",
 			UsersContract::USERS_COLUMN_ROLE=>"socorros",
 			UsersContract::USERS_COLUMN_SURNAME=>"what");
 
-	$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
+	$where = "`".UsersContract::USERS_COLUMN_E_MAIL . "`=?";
 	$whereArgs = array("user@example.com");
 	$result = $dbLayer->update($values, $table, $where, $whereArgs);
-
 	var_dump($result);
-	if($result == array()){
+	if($result === array()){
 		pass();
 	} else {
 		var_dump($dbLayer->pdo->errorInfo());
@@ -98,11 +97,11 @@ function testQuery(DbLayer $dbLayer){
 
 function testDelete(DbLayer $dbLayer){
 	$table = UsersContract::USERS_TABLE_NAME;
-	$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
-	$whereArgs = array("valid@email.de");
+	$where = UsersContract::USERS_COLUMN_NAME . "=?";
+	$whereArgs = array("user");
 	$result = $dbLayer->delete($table, $where, $whereArgs);
 	var_dump($result);
-	if($result == array()){
+	if($result === array()){
 		pass();
 	} else {
 		var_dump($dbLayer->pdo->errorInfo());

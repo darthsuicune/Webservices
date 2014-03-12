@@ -16,14 +16,14 @@ class MySqlDao implements DataStorage {
 
 		$projection;
 		if (is_array ( $columns ) && count($columns) > 0) {
-			$projection = join ( ',', $columns );
+			$projection = "`" . join ( '`,`', $columns ) . "`";
 		} else {
 			$projection = '*';
 		}
 
-		$sources = join ( ' NATURAL JOIN ', $tables );
+		$sources = join ( '` NATURAL JOIN `', $tables );
 
-		$query = "SELECT $projection FROM $sources";
+		$query = "SELECT $projection FROM `$sources`";
 		if($where != ""){
 			$query .= " WHERE $where";
 		}
@@ -44,9 +44,9 @@ class MySqlDao implements DataStorage {
 			}
 			$fields[] = $index;
 		}
-		$fields = join(',', $fields);
+		$fields = join('`,`', $fields);
 		$row = implode(',', array_fill(0, count($values), '?'));
-		$query = "INSERT INTO $table ($fields) VALUES ($row)";
+		$query = "INSERT INTO `$table` (`$fields`) VALUES ($row)";
 		return $this->performParametrizedQuery($query, $values);
 	}
 	
@@ -76,9 +76,9 @@ class MySqlDao implements DataStorage {
 			$valuesToInsert = array_merge($valuesToInsert, array_values($set));
 		}
 
-		$parameters = join(",", $parameters);
+		$parameters = join("`,`", $parameters);
 		$rows = join("),(", $rows);
-		$query = "INSERT INTO $table ($parameters) VALUES ($rows)";
+		$query = "INSERT INTO `$table` (`$parameters`) VALUES ($rows)";
 		return $this->performParametrizedQuery($query, $valuesToInsert);
 	}
 	
@@ -95,11 +95,11 @@ class MySqlDao implements DataStorage {
 						. "Pass an assoc array with columns as indices");
 				return false;
 			}
-			$set .= "$index=?,";
+			$set .= "`$index`=?,";
 		}
-		$set = substr($set, 0, -1);
 		$parameters = array_merge(array_values($values), $whereArgs);
-		$query = "UPDATE $table SET ($set)";
+
+		$query = "UPDATE `$table` SET ".substr($set, 0, -1);
 		if($where != null && (strcmp($where, "") != 0)){
 			$query .= " WHERE $where";
 		}
@@ -112,28 +112,39 @@ class MySqlDao implements DataStorage {
 			error_log("DELETE -> Pass valid values. No defaults are provided for deletion.");
 			return false;
 		}
-		$query = "DELETE FROM " . $table . ' WHERE ' . $where;
+		$query = "DELETE FROM `$table` WHERE " . $where;
 		return $this->performParametrizedQuery($query, $whereArgs);
 	}
 
 	function performParametrizedQuery($query, array $whereArgs){
 		$statement = false;
+		$result = false;
+
 		try{
-			$statement = $this->pdo->prepare($query);
-			if($statement->execute($whereArgs)){
+			if($whereArgs === array()){
+				$statement = $this->pdo->query($query);
 				$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 				$statement->closeCursor();
-				return $result;
 			} else {
-				error_log("Statement did not parse correctly");
-				return false;
+				$statement = $this->pdo->prepare($query);
+				
+				if($statement->execute(array_values($whereArgs))){
+					$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+					$statement->closeCursor();
+				} else {
+					var_dump($whereArgs);
+					var_dump($statement->errorInfo()) . "<br>\n";
+					echo $statement->debugDumpParams() . "<br>\n";
+					echo $statement->queryString . "<br>\n";
+					$result = false;
+				}
 			}
 		} catch (PDOException $e) {
 			if($statement){
-				error_log($statement->errorInfo());
 				$statement->closeCursor();
 			}
-			return false;
+			$result = false;
 		}
+		return $result;
 	}
 }
