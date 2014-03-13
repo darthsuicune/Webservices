@@ -203,7 +203,7 @@ class Index {
 				$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
 				$email = $_POST[self::EMAIL];
 				$roles = $_POST[self::ROLES];
-				if ($register->registerUser($password, $email, $roles, $name, $surname)) {
+				if ($register->registerUser($password, $email, $roles, $name, $surname) === array()) {
 					echo "Success!";
 					require_once('register.html');
 				} else {
