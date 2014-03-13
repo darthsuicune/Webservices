@@ -14,7 +14,31 @@ require_once('DbLayer.php');
 // $ls = new LocationsService();
 
 // print json_encode($ls->getLocations($user, (isset($_GET['lup'])) ? $_GET['lup'] : 0));
+?>
+<table border=1>
+<tr><td>
+<?php
+echo "testing login service";
+$ls = new LoginService();
+$dbLayer = new DbLayer();
+testInsert($dbLayer);
+testCheckUser($ls,"user@example.com", sha1("user"));
+testAccessToken($ls, "");
 
+testDelete($dbLayer);
+
+function testCheckUser(LoginService $ls, $username, $password){
+	
+}
+function testAccessToken(LoginService $ls, $token){
+
+}
+?>
+</td>
+</tr>
+<tr>
+<td>
+<?php 
 $dbLayer = new DbLayer();
 echo "testing db connection...";
 
@@ -42,7 +66,7 @@ function testInsert(DbLayer $dbLayer){
 	$table = UsersContract::USERS_TABLE_NAME;
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"user@example.com",
 			UsersContract::USERS_COLUMN_NAME=>"user",
-			UsersContract::USERS_COLUMN_PASSWORD=>password_hash("user", PASSWORD_BCRYPT),
+			UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("user"), PASSWORD_BCRYPT),
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>0,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"asdfasdf",
 			UsersContract::USERS_COLUMN_ROLE=>"social",
@@ -116,3 +140,6 @@ function pass(){
 function fail(){
 	echo "<font color=\"red\"><b>FAILED</b></font><br>";
 }
+?>
+</td></tr>
+</table>
