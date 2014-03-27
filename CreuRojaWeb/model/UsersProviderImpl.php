@@ -7,10 +7,11 @@ class UsersProviderImpl implements UsersProvider {
 		$this->dataStorage = $dataStorage;
 	}
 
-	public function validateUserInfo($email, $password) {
-
+	public function getUserFromEmail($email){
+		
 	}
-	public function validateAccessToken($accessToken) {
-
+	
+	public function getUserFromAccessToken($accessToken){
+	
 	}
 }

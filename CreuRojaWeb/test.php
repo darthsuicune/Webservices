@@ -1,23 +1,24 @@
 <?php
-require_once("l10n/languages.php");
-
-require_once("controller/RequestController.php");
-
-require_once("model/DataStorage.php");
-require_once("model/MySqlDao.php");
-require_once("model/Location.php");
-require_once("model/LocationsProvider.php");
-require_once("model/User.php");
-require_once("model/LocationsProviderImpl.php");
-
-require_once("db/UsersContract.php");
-require_once("db/AccessTokenContract.php");
-require_once("db/LocationsContract.php");
-
-require_once("test/MySqlDaoTest.php");
-require_once("test/LocationsProviderTest.php");
-require_once("test/L10nTest.php");
-
+foreach (glob("controller/*.php") as $filename)
+{
+    require_once($filename);
+}
+foreach (glob("model/*.php") as $filename)
+{
+	require_once($filename);
+}
+foreach (glob("l10n/*.php") as $filename)
+{
+	require_once($filename);
+}
+foreach (glob("db/*.php") as $filename)
+{
+	require_once($filename);
+}
+foreach (glob("test/*.php") as $filename)
+{
+	require_once($filename);
+}
 
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
