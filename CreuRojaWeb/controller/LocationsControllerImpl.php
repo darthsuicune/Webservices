@@ -1,8 +1,8 @@
 <?php
 
 class LocationsControllerImpl{
-
-	public function __construct() {
-		
+	var $locationsProvider;
+	public function __construct(LocationsProvider $locationsProvider) {
+		$this->locationsProvider = $locationsProvider;
 	}
 }

@@ -24,6 +24,7 @@ echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
 echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 echo "\t<tr>" . testLocalization() . "</tr>\n";
+echo "\t<tr>" . testLocationsController() . "</tr>\n";
 // echo "\t<tr>" . testLoginProviderImpl() . "</tr>\n";
 // echo "\t<tr>" . testWebClientImpl() . "</tr>\n";
 echo "</table>";

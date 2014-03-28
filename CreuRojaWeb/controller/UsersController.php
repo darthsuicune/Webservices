@@ -1,5 +1,5 @@
 <?php
 
-class UsersController {
+interface UsersController {
 	
 }
