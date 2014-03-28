@@ -9,8 +9,8 @@ class LocationsProviderImpl implements LocationsProvider {
 		$columns = array();
 		$tables = array(LocationsContract::TABLE_NAME);
 		$where = LocationsContract::COLUMN_TYPE . " IN ("
-			. implode(',', array_fill(0, count($user->allowedTypes), '?')) . ") AND ";
-		$whereArgs = $user->allowedTypes;
+			. implode(',', array_fill(0, count($user->getAllowedTypes()), '?')) . ") AND ";
+		$whereArgs = $user->getAllowedTypes();
 
 		/*The presence of a last update time indicates that the petition
 		 * came from a phone that already stores information, so only updated
@@ -31,6 +31,19 @@ class LocationsProviderImpl implements LocationsProvider {
 		}
 		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
 		return $this->getLocationListFromCursor($result);
+	}
+	
+	public function getLocation($id){
+		if ($id < 0) {
+			return false;
+		}
+		$columns = array();
+		$tables = array(LocationsContract::TABLE_NAME);
+		$where = LocationsContract::COLUMN_ID . "=?";
+		$whereArgs = array($id);
+		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
+		$location = $this->getLocationListFromCursor($result);
+		return $location[0];
 	}
 
 	public function addLocation(Location $location){

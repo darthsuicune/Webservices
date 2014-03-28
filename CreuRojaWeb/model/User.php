@@ -5,7 +5,6 @@ class User{
 	var $surname;
 	var $email;
 	var $role;
-	var $allowedTypes;
 
 	public function __construct($name, $surname, $email, $role, $id = 0 ){
 		$this->id = $id;
@@ -13,7 +12,6 @@ class User{
 		$this->surname = $surname;
 		$this->email = $email;
 		$this->role = $role;
-		$this->allowedTypes = self::getAllowedTypes($role);
 	}
 	
 	public static function createFromCursor($entry){
@@ -30,9 +28,9 @@ class User{
 				UsersContract::COLUMN_E_MAIL=>$this->email);
 	}
 
-	private function getAllowedTypes($role) {
+	public function getAllowedTypes() {
 		$types = array();
-		switch ($role) {
+		switch ($this->role) {
 			case UsersContract::ROLE_ADMIN:
 				$types[] = LocationsContract::TYPE_ADAPTADAS;
 				$types[] = LocationsContract::TYPE_ASAMBLEA;

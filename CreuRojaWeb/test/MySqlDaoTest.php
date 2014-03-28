@@ -121,7 +121,6 @@ function testMySqlDaoUpdate(MySqlDao $dao){
 	$values = array(UsersContract::COLUMN_E_MAIL=>"somevalue");
 	$result = $dao->update($table, $values, $where, $whereArgs);
 	assertEquals("Valid single value", $result, "UPDATE `users` SET `email`=somevalue");
-	var_dump($result);
 
 	$values = array(UsersContract::COLUMN_E_MAIL=>"somevalue",
 			UsersContract::COLUMN_ROLE=>"admin");

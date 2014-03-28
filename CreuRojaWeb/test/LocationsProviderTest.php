@@ -6,6 +6,8 @@ function testLocationsProviderImpl(){
 	echo "<td> LocationProvider tests";
 	echo "<td>testGetLocationList<br>\n";
 	echo testGetLocationList($provider);
+	echo "<td>testGetLocation<br>\n";
+	echo testGetLocation($provider);
 	echo "<td>testAddLocation<br>\n";
 	echo testAddLocation($provider);
 	echo "<td>testUpdateLocation<br>\n";
@@ -41,6 +43,13 @@ function testGetLocationList(LocationsProvider $provider) {
 	$user = new User("a", "a", $email, $role);
 	$result = $provider->getLocationList($user, 6);
 	assertEquals("LastUpdateTime 6, socorro", $result, array());
+}
+
+function testGetLocation(LocationsProvider $provider){
+	$location1 = new Location("12.2", "2.2", "Sitio 1", "asamblea", "Direccion 1", "Tfno 1", 1, 0, 0);
+	$id = 0;
+	$result = $provider->getLocation($id);
+	assertEquals("Id 0", array_values($result->to_array()), array_values($location1->to_array()));
 }
 
 function testAddLocation(LocationsProvider $provider){
