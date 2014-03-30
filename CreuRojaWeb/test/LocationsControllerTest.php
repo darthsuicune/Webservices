@@ -4,39 +4,44 @@ function testLocationsController(){
 	$controller = new LocationsControllerImpl($provider);
 	echo "<td> LocationController tests";
 	echo "<td>testGetLocationList<br>\n";
-	echo testGetLocationList1($controller);
+	echo testGetLocations($controller);
 	echo "<td>testAddLocation<br>\n";
-	echo testAddLocation1($controller);
+	echo testAddNewLocation($controller);
 	echo "<td>testUpdateLocation<br>\n";
-	echo testUpdateLocation1($controller);
+	echo testControllerUpdateLocation($controller);
 	echo "<td>testDeleteLocation<br>\n";
-	echo testDeleteLocation1($controller);
+	echo testControllerDeleteLocation($controller);
 	echo "</td><br>\n";
 }
 
-function testGetLocationList1(LocationsController $controller) {
-	
+function testGetLocations(LocationsController $controller) {
+	$location1 = new Location("12.2", "2.2", "Sitio 1", "asamblea", "Direccion 1", "Tfno 1", 1, 0, 0);
+	$location2 = new Location("12.22", "2.22", "Place 2", "bravo", "Address 2", "Phone 2", 3, 0, 1);
 }
 
-function testAddLocation1(LocationsController $controller){
-	
+function testAddNewLocation(LocationsController $controller){
+	assertIsTrue("DeleteLocation", $result);
 }
 
-function testUpdateLocation1(LocationsController $controller){
-	
+function testControllerUpdateLocation(LocationsController $controller){
+	assertIsTrue("DeleteLocation", $result);
 }
 
-function testDeleteLocation1(LocationsController $controller){
-	
+function testControllerDeleteLocation(LocationsController $controller){
+	assertIsTrue("DeleteLocation", $result);
 }
 
 class MockLocationProvider implements LocationsProvider {
 	public function getLocationList(User $user, $lastUpdateTime = 0){
-		
+		$location1 = new Location("12.2", "2.2", "Sitio 1", "asamblea", "Direccion 1", "Tfno 1", 1, 0, 0);
+		$location2 = new Location("12.22", "2.22", "Place 2", "bravo", "Address 2", "Phone 2", 3, 0, 1);
 	}
 	
 	public function getLocation($id){
-		
+		$location4 = new Location("12.2222", "2.2222", "Lage 4", "maritimo", "Addresse 4", "Telefon 4", 5, 1, 3);
+		if($id === 3){
+			return $location4;
+		}
 	}
 
 	public function addLocation(Location $location){

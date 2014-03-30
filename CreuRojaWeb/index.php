@@ -15,7 +15,12 @@ foreach (glob("db/*.php") as $filename)
 {
 	require_once($filename);
 }
+require_once('Client.php');
+require_once('WebClient.php');
 
-$clientConfig = new ClientConfiguration();
-$webClient = new WebClientImpl(new MockController());
-echo $webClient->handleRequest();
+session_start();
+
+// $clientConfig = new ClientConfiguration(ClientConfiguration::WEB);
+// $webClient = $clientConfig->getClient();
+$webClient = new WebClient();
+$webClient->handleRequest();

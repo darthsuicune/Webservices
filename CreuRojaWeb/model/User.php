@@ -25,7 +25,10 @@ class User{
 	public function to_array(){
 		return array(UsersContract::COLUMN_ID=>$this->id,
 				UsersContract::COLUMN_ROLE=>$this->role,
-				UsersContract::COLUMN_E_MAIL=>$this->email);
+				UsersContract::COLUMN_E_MAIL=>$this->email,
+				UsersContract::COLUMN_NAME=>$this->name,
+				UsersContract::COLUMN_SURNAME=>$this->surname,
+				);
 	}
 
 	public function getAllowedTypes() {
