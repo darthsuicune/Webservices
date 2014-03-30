@@ -43,13 +43,13 @@ class WebClient implements Client {
 				$this->handleLoginRequest();
 				break;
 			case self::REQUEST_UPDATE_LOCATION:
-				$this->handleLocationUpdateRequest();
+				$this->handleLocationUpdateRequest($request);
 				break;
 			case self::REQUEST_ADD_LOCATION:
 				$this->handleLocationAddRequest();
 				break;
 			case self::REQUEST_DELETE_LOCATION:
-				$this->handleLocationDeleteRequest();
+				$this->handleLocationDeleteRequest($request);
 				break;
 			case self::REQUEST_REGISTER:
 				$this->handleRegisterRequest();
