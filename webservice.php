@@ -40,7 +40,7 @@ class Webservice {
 				case self::QUERY_REQUEST_ACCESS_TOKEN :
 					$response = $this->handleAccessRequest ();
 					break;
-				case self::QUERY_VALIDATE_ACCESS :
+				case self::QUERY_REQUEST_VALIDATE_ACCESS :
 					$response = $this->handleAccessValidationRequest();
 					break;
 				default :
