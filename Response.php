@@ -66,3 +66,10 @@ class LoginResponse extends Response {
         $this->locations = $locations;
     }
 }
+
+class AccessResponse extends Response {
+	var $isValid;
+	public function __construct($isValid){
+		$this->isValid = $isValid;
+	}
+}

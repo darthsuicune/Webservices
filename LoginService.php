@@ -32,7 +32,7 @@ class LoginService {
 					$userRow[UsersContract::USERS_COLUMN_ROLE],
 					$userRow[UsersContract::USERS_COLUMN_E_MAIL]);
 		} else {
-			return null;
+			return false;
 		}
 	}
 
@@ -66,7 +66,7 @@ class LoginService {
 					$userRow[UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN]
 			);
 		} else {
-			return null;
+			return false;
 		}
 	}
 

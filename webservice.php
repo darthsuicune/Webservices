@@ -16,6 +16,7 @@ class Webservice {
 	const QUERY_REQUEST = 'q';
 	const QUERY_REQUEST_LOCATIONS = 'get_locations';
 	const QUERY_REQUEST_ACCESS_TOKEN = 'request_access';
+	const QUERY_REQUEST_VALIDATE_ACCESS = 'validate_access';
 
 	const PARAMETER_EMAIL = "email";
 	const PARAMETER_PASSWORD = "password";
@@ -38,6 +39,9 @@ class Webservice {
 					break;
 				case self::QUERY_REQUEST_ACCESS_TOKEN :
 					$response = $this->handleAccessRequest ();
+					break;
+				case self::QUERY_VALIDATE_ACCESS :
+					$response = $this->handleAccessValidationRequest();
 					break;
 				default :
 					$response = new ErrorResponse ( Response::ERROR_WRONG_REQUEST );
@@ -87,28 +91,41 @@ class Webservice {
 		// If an access token is already provided, this should $response = an error
 		if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
-		}
-		if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
+		} else if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
 				! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
-		}
-
-		$email = $_POST [self::PARAMETER_EMAIL];
-		$password = $_POST [self::PARAMETER_PASSWORD];
-		if ($email == "" || $password == "") {
-			$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 		} else {
-			$loginService = new LoginService ();
-			$user = $loginService->checkUser ($email, $password);
-			if($user == null || !($user->accessToken->isValid())){
+
+			$email = $_POST [self::PARAMETER_EMAIL];
+			$password = $_POST [self::PARAMETER_PASSWORD];
+			if ($email == "" || $password == "") {
 				$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 			} else {
-				$locationsService = new LocationsService ();
-				$locations = $locationsService->getLocations ( $user, 0 );
-				$response = new LoginResponse ( $user->accessToken, $locations );
+				$loginService = new LoginService ();
+				$user = $loginService->checkUser ($email, $password);
+				if($user == null || !($user->accessToken->isValid())){
+					$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+				} else {
+					$locationsService = new LocationsService ();
+					$locations = $locationsService->getLocations ( $user, 0 );
+					$response = new LoginResponse ( $user->accessToken, $locations );
+				}
 			}
 		}
 		header("Content-Type: application/json");
+		return json_encode($response);
+	}
+
+	function handleAccessValidationRequest() {
+		$response;
+		if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
+			$response = new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
+		} else {
+			$loginService = new LoginService();
+			$isValid = ($loginService->validateAccessToken($_POST [self::PARAMETER_ACCESS_TOKEN]) != false);
+			$response = new AccessResponse($isValid);
+		}
+
 		return json_encode($response);
 	}
 }
