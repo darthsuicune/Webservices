@@ -35,48 +35,48 @@ class WebClient implements Client {
 
 	public function handleRequest() {
 		$request[0] = false;
-		if(isset($_GET[self::REQUEST_TYPE])){		
+		if(isset($_GET[self::REQUEST_TYPE])){
 			$request = explode("/", $_GET[self::REQUEST_TYPE]);
 		}
-		switch($request[0]){
-			case self::REQUEST_LOGIN:
-				$this->handleLoginRequest();
-				break;
-			case self::REQUEST_UPDATE_LOCATION:
-				$this->handleLocationUpdateRequest($request);
-				break;
-			case self::REQUEST_ADD_LOCATION:
-				$this->handleLocationAddRequest();
-				break;
-			case self::REQUEST_DELETE_LOCATION:
-				$this->handleLocationDeleteRequest($request);
-				break;
-			case self::REQUEST_REGISTER:
-				$this->handleRegisterRequest();
-				break;
-			case self::REQUEST_CHANGE_PASSWORD:
-				$this->handlePasswordChangeRequest();
-				break;
-			case self::REQUEST_RECOVER_PASSWORD:
-				$this->handlePasswordRecoverRequest();
-				break;
-			default:
-				$this->showRoot();
-				break;
-
+		if($request[1]){
+			switch($request[0]){
+				case self::REQUEST_UPDATE_LOCATION:
+					return $this->handleLocationUpdateRequest($request[1]);
+				case self::REQUEST_DELETE_LOCATION:
+					return $this->handleLocationDeleteRequest($request[1]);
+				default:
+					break;
+			}
+		} else {
+			switch($request[0]){
+				case self::REQUEST_LOGIN:
+					return $this->handleLoginRequest();
+				case self::REQUEST_ADD_LOCATION:
+					return $this->handleLocationAddRequest();
+				case self::REQUEST_REGISTER:
+					return $this->handleRegisterRequest();
+				case self::REQUEST_CHANGE_PASSWORD:
+					return $this->handlePasswordChangeRequest();
+				case self::REQUEST_RECOVER_PASSWORD:
+					return $this->handlePasswordRecoverRequest();
+				default:
+					break;
+			}
 		}
+		return $this->showRoot();
 	}
 
 	function handleLoginRequest(){
 
 	}
-	function handleLocationUpdateRequest(){
 
-	}
 	function handleLocationAddRequest(){
 
 	}
-	function handleLocationDeleteRequest(){
+	function handleLocationUpdateRequest($unsafeId){
+
+	}
+	function handleLocationDeleteRequest($unsafeId){
 
 	}
 	function handleRegisterRequest(){

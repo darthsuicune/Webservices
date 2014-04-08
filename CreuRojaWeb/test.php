@@ -20,6 +20,7 @@ foreach (glob("test/*.php") as $filename)
 	require_once($filename);
 }
 
+
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
 echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
