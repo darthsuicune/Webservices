@@ -16,11 +16,11 @@ foreach (glob("db/*.php") as $filename)
 	require_once($filename);
 }
 require_once('Client.php');
+require_once('ClientConfiguration.php');
 require_once('WebClient.php');
 
 session_start();
 
-// $clientConfig = new ClientConfiguration(ClientConfiguration::WEB);
-// $webClient = $clientConfig->getClient();
-$webClient = new WebClient();
+$clientConfig = new ClientConfiguration();
+$webClient = $clientConfig->getClient(ClientConfiguration::WEB);
 $webClient->handleRequest();

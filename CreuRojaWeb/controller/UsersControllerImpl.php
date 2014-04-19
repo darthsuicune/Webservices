@@ -1,8 +1,15 @@
 <?php
 class UsersControllerImpl implements UsersController {
-	public function __construct() {
+	var $usersProvider;
+	
+	public function __construct(UsersProvider $usersProvider) {
 		
 	}
 	
-	
+	public function validateUserFromLogin($email, $password){
+		
+	}
+	public function validateUserFromAccessToken($accessToken){
+		
+	}
 } 

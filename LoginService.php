@@ -24,7 +24,6 @@ class LoginService {
 		$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 		$whereargs = array($email);
 		$userRow = $this->getUserData($projection, $tables, $where, $whereargs);
-		
 		if($userRow != null &&
 				password_verify($password, $userRow[UsersContract::USERS_COLUMN_PASSWORD])){
 			return User::generateToken($userRow[UsersContract::USERS_COLUMN_NAME],

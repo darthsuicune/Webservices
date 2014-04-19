@@ -11,7 +11,7 @@ class ClientConfiguration{
 
 	public function getClient($clientType){
 		$dsn = "mysql:dbname=" . self::DB_DATABASE . ";host=" . self::DB_ADDRESS
-		. ";charset=" . self::CHARSET;
+				. ";charset=" . self::CHARSET;
 		$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
 		$dataStorage = new MySqlDao($pdo);
 		$usersProvider = new UsersProviderImpl($dataStorage);
@@ -23,7 +23,7 @@ class ClientConfiguration{
 			case self::ANDROID:
 				return new AndroidClient($usersController, $locationsController);
 			case self::WEB:
-				$sessionsController = new SessionsControllerImpl();
+				$sessionsController = new SessionsControllerImpl($dataStorage);
 				return new WebClient($usersController, $locationsController, $sessionsController);
 			default:
 				return false;

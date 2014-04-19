@@ -10,7 +10,7 @@ class DbLayer {
 
 	const DB_ADDRESS = 'localhost'; // TODO: Set values
 	const DB_USERNAME = 'testuser'; // TODO: Set values
-	const DB_PASSWORD = 'password'; // TODO: Set values
+	const DB_PASSWORD = 'testpass'; // TODO: Set values
 	const DB_DATABASE = 'webservice';
 	const CHARSET = 'UTF8';
 

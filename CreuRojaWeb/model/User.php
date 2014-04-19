@@ -13,7 +13,7 @@ class User{
 		$this->email = $email;
 		$this->role = $role;
 	}
-	
+
 	public static function createFromCursor($entry){
 		return new User($entry[UsersContract::COLUMN_NAME],
 				$entry[UsersContract::COLUMN_SURNAME],
@@ -27,8 +27,49 @@ class User{
 				UsersContract::COLUMN_ROLE=>$this->role,
 				UsersContract::COLUMN_E_MAIL=>$this->email,
 				UsersContract::COLUMN_NAME=>$this->name,
-				UsersContract::COLUMN_SURNAME=>$this->surname,
-				);
+				UsersContract::COLUMN_SURNAME=>$this->surname
+		);
+	}
+
+	public function isAllowedTo($action) {
+		if($this->role){
+			return true;
+		}
+		$isAllowed = false;
+		switch ($action) {
+			case Actions::SIDEBAR:
+				switch ($this->role) {
+					case UsersContract::ROLE_MARITIMOS:
+					case UsersContract::ROLE_SOCIAL:
+					case UsersContract::ROLE_SOCIAL_SOCORROS:
+					case UsersContract::ROLE_SOCORROS:
+					case UsersContract::ROLE_SOCORROS_MARITIMOS:
+					case UsersContract::ROLE_REGISTER:
+						break;
+					default:
+						break;
+				}
+				break;
+			case Actions::SIDEBAR_MANAGEMENT:
+				switch ($this->role) {
+					case UsersContract::ROLE_MARITIMOS:
+					case UsersContract::ROLE_SOCIAL:
+					case UsersContract::ROLE_SOCIAL_SOCORROS:
+					case UsersContract::ROLE_SOCORROS:
+					case UsersContract::ROLE_SOCORROS_MARITIMOS:
+						break;
+					case UsersContract::ROLE_REGISTER:
+						$isAllowed = true;
+						break;
+					default:
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+
+		return $isAllowed;
 	}
 
 	public function getAllowedTypes() {

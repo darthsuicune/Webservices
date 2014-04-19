@@ -81,6 +81,7 @@ class Index {
 		} else if ($user) {
 			$this->showMap($user);
 		} else {
+			echo "WHAT?";
 			$this->showLoginForm();
 		}
 	}
@@ -253,7 +254,7 @@ class Index {
 		if(!isset($_POST[self::PASSWORD]) || $_POST[self::PASSWORD] == ""){
 			$this->showLoginForm();
 			return;
-		}
+		}		
 		$loginService = new LoginService();
 		return $loginService->checkUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]));
 	}
