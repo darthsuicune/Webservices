@@ -10,13 +10,15 @@ require_once('header.php');
 ?>
 <BODY>
 	<?php
-	if ($user && $user->isAllowedTo(Actions::SIDEBAR)) {
-		require_once('sidebar.php');
-	}
+	// 	if ($user && $user->isAllowedTo(Actions::MENU)) {
+	require_once('menu.php');
+	// 	}
 	?>
 	<div class="content">
-		<center>
-			<br> <img src="view/icons/logo.png"><br> <br> <br> <br>
+		<div class="logo">
+			<img src="view/icons/logo.png">
+		</div>
+		<div class="login_form">
 			<form accept-charset="utf8" novalidate="novalidate" autocomplete="on"
 				method="POST" action="?q=login" name="Login">
 				<?php echo $languages->get(Strings::E_MAIL); ?>
@@ -27,14 +29,19 @@ require_once('header.php');
 					value="<?php echo $languages->get(Strings::LOGIN); ?>"
 					type="submit">
 			</form>
+		</div>
+		<div class="recover_password">
 			<p>
-				<br> <br><?php echo $languages->get(Strings::COOKIES_WARNING); ?> 
+				<a href="?q=recoverPassword"> <?php 
+				echo $languages->get(Strings::RECOVER_PASSWORD); ?>
+				</a>
 			</p>
+		</div>
+		<div class="cookies_warning">
 			<p>
-				<a href="?q=recoverPassword">
-				<?php echo $languages->get(Strings::RECOVER_PASSWORD); ?></a>
+				<?php echo $languages->get(Strings::COOKIES_WARNING); ?>
 			</p>
-		</center>
+		</div>
 	</div>
 	<?php 
 	require_once('footer.php');

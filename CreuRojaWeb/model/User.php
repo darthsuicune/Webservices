@@ -37,7 +37,7 @@ class User{
 		}
 		$isAllowed = false;
 		switch ($action) {
-			case Actions::SIDEBAR:
+			case Actions::MENU:
 				switch ($this->role) {
 					case UsersContract::ROLE_MARITIMOS:
 					case UsersContract::ROLE_SOCIAL:
@@ -45,12 +45,11 @@ class User{
 					case UsersContract::ROLE_SOCORROS:
 					case UsersContract::ROLE_SOCORROS_MARITIMOS:
 					case UsersContract::ROLE_REGISTER:
-						break;
 					default:
 						break;
 				}
 				break;
-			case Actions::SIDEBAR_MANAGEMENT:
+			case Actions::MENU_MANAGEMENT:
 				switch ($this->role) {
 					case UsersContract::ROLE_MARITIMOS:
 					case UsersContract::ROLE_SOCIAL:
@@ -61,6 +60,20 @@ class User{
 					case UsersContract::ROLE_REGISTER:
 						$isAllowed = true;
 						break;
+					default:
+						break;
+				}
+				break;
+			case Actions::SEE_MAP:
+				switch($this->role) {
+					case UsersContract::ROLE_MARITIMOS:
+					case UsersContract::ROLE_SOCIAL:
+					case UsersContract::ROLE_SOCIAL_SOCORROS:
+					case UsersContract::ROLE_SOCORROS:
+					case UsersContract::ROLE_SOCORROS_MARITIMOS:
+						$isAllowed = true;
+						break;
+					case UsersContract::ROLE_REGISTER:
 					default:
 						break;
 				}

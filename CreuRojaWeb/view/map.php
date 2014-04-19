@@ -18,17 +18,17 @@ if (isset($_SESSION['user'])) {
 <title><?php echo $language->get(Strings::WEB_TITLE) ?>
 </title>
 <?php
-require_once('css/map.css');
+require_once('view/css/map.css');
 ?>
 <script src="<?php echo $JQUERY; ?>"></script>
 <?php 
-require_once('scripts/gmaps.php')
+require_once('view/scripts/gmaps.php')
 ?>
 </HEAD>
 <BODY>
 	<?php
 	if ($user && $user->isAllowedTo(Actions::SIDEBAR)) {
-		require_once('sidebar.php');
+		require_once('menu.php');
 	}
 	?>
 	<div class="content"></div>

@@ -37,16 +37,16 @@ function initialize() {
 		}
 		
 		var marker = new google.maps.Marker({
-		    position: new google.maps.LatLng(marcadores[i].<?php echo LocationsContract::COLUMN_LATITUDE; ?>, 
-				    marcadores[i].<?php echo LocationsContract::COLUMN_LONGITUDE; ?> ),
-		    map: map,
-			icon: "icons/" + marcadores[i].<?php echo LocationsContract::COLUMN_TYPE; ?> + ".png"
-			 });
-			 (function(marker, contenido){
-			   google.maps.event.addListener(marker, 'click', function() {
-			     infowindow.setContent(contenido);
-			     infowindow.open(map, marker);
-		   });
+			    position: new google.maps.LatLng(marcadores[i].<?php echo LocationsContract::COLUMN_LATITUDE; ?>, 
+					    marcadores[i].<?php echo LocationsContract::COLUMN_LONGITUDE; ?> ),
+			    map: map,
+				icon: "icons/" + marcadores[i].<?php echo LocationsContract::COLUMN_TYPE; ?> + ".png"
+		});
+		(function(marker, contenido){
+				google.maps.event.addListener(marker, 'click', function() {
+						infowindow.setContent(contenido);
+						infowindow.open(map, marker);
+				});
 		})(marker,contenido);
 	}
 }
