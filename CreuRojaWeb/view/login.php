@@ -21,16 +21,19 @@ require_once('header.php');
 		<div class="login_form">
 			<form accept-charset="utf8" novalidate="novalidate" autocomplete="on"
 				method="POST" action="?q=login" name="Login">
-				<?php echo $languages->get(Strings::E_MAIL); ?>
-				: <input required="required" name="email" type="text"><br>
-				<?php echo $languages->get(Strings::PASSWORD); ?>
-				: <input autocomplete="off" required="required" name="password"
-					type="password"> <br> <br> <input name="send"
+				<label for="email"> <?php echo $languages->get(Strings::E_MAIL); ?>:
+				</label> 
+				<input required="required" name="email" type="text" />
+				<label for="password"><?php echo $languages->get(Strings::PASSWORD); ?>:
+				</label> 
+				<input autocomplete="off" required="required" name="password" 
+					type="password" />
+				<input name="send"
 					value="<?php echo $languages->get(Strings::LOGIN); ?>"
-					type="submit">
+					type="submit" />
 			</form>
 		</div>
-		<div class="recover_password">
+		<div class="password_recovery">
 			<p>
 				<a href="?q=recoverPassword"> <?php 
 				echo $languages->get(Strings::RECOVER_PASSWORD); ?>
