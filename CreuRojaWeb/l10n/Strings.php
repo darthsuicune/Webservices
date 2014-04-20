@@ -10,13 +10,19 @@ class Strings{
 	const LOGIN_BUTTON = "login";
 	const COOKIES_WARNING = "cookiesWarning";
 	const RECOVER_PASSWORD = "recoverPassword";
-	
+
 	const MENU_SIGN_IN = "signIn";
 	const MENU_SIGN_OUT = "signOut";
 	const MENU_REGISTER_USER = "registerUser";
 	const MENU_MANAGE_LOCATIONS = "manageLocations";
 	const MENU_MANAGE_USERS = "manageUsers";
-	
+
+	const MENU_CONTACT = "contact";
+	const MENU_ABOUT = "about";
+
+	const TITLE_CONTACT = "titleContact";
+	const TITLE_ABOUT = "titleAbout";
+
 	var $strings = array(
 			self::WEB_TITLE=>array(self::SPANISH=>"Mapa de Cruz Roja Barcelona",
 					self::CATALAN=>"Mapa de Creu Roja Barcelona",
@@ -51,6 +57,18 @@ class Strings{
 			self::MENU_MANAGE_USERS=>array(self::SPANISH=>"Gestionar usuarios",
 					self::CATALAN=>"",
 					self::ENGLISH=>"Manage users"),
+			self::MENU_ABOUT=>array(self::SPANISH=>"Sobre nosotros",
+					self::CATALAN=>"",
+					self::ENGLISH=>"About"),
+			self::MENU_CONTACT=>array(self::SPANISH=>"Contacto",
+					self::CATALAN=>"",
+					self::ENGLISH=>"Contact"),
+			self::TITLE_ABOUT=>array(self::SPANISH=>"Sobre nosotros",
+					self::CATALAN=>"",
+					self::ENGLISH=>"About"),
+			self::TITLE_CONTACT=>array(self::SPANISH=>"Contacto",
+					self::CATALAN=>"",
+					self::ENGLISH=>"Contact"),
 	);
 
 	var $language;

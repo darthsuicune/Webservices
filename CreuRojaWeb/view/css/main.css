@@ -35,7 +35,28 @@
 
 /* Footer */
 #footer {
+	margin-left: 20%;
+	margin-right: 16%;
 	height: 5%;
+}
+
+#footer hr {
+	width: 100%;
+}
+
+#footer ul {
+	float: right;
+	list-style-type: none;
+}
+
+#footer ul li {
+	display: inline;
+}
+
+#footer ul li a {
+	text-decoration: none;
+	padding: .2em 1em;
+	color: #000;
 }
 
 /* Content */
@@ -43,6 +64,10 @@
 	height: 87%;
 	margin-left: 20%;
 	margin-right: 20%;
+}
+
+h1 {
+	text-align: center;
 }
 
 /* Login form */
