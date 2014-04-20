@@ -9,6 +9,7 @@ if (isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <HTML>
 	<head>
+		<link rel="shortcut icon" href="icons/favicon.ico" />
 		<meta http-equiv="Content-Style-Type" content="text/css" />
 		<?php if ($isMap) { ?>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -17,7 +18,6 @@ if (isset($_SESSION['user'])) {
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
 		<?php } ?>
 		<link href="view/css/main.css" rel="stylesheet" type="text/css" />
-		<link rel="shortcut icon" href="view/icons/favicon.ico" />
 		<title><?php 
 		$strings = new Strings();
 		echo $strings->get(Strings::WEB_TITLE);
