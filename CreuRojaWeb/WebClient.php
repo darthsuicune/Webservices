@@ -136,7 +136,7 @@ class WebClient implements Client {
 	}
 
 	function showRoot(){
-		require_once("view/login.php");
+		require_once("view/root.php");
 	}
 	
 	function showMap(){

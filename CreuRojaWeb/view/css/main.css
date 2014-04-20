@@ -1,15 +1,13 @@
 @CHARSET "UTF-8";
 
-html {
-}
-
-body {
+/* Header */
+#header {
+	height: 60px;
 }
 
 /* Menu */
 .nav_menu {
 	float: right;
-	margin-top: -120px;
 	margin-right: 20px;
 }
 
@@ -35,9 +33,14 @@ body {
 	background-color: #600;
 }
 
+/* Footer */
+#footer {
+	height: 5%;
+}
+
 /* Content */
-.content {
-	margin-top: 120px;
+#content {
+	height: 87%;
 	margin-left: 20%;
 	margin-right: 20%;
 }
@@ -93,9 +96,4 @@ input[type="submit"]:hover {
 
 .password_recovery {
 	margin-left: 20%;
-}
-
-/* Map */
-#map_canvas {
-	height: 100%;
 }
