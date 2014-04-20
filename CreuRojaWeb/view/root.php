@@ -1,7 +1,6 @@
 <?php
 $isMap = false;
 $languages = new Strings(Strings::ENGLISH);
-$request;
 $user = false;
 if (isset($_SESSION['user'])) {
 	$user = $_SESSION['user'];
