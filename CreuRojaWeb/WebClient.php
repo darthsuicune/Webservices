@@ -137,6 +137,8 @@ class WebClient implements Client {
 
 	function showRoot(){
 		require_once("view/root.php");
+		$root = new Root();
+		$root->showRoot();
 	}
 	
 	function showMap(){

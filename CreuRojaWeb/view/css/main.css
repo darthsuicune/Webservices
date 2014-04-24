@@ -122,3 +122,14 @@ input[type="submit"]:hover {
 .password_recovery {
 	margin-left: 20%;
 }
+
+/* Error message for forms */
+#error {
+	margin-top: 30px;
+	margin-left: 20%; width : 60%;
+	background-color: #ff8888;
+	padding: 10px;
+	border: 1px solid #ff0000;
+	border-radius: 10px;
+	width: 60%;
+}

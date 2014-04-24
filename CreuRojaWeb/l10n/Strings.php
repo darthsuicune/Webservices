@@ -23,6 +23,10 @@ class Strings{
 	const TITLE_CONTACT = "titleContact";
 	const TITLE_ABOUT = "titleAbout";
 
+	const ERRORS_TITLE = "errorsTitle";
+	const ERROR_INVALID_LOGIN = "errorInvalidLogin";
+	const ERROR_NO_LOGIN = "errorNoLogin";
+
 	var $strings = array(
 			self::WEB_TITLE=>array(self::SPANISH=>"Mapa de Cruz Roja Barcelona",
 					self::CATALAN=>"Mapa de Creu Roja Barcelona",
@@ -69,6 +73,15 @@ class Strings{
 			self::TITLE_CONTACT=>array(self::SPANISH=>"Contacto",
 					self::CATALAN=>"",
 					self::ENGLISH=>"Contact"),
+			self::ERRORS_TITLE=>array(self::SPANISH=>"Se han encontrado errores al procesar el formulario:",
+					self::CATALAN=>"",
+					self::ENGLISH=>"Errors were found when processing the form:"),
+			self::ERROR_INVALID_LOGIN=>array(self::SPANISH=>"La dirección de correo o contraseña son incorrectos",
+					self::CATALAN=>"",
+					self::ENGLISH=>"E-mail address or password are incorrect."),
+			self::ERROR_NO_LOGIN=>array(self::SPANISH=>"La dirección de correo y contraseña son obligatorios",
+					self::CATALAN=>"",
+					self::ENGLISH=>"E-mail address and password are mandatory."),
 	);
 
 	var $language;

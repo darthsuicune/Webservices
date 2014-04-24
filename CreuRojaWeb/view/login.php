@@ -1,29 +1,36 @@
+<?php 
+$this->hasError = true;
+$this->errors = array($this->languages->get(Strings::ERROR_NO_LOGIN));
+?>
 <div id="content">
 	<div class="logo">
 		<img src="view/icons/logo.png">
 	</div>
+	<?php if($this->hasError){
+		require_once('error.php');
+	} ?>
 	<div class="login_form">
 		<form accept-charset="utf8" novalidate="novalidate" autocomplete="on"
 			method="POST" action="?q=login" name="Login">
-			<label for="email"> <?php echo $languages->get(Strings::E_MAIL); ?>:
+			<label for="email"> <?php echo $this->languages->get(Strings::E_MAIL); ?>:
 			</label> <input required="required" name="email" type="text" /> <label
-				for="password"><?php echo $languages->get(Strings::PASSWORD); ?>: </label>
+				for="password"><?php echo $this->languages->get(Strings::PASSWORD); ?>: </label>
 			<input autocomplete="off" required="required" name="password"
 				type="password" /> <input name="send"
-				value="<?php echo $languages->get(Strings::LOGIN_BUTTON); ?>"
+				value="<?php echo $this->languages->get(Strings::LOGIN_BUTTON); ?>"
 				type="submit" />
 		</form>
 	</div>
 	<div class="password_recovery">
 		<p>
 			<a href="?q=recoverPassword"> <?php 
-				echo $languages->get(Strings::RECOVER_PASSWORD); ?>
+				echo $this->languages->get(Strings::RECOVER_PASSWORD); ?>
 			</a>
 		</p>
 	</div>
 	<div class="cookies_warning">
 		<p>
-			<?php echo $languages->get(Strings::COOKIES_WARNING); ?>
+			<?php echo $this->languages->get(Strings::COOKIES_WARNING); ?>
 		</p>
 	</div>
 </div>
