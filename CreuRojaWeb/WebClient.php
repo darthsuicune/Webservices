@@ -25,13 +25,16 @@ class WebClient implements Client {
 	var $usersController;
 	var $locationsController;
 	var $sessionsController;
+	var $lang;
 
 	public function __construct(UsersController $usersController,
 			LocationsController $locationsController,
-			SessionsController $sessionsController){
+			SessionsController $sessionsController,
+			Strings $lang){
 		$this->usersController = $usersController;
 		$this->locationsController = $locationsController;
 		$this->sessionsController = $sessionsController;
+		$this->lang = $lang;
 	}
 
 	public function handleRequest() {
@@ -137,7 +140,7 @@ class WebClient implements Client {
 
 	function showRoot(){
 		require_once("view/root.php");
-		$root = new Root();
+		$root = new Root($this->lang);
 		$root->showRoot();
 	}
 	

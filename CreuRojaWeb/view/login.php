@@ -1,6 +1,6 @@
 <?php 
 $this->hasError = true;
-$this->errors = array($this->languages->get(Strings::ERROR_NO_LOGIN));
+$this->errors[] = $this->languages->get(Strings::ERROR_NO_LOGIN);
 ?>
 <div id="content">
 	<div class="logo">

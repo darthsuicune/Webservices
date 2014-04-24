@@ -1,27 +1,29 @@
 <?php
 class Root {
-	var $isMap = false;
+	const MAP = "map";
+	const ABOUT = "about";
+	const CONTACT = "contact";
+	const LOGIN = "login";
+
 	var $languages;
-	var $user = false;
+	var $user;
 	var $hasError;
 	var $errors = array();
-	
-	public function __construct() {
-		$this->languages = new Strings(Strings::ENGLISH);
-		if (isset($_SESSION['user'])) {
-			$this->user = $_SESSION['user'];
-		}
+
+	public function __construct(Strings $lang, User $user = null) {
+		$this->languages = $lang;
+		$this->user = $user;
 	}
-	
-	public function showRoot() { 
-?>
+
+	public function showRoot($type = self::LOGIN) {
+		?>
 
 <!DOCTYPE html>
 <HTML>
 <head>
 <link rel="shortcut icon" href="view/icons/favicon.ico" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
-<?php if ($this->isMap) { ?>
+<?php if (strcmp($type, self::MAP) == 0) { ?>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <?php require_once('scripts/gmaps.php');
 		} else { ?>
@@ -34,16 +36,29 @@ echo $this->languages->get(Strings::WEB_TITLE);
 </title>
 </head>
 
-<BODY <?php if($this->isMap) { echo 'onload="initialize()"'; }?>>
+<BODY
+<?php if(strcmp($type, self::MAP) == 0) { echo 'onload="initialize()"'; }?>>
 	<?php
 	require_once('header.php');
-	
-	if(isset($_GET['q']) && strcmp($_GET['q'], "about") == 0) {
-		require_once('static/about.php');
-	} else if(isset($_GET['q']) && strcmp($_GET['q'], "contact") == 0) {
-		require_once('static/contact.php');
-	} else if($this->isMap) {
-		require_once('map.php');
+
+	if($this->user) {
+		switch($type){
+			case self::ABOUT:
+				require_once('static/about.php');
+				break;
+			case self::CONTACT:
+				require_once('static/contact.php');
+				break;
+			case self::LOGIN:
+				require_once('login.php');
+				break;
+			case self::MAP:
+				require_once('map.php');
+				break;
+			default:
+				require_once('login.php');
+				break;
+		}
 	} else {
 		require_once('login.php');
 	}
