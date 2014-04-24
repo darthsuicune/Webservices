@@ -7,7 +7,7 @@ class Root {
 
 	var $languages;
 	var $user;
-	var $hasError;
+	var $hasError = false;
 	var $errors = array();
 
 	public function __construct(Strings $lang, User $user = null) {

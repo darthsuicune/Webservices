@@ -1,7 +1,3 @@
-<?php 
-$this->hasError = true;
-$this->errors[] = $this->languages->get(Strings::ERROR_NO_LOGIN);
-?>
 <div id="content">
 	<div class="logo">
 		<img src="view/icons/logo.png">
