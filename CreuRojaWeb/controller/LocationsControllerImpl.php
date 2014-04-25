@@ -8,13 +8,16 @@ class LocationsControllerImpl implements LocationsController {
 	public function getLocations(User $user){
 		
 	}
-	public function addNewLocation(){
-		
+	public function addNewLocation(){		
 	}
 	public function updateLocation(){
-		
 	}
 	public function deleteLocation($id){
-		
+		$location = $this->locationsProvider->getLocation($id);
+		if($location){
+			return $this->locationsProvider->deleteLocation($location);
+		} else {
+			return false;
+		}
 	}
 }

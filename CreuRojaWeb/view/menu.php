@@ -12,7 +12,7 @@
 				<?php echo $this->languages->get(Strings::MENU_MANAGE_LOCATIONS); ?> </a>
 				
 				<li><a href="index.php?q=manageUsers">
-				<?php echo $this->languages->get(Strings::MENU_MANAGE_LOCATIONS); ?> </a> 
+				<?php echo $this->languages->get(Strings::MENU_MANAGE_USERS); ?> </a> 
 			<?php } ?>
 			
 			<li><a href="index.php?q=logout">

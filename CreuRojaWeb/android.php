@@ -18,7 +18,7 @@ foreach (glob("db/*.php") as $filename)
 require_once('Client.php');
 require_once('AndroidClient.php');
 
-// $clientConfig = new ClientConfiguration(ClientConfiguration::ANDROID);
-// $androidClient = $clientConfig->getClient();
-$androidClient = new AndroidClient();
-echo $androidClient->handleRequest();
+$clientConfig = new ClientConfiguration(ClientConfiguration::ANDROID);
+$androidClient = $clientConfig->getClient();
+
+

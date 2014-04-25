@@ -53,5 +53,17 @@ class Location{
 		}
 		return $location;
 	}
+	
+	public function equals(Location $location) {
+		return (($this->id == $location->id)
+				&& ($this->latitude == $location->latitude)
+				&& ($this->longitude == $location->longitude)
+				&& ($this->name == $location->name)
+				&& ($this->type == $location->type)
+				&& ($this->address == $location->address)
+				&& ($this->other == $location->other)
+				&& ($this->lastUpdateTime == $location->lastUpdateTime)
+				&& ($this->expireDate == $location->expireDate));
+	}
 
 }

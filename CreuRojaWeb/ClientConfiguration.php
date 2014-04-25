@@ -9,7 +9,7 @@ class ClientConfiguration{
 	const ANDROID = 1;
 	const WEB = 2;
 
-	public function getClient($clientType){
+	public function getClient($clientType, $lang){
 		$dsn = "mysql:dbname=" . self::DB_DATABASE . ";host=" . self::DB_ADDRESS
 		. ";charset=" . self::CHARSET;
 		$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
@@ -23,9 +23,12 @@ class ClientConfiguration{
 			case self::ANDROID:
 				return new AndroidClient($usersController, $locationsController);
 			case self::WEB:
+				require_once("view/root.php");
 				$sessionsController = new SessionsControllerImpl($dataStorage);
 				$strings = new Strings(Strings::LANG_ENGLISH);
-				return new WebClient($usersController, $locationsController, $sessionsController, $strings);
+				$root = new Root(new Strings($lang));
+				return new WebClient($usersController, $locationsController, $sessionsController, $strings,
+						$root);
 			default:
 				return false;
 		}

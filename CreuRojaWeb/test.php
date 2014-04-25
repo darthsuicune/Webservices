@@ -1,7 +1,7 @@
 <?php
 foreach (glob("controller/*.php") as $filename)
 {
-    require_once($filename);
+	require_once($filename);
 }
 foreach (glob("model/*.php") as $filename)
 {
@@ -23,11 +23,10 @@ foreach (glob("test/*.php") as $filename)
 
 echo "<table border='1'>\n";
 echo "\t<tr>" . testMySqlDao() . "</tr>\n";
-echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 echo "\t<tr>" . testLocalization() . "</tr>\n";
+echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 echo "\t<tr>" . testLocationsController() . "</tr>\n";
-// echo "\t<tr>" . testLoginProviderImpl() . "</tr>\n";
-// echo "\t<tr>" . testWebClientImpl() . "</tr>\n";
+echo "\t<tr>" . testUsersProviderImpl() . "</tr>\n";
 echo "</table>";
 
 function assertEquals($condition, $result, $expected){
@@ -36,6 +35,14 @@ function assertEquals($condition, $result, $expected){
 
 function assertNotEquals($condition, $result, $expected){
 	passTest($condition, !areEqual($result, $expected));
+}
+
+function assertIsTrue($condition, $result){
+	passTest($condition, $result);
+}
+
+function assertIsFalse($condition, $result){
+	passTest($condition, !$result);
 }
 
 function areEqual($obj_a, $obj_b){
@@ -48,26 +55,18 @@ function areEqual($obj_a, $obj_b){
 				break;
 			}
 		}
-	} else if (!is_array($obj_a) && !is_array($obj_b)){
-		if(strcmp($obj_a, $obj_b) == 0){
-			$isEqual = true;
-		}
+	} else if(is_object($obj_a) && is_object($obj_b)) {
+		$isEqual = ($obj_a->equals($obj_b));
+	} else if(is_string($obj_a) && is_string($obj_b)) {
+		$isEqual = (strcmp($obj_a, $obj_b) == 0);
 	}
 	return $isEqual;
 }
 
-function assertIsTrue($condition, $result){
-	passTest($condition, $result);
-}
-
-function assertIsFalse($condition, $result){
-	passTest($condition, !$result);
-}
-
 function passTest($condition, $isPassed){
 	if($isPassed === true){
-		echo "\t&nbsp;&nbsp;&nbsp;&nbsp;$condition: <font color=\"green\">PASSED</font><br>\n";
+		echo "\t&nbsp;&nbsp;$condition: <font color=\"green\">PASSED</font><br>\n";
 	} else {
-		echo "\t&nbsp;&nbsp;&nbsp;&nbsp;$condition: <font color=\"red\"><b>FAILED</b></font><br>\n";
+		echo "\t&nbsp;&nbsp;$condition: <font color=\"red\"><b>FAILED</b></font><br>\n";
 	}
 }

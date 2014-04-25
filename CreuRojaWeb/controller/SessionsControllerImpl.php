@@ -8,7 +8,7 @@ class SessionsControllerImpl implements SessionsController {
 	}
 	
 	public function createSession(User $user){
-		$_SESSION['user'] = $user;
+		$_SESSION[SessionsController::USER_OBJECT] = $user;
 	}
 	
 	public function destroySession(){

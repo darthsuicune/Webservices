@@ -2,7 +2,7 @@
 	<div class="logo">
 		<img src="view/icons/logo.png">
 	</div>
-	<?php if($this->hasError){
+	<?php if($this->hasErrors){
 		require_once('error.php');
 	} ?>
 	<div class="login_form">

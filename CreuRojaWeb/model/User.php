@@ -30,7 +30,15 @@ class User{
 				UsersContract::COLUMN_SURNAME=>$this->surname
 		);
 	}
-
+	
+	public function equals(User $user) {
+		return (($this->id == $user->id)
+				&& ($this->name == $user->name)
+				&& ($this->surname == $user->surname)
+				&& ($this->email == $user->email)
+				&& ($this->role == $user->role));
+	}
+	
 	public function isAllowedTo($action) {
 		if($this->role){
 			return true;
