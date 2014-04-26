@@ -1,0 +1,115 @@
+<?php
+
+function testUsersController(){
+	$provider = new MockUserProvider();
+	$controller = new UsersControllerImpl($provider);
+	echo "<td> UserController tests";
+	echo "<td>testGetUserFromEmail<br>\n";
+	testControllerGetUserFromEmail($controller);
+	echo "<td>testGetUserFromLoginData<br>\n";
+	testControllerValidateUserFromLoginData($controller);
+	echo "<td>testGetUserFromAccessToken<br>\n";
+	testControllerValidateUserFromAccessToken($controller);
+	echo "</td><br>\n";
+}
+
+function testControllerGetUserFromEmail(UsersController $controller) {
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+
+	$email = false;
+	$result = $controller->getUserFromEmail($email);
+	assertIsFalse("Email is false", $result);
+
+	$email = "";
+	$result = $controller->getUserFromEmail($email);
+	assertIsFalse("Email is empty", $result);
+
+	$email = "tralara";
+	$result = $controller->getUserFromEmail($email);
+	assertIsFalse("Email is invalid", $result);
+
+	$email = "Email@something.com";
+	$result = $controller->getUserFromEmail($email);
+	assertEquals("Valid email", $result, $user1);
+}
+
+function testControllerValidateUserFromLoginData(UsersController $controller) {
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+
+	$email = false;
+	$password = false;
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertIsFalse("Email is false", $user);
+
+	$email = "";
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertIsFalse("Empty email", $user);
+
+	$email = "email";
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertIsFalse("Invalid email", $user);
+
+	$email = "Email@something.com";
+	$password = "";
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertIsFalse("Valid email, wrong password", $user);
+
+	$password = "passwordTest";
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertIsFalse("Valid data, unhashed password", $user);
+
+	$password = sha1("passwordTest");
+	$user = $controller->validateUserFromLoginData($email, $password);
+	assertEquals("Valid data, hashed password", $user, $user1);
+}
+
+function testControllerValidateUserFromAccessToken(UsersController $controller) {
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+
+	$token = false;
+	$user = $controller->validateUserFromAccessToken($token);
+	assertIsFalse("Token is false", $user);
+
+	$token = "";
+	$user = $controller->validateUserFromAccessToken($token);
+	assertIsFalse("Empty token", $user);
+
+	$token = "token";
+	$user = $controller->validateUserFromAccessToken($token);
+	assertIsFalse("Invalid token", $user);
+
+	$token = "validAccessTokenThatHas40CharactersTotal";
+	$user = $controller->validateUserFromAccessToken($token);
+	assertEquals("Valid token", $user, $user1);
+}
+
+
+class MockUserProvider implements UsersProvider {
+	var $user1;
+	var $password = "passwordTest";
+	var $accessToken = "validAccessTokenThatHas40CharactersTotal";
+
+	public function __construct() {
+		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	}
+
+	public function getUserFromEmail($email){
+		if(strcmp($email, $this->user1->email) == 0) {
+			return $this->user1;
+		}
+		return false;
+	}
+	public function getUserFromLoginData($email, $password){
+		if((strcmp($email, $this->user1->email) == 0)
+				&& (strcmp($password, sha1($this->password)) == 0)) {
+			return $this->user1;
+		}
+		return false;
+	}
+	public function getUserFromAccessToken($accessToken){
+		if(strcmp($accessToken, $this->accessToken) == 0) {
+			return $this->user1;
+		}
+		return false;
+	}
+}

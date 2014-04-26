@@ -35,12 +35,17 @@ class WebClient {
 	public function handleLoginRequest(){
 		if(isset($_POST[self::PARAMETER_EMAIL])
 				&& isset($_POST[self::PARAMETER_PASSWORD])) {
-			$user = $this->usersController->validateUserFromLogin(
+			$user = $this->usersController->validateUserFromLoginData(
 					$_POST[self::PARAMETER_EMAIL],
 					sha1($_POST[self::PARAMETER_PASSWORD]));
 			if($user) {
 				$this->sessionsController->createSession($user);
+				$this->root->setUser($user);
 				return $this->root->showRoot(Root::MAP);
+			} else {
+				$errors = array($this->lang->get(Strings::ERROR_INVALID_LOGIN));
+				return $this->root->showRoot(Root::LOGIN, true, $errors);
+				
 			}
 		}
 		return $this->root->showRoot(Root::LOGIN);

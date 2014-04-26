@@ -6,10 +6,24 @@ class UsersControllerImpl implements UsersController {
 		$this->usersProvider = $usersProvider;
 	}
 	
-	public function validateUserFromLogin($email, $password){
-		$this->usersProvider->getUserFromEmail($email);
+	public function getUserFromEmail($email) {
+		if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
+			return false;
+		}
+		return $this->usersProvider->getUserFromEmail($email);
 	}
+	
+	public function validateUserFromLoginData($email, $password){
+		if((filter_var($email, FILTER_VALIDATE_EMAIL) == false) || (strlen($password) != 40)) {
+			return false;
+		}
+		return $this->usersProvider->getUserFromLoginData($email, $password);
+	}
+	
 	public function validateUserFromAccessToken($accessToken){
-		
+		if(strlen($accessToken) != 40) {
+			return false;
+		}
+		return $this->usersProvider->getUserFromAccessToken($accessToken);
 	}
 } 

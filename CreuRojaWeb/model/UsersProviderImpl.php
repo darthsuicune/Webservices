@@ -8,9 +8,6 @@ class UsersProviderImpl implements UsersProvider {
 	}
 
 	public function getUserFromEmail($email){
-		if(filter_var($email, FILTER_VALIDATE_EMAIL) == false) {
-			return false;
-		}
 		$columns = array(UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME,
 				UsersContract::COLUMN_ROLE);
@@ -19,13 +16,9 @@ class UsersProviderImpl implements UsersProvider {
 		$whereArgs = array($email);
 		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
 		return $this->getUserObject($result[0]);
-
 	}
 
 	public function getUserFromLoginData($email, $password) {
-		if((filter_var($email, FILTER_VALIDATE_EMAIL) == false) || (strlen($password) == 0)) {
-			return false;
-		}
 		$columns = array(UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME,
 				UsersContract::COLUMN_ROLE, UsersContract::COLUMN_PASSWORD);
@@ -41,9 +34,6 @@ class UsersProviderImpl implements UsersProvider {
 	}
 
 	public function getUserFromAccessToken($accessToken){
-		if(strlen($accessToken) != 30) {
-			return false;
-		}
 		$columns = array(AccessTokenContract::COLUMN_LOGIN_TOKEN, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_NAME,
 				UsersContract::COLUMN_SURNAME, UsersContract::COLUMN_ROLE);
@@ -55,10 +45,14 @@ class UsersProviderImpl implements UsersProvider {
 	}
 
 	function getUserObject(array $userArray) {
-		return new User($userArray[UsersContract::COLUMN_NAME],
-				$userArray[UsersContract::COLUMN_SURNAME],
-				$userArray[UsersContract::COLUMN_E_MAIL],
-				$userArray[UsersContract::COLUMN_ROLE],
-				$userArray[UsersContract::COLUMN_ID]);
+		if(isset($userArray[UsersContract::COLUMN_NAME])) {
+			return new User($userArray[UsersContract::COLUMN_NAME],
+					$userArray[UsersContract::COLUMN_SURNAME],
+					$userArray[UsersContract::COLUMN_E_MAIL],
+					$userArray[UsersContract::COLUMN_ROLE],
+					$userArray[UsersContract::COLUMN_ID]);
+		} else {
+			return null;
+		}
 	}
 }

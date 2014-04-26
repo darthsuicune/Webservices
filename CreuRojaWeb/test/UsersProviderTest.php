@@ -18,7 +18,7 @@ function testGetUserFromEmail(UsersProvider $provider) {
 
 	$email = false;
 	$user = $provider->getUserFromEmail($email);
-	assertIsFalse("Email is false", $user);
+	assertisFalse("Email is false", $user, $user1);
 	
 	$email = "";
 	$user = $provider->getUserFromEmail($email);
@@ -78,7 +78,7 @@ function testGetUserFromAccessToken(UsersProvider $provider) {
 	$user = $provider->getUserFromAccessToken($token);
 	assertIsFalse("Invalid token", $user);
 	
-	$token = "AValidTokenWith30Characters...";
+	$token = "accessTokenThatHas30Characters";
 	$user = $provider->getUserFromAccessToken($token);
 	assertEquals("Valid token", $user, $user1);
 }
@@ -87,7 +87,7 @@ function testGetUserFromAccessToken(UsersProvider $provider) {
 class MockUserStorage implements DataStorage {
 	var $user1;
 	var $password;
-	var $token = "AValidTokenWith30Characters...";
+	var $token = "accessTokenThatHas30Characters";
 
 	public function __construct(){
 		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);

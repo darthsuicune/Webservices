@@ -14,7 +14,7 @@ class Root {
 		$this->languages = $lang;
 		$this->user = $user;
 	}
-	
+
 	public function setUser(User $user){
 		$this->user = $user;
 	}
@@ -67,7 +67,9 @@ echo $this->languages->get(Strings::WEB_TITLE);
 			break;
 	}
 
-	require_once('footer.php');
+	if(!$isMap) {
+		require_once('footer.php');
+	}
 	?>
 </BODY>
 </HTML>

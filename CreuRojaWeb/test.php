@@ -27,6 +27,7 @@ echo "\t<tr>" . testLocalization() . "</tr>\n";
 echo "\t<tr>" . testLocationsProviderImpl() . "</tr>\n";
 echo "\t<tr>" . testLocationsController() . "</tr>\n";
 echo "\t<tr>" . testUsersProviderImpl() . "</tr>\n";
+echo "\t<tr>" . testUsersController() . "</tr>\n";
 echo "</table>";
 
 function assertEquals($condition, $result, $expected){
