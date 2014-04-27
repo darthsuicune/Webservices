@@ -51,7 +51,7 @@ function areEqual($obj_a, $obj_b){
 	if(is_array($obj_a) && is_array($obj_b)){
 		$isEqual = true;
 		for($i = 0; $i < count($obj_a); $i++){
-			if($obj_a[$i] != $obj_b[$i]){
+			if(!areEqual($obj_a[$i], $obj_b[$i])){
 				$isEqual = false;
 				break;
 			}

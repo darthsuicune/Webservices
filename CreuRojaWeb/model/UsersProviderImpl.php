@@ -44,8 +44,21 @@ class UsersProviderImpl implements UsersProvider {
 		return $this->getUserObject($result[0]);
 	}
 
-	public function getUserList() {
-		return false;
+	public function getUserList(array $roles) {
+		$columns = array(UsersContract::COLUMN_ID, UsersContract::COLUMN_E_MAIL, 
+				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME, 
+				UsersContract::COLUMN_ROLE);
+		$tables = array(UsersContract::TABLE_NAME);
+		$where = UsersContract::COLUMN_ROLE . " IN (" 
+				. implode(',', array_fill(0, count($roles), '?'))
+				. ")";
+		$whereArgs = $roles;
+		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
+		$userList = array();
+		foreach($result as $userArray) {
+			$userList[] = $this->getUserObject($userArray);
+		}
+		return $userList;
 	}
 
 	function getUserObject(array $userArray) {

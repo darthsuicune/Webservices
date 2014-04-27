@@ -38,19 +38,6 @@ function testGetUserFromEmail(UsersProvider $provider) {
 function testGetUserFromLoginData(UsersProvider $provider) {
 	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
 	
-	$email = false;
-	$password = false;
-	$user = $provider->getUserFromLoginData($email, $password);
-	assertIsFalse("Email is false", $user);
-	
-	$email = "";
-	$user = $provider->getUserFromLoginData($email, $password);
-	assertIsFalse("Empty email", $user);
-	
-	$email = "email";
-	$user = $provider->getUserFromLoginData($email, $password);
-	assertIsFalse("Invalid email", $user);
-	
 	$email = "Email@something.com";
 	$password = "";
 	$user = $provider->getUserFromLoginData($email, $password);
@@ -85,9 +72,15 @@ function testGetUserFromAccessToken(UsersProvider $provider) {
 	assertEquals("Valid token", $user, $user1);
 }
 
-function testGetUserList(UserProvider $provider) {
+function testGetUserList(UsersProvider $provider) {
 	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
 	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+	
+	$result = $provider->getUserList(array("role"));
+	assertEquals("Gets partial list", $result, array($user1));
+	
+	$result = $provider->getUserList(array("role", "role2"));
+	assertEquals("Gets user list", $result, array($user1, $user2));
 }
 
 class MockUserStorage implements DataStorage {
@@ -106,7 +99,14 @@ class MockUserStorage implements DataStorage {
 		if(($where == "") || (substr_count($where, "?") != count($whereArgs))){
 			return false;
 		}
-		if($whereArgs[0] == $this->user1->email || $whereArgs[0] == $this->token) {
+		
+		if(strpos($where, UsersContract::COLUMN_ROLE) !== false) {
+			if($whereArgs == array("role", "role2")){
+				return array($this->user1->to_array(), $this->user2->to_array());
+			} else if($whereArgs == array("role")){
+				return array($this->user1->to_array());
+			}
+		} else if($whereArgs[0] == $this->user1->email || $whereArgs[0] == $this->token) {
 		return array(array(UsersContract::COLUMN_NAME=>$this->user1->name,
 				UsersContract::COLUMN_SURNAME=>$this->user1->surname,
 				UsersContract::COLUMN_E_MAIL=>$this->user1->email,

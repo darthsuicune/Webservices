@@ -26,4 +26,11 @@ class UsersControllerImpl implements UsersController {
 		}
 		return $this->usersProvider->getUserFromAccessToken($accessToken);
 	}
+	
+	public function getUserList(array $roles = null){
+		if(($roles == null) || (count($roles) == 0)) {
+			return array();
+		}
+		return $this->usersProvider->getUserList($roles);
+	}
 } 

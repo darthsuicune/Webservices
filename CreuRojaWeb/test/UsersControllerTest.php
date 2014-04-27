@@ -10,6 +10,8 @@ function testUsersController(){
 	testControllerValidateUserFromLoginData($controller);
 	echo "<td>testGetUserFromAccessToken<br>\n";
 	testControllerValidateUserFromAccessToken($controller);
+	echo "<td>testGetUserList<br>\n";
+	testControllerGetUserList($controller);
 	echo "</td><br>\n";
 }
 
@@ -83,14 +85,35 @@ function testControllerValidateUserFromAccessToken(UsersController $controller) 
 	assertEquals("Valid token", $user, $user1);
 }
 
+function testControllerGetUserList(UsersController $controller) {
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+	
+	$result = $controller->getUserList();
+	assertEquals("Empty parameter", $result, array());
+	
+	$result = $controller->getUserList(null);
+	assertEquals("Null list", $result, array());
+	
+	$result = $controller->getUserList(array());
+	assertEquals("Empty list", $result, array());
+	
+	$result = $controller->getUserList(array("role"));
+	assertEquals("Gets partial list", $result, array($user1));
+	
+	$result = $controller->getUserList(array("role", "role2"));
+	assertEquals("Gets user list", $result, array($user1, $user2));
+}
+
 
 class MockUserProvider implements UsersProvider {
-	var $user1;
+	var $user1, $user2;
 	var $password = "passwordTest";
 	var $accessToken = "validAccessTokenThatHas40CharactersTotal";
 
 	public function __construct() {
 		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);		
 	}
 
 	public function getUserFromEmail($email){
@@ -111,5 +134,15 @@ class MockUserProvider implements UsersProvider {
 			return $this->user1;
 		}
 		return false;
+	}
+
+	public function getUserList(array $roles) {
+		if($roles == array("role", "role2")){
+			return array($this->user1, $this->user2);
+		} else if($roles == array("role")){
+			return array($this->user1);
+		} else {
+			return array();
+		}
 	}
 }

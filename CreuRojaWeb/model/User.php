@@ -108,6 +108,22 @@ class User{
 
 		return $isAllowed;
 	}
+	
+	public function getManagedRoles() {
+		$result = array();
+		if($this->role == UsersContract::ROLE_REGISTER){
+			$result[] = UsersContract::ROLE_REGISTER;
+			$result[] = UsersContract::ROLE_MARITIMOS;
+			$result[] = UsersContract::ROLE_SOCIAL;
+			$result[] = UsersContract::ROLE_SOCIAL_SOCORROS;
+			$result[] = UsersContract::ROLE_SOCORROS;
+			$result[] = UsersContract::ROLE_SOCORROS_MARITIMOS;
+		}
+		if($this->role == UsersContract::ROLE_ADMIN) {
+			$result[] = UsersContract::ROLE_ADMIN;
+		}
+		return $result;
+	}
 
 	public function getAllowedTypes() {
 		$types = array();
