@@ -2,18 +2,21 @@
 
 /* Header */
 #header {
-	height: 60px;
+	height: 68px;
 }
 
 #logomenu {
 	float:left;
+	margin-top: 4px;
+	margin-left: 10%;
+	margin-bottom: 4px;
 	height: 60px;
 }
 
 /* Menu */
 .nav_menu {
 	float: right;
-	margin-right: 20px;
+	margin-right: 10%;
 }
 
 .nav_menu ul {

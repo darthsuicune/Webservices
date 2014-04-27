@@ -65,6 +65,6 @@ body {
 }
 
 #map-canvas {
-	height: 94%
+	height: 94%;
 }
 </style>
