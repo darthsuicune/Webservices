@@ -16,7 +16,7 @@ function testUsersController(){
 }
 
 function testControllerGetUserFromEmail(UsersController $controller) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 
 	$email = false;
 	$result = $controller->getUserFromEmail($email);
@@ -36,7 +36,7 @@ function testControllerGetUserFromEmail(UsersController $controller) {
 }
 
 function testControllerValidateUserFromLoginData(UsersController $controller) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 
 	$email = false;
 	$password = false;
@@ -66,7 +66,7 @@ function testControllerValidateUserFromLoginData(UsersController $controller) {
 }
 
 function testControllerValidateUserFromAccessToken(UsersController $controller) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 
 	$token = false;
 	$user = $controller->validateUserFromAccessToken($token);
@@ -86,8 +86,8 @@ function testControllerValidateUserFromAccessToken(UsersController $controller) 
 }
 
 function testControllerGetUserList(UsersController $controller) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
-	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
+	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1, "ca");
 	
 	$result = $controller->getUserList();
 	assertEquals("Empty parameter", $result, array());
@@ -112,8 +112,8 @@ class MockUserProvider implements UsersProvider {
 	var $accessToken = "validAccessTokenThatHas40CharactersTotal";
 
 	public function __construct() {
-		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
-		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);		
+		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
+		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1, "ca");		
 	}
 
 	public function getUserFromEmail($email){

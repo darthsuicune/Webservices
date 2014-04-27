@@ -33,17 +33,12 @@ if(isset($_COOKIE['PHPSESSID'])) {
 	session_start();
 }
 
-$language = getLanguage();
+$language = Strings::getDefaultLanguage();
 
 $clientConfig = new ClientConfiguration();
 $webClient = $clientConfig->getClient(ClientConfiguration::WEB, $language);
 
 handleRequest($webClient);
-
-function getLanguage() {
-	//TODO get the language
-	return Strings::LANG_ENGLISH;
-}
 
 function handleRequest($webClient){
 	$request = false;

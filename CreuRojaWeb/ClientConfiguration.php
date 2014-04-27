@@ -1,18 +1,13 @@
 <?php
 class ClientConfiguration{
-	const DB_ADDRESS = 'localhost'; // TODO: Set values
-	const DB_USERNAME = 'testuser'; // TODO: Set values
-	const DB_PASSWORD = 'testpass'; // TODO: Set values
-	const DB_DATABASE = 'webservice';
-	const CHARSET = 'UTF8';
 
 	const ANDROID = 1;
 	const WEB = 2;
 
 	public function getClient($clientType, $lang = Strings::LANG_CATALAN){
-		$dsn = "mysql:dbname=" . self::DB_DATABASE . ";host=" . self::DB_ADDRESS
-		. ";charset=" . self::CHARSET;
-		$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
+		require_once("config.php");
+		$dsn = "mysql:dbname=$DB_DATABASE;host=$DB_ADDRESS;charset=$CHARSET";
+		$pdo = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
 		$dataStorage = new MySqlDao($pdo);
 		$usersProvider = new UsersProviderImpl($dataStorage);
 		$locationsProvider = new LocationsProviderImpl($dataStorage);

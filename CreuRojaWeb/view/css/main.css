@@ -5,6 +5,11 @@
 	height: 60px;
 }
 
+#logomenu {
+	float:left;
+	height: 60px;
+}
+
 /* Menu */
 .nav_menu {
 	float: right;
@@ -72,7 +77,7 @@ h1 {
 
 /* Login form */
 .logo {
-	margin-top: 100px;
+	margin-top: 60px;
 	margin-left: 20px;
 	text-align: center;
 }

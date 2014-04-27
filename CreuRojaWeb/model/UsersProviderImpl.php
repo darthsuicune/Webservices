@@ -10,7 +10,7 @@ class UsersProviderImpl implements UsersProvider {
 	public function getUserFromEmail($email) {
 		$columns = array(UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME,
-				UsersContract::COLUMN_ROLE);
+				UsersContract::COLUMN_ROLE, UsersContract::COLUMN_LANGUAGE);
 		$tables = array(UsersContract::TABLE_NAME);
 		$where = UsersContract::COLUMN_E_MAIL . "=?";
 		$whereArgs = array($email);
@@ -21,7 +21,8 @@ class UsersProviderImpl implements UsersProvider {
 	public function getUserFromLoginData($email, $password) {
 		$columns = array(UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME,
-				UsersContract::COLUMN_ROLE, UsersContract::COLUMN_PASSWORD);
+				UsersContract::COLUMN_ROLE, UsersContract::COLUMN_PASSWORD, 
+				UsersContract::COLUMN_LANGUAGE);
 		$tables = array(UsersContract::TABLE_NAME);
 		$where = UsersContract::COLUMN_E_MAIL . "=?";
 		$whereArgs = array($email);
@@ -36,7 +37,8 @@ class UsersProviderImpl implements UsersProvider {
 	public function getUserFromAccessToken($accessToken) {
 		$columns = array(AccessTokenContract::COLUMN_LOGIN_TOKEN, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_NAME,
-				UsersContract::COLUMN_SURNAME, UsersContract::COLUMN_ROLE);
+				UsersContract::COLUMN_SURNAME, UsersContract::COLUMN_ROLE,
+				UsersContract::COLUMN_LANGUAGE);
 		$tables = array(AccessTokenContract::TABLE_NAME, UsersContract::TABLE_NAME);
 		$where = AccessTokenContract::USER_ID . "=?";
 		$whereArgs = array($accessToken);
@@ -47,7 +49,7 @@ class UsersProviderImpl implements UsersProvider {
 	public function getUserList(array $roles) {
 		$columns = array(UsersContract::COLUMN_ID, UsersContract::COLUMN_E_MAIL, 
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME, 
-				UsersContract::COLUMN_ROLE);
+				UsersContract::COLUMN_ROLE, UsersContract::COLUMN_LANGUAGE);
 		$tables = array(UsersContract::TABLE_NAME);
 		$where = UsersContract::COLUMN_ROLE . " IN (" 
 				. implode(',', array_fill(0, count($roles), '?'))
@@ -67,7 +69,8 @@ class UsersProviderImpl implements UsersProvider {
 					$userArray[UsersContract::COLUMN_SURNAME],
 					$userArray[UsersContract::COLUMN_E_MAIL],
 					$userArray[UsersContract::COLUMN_ROLE],
-					$userArray[UsersContract::COLUMN_ID]);
+					$userArray[UsersContract::COLUMN_ID],
+					$userArray[UsersContract::COLUMN_LANGUAGE]);
 		} else {
 			return null;
 		}

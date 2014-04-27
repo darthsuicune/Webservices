@@ -8,8 +8,11 @@ class SessionsControllerImpl implements SessionsController {
 	}
 
 	public function createSession(User $user){
-		session_start();
+		if(session_id() == ""){
+			session_start();
+		}
 		$_SESSION[SessionsController::USER] = $user;
+		$this->setLanguage($user->language);
 	}
 
 	public function destroySession(){

@@ -1,17 +1,17 @@
 <?php class Login implements Content {
-	var $hasNotice = false;
+	
 	public function showContent(Notice $notice = null) {
 		$lang = $_SESSION[SessionsController::LANGUAGE];
-		$this->hasNotice = count($notice) > 0;
+		$hasNotice = count($notice) > 0;
 		?>
 <div id="content">
 	<div class="logo">
 		<img src="view/icons/logo.png">
 	</div>
 	<?php 
-	if($this->hasNotice){
-		$notice->showNotice();
-	} ?>
+		if($hasNotice){
+			$notice->showNotice();
+		} ?>
 	<div class="login_form">
 		<form accept-charset="utf8" novalidate="novalidate" autocomplete="on"
 			method="POST" action="?q=login" name="Login">
@@ -36,8 +36,8 @@
 	</div>
 </div>
 <?php 
-$footer = new Footer();
-$footer->showFooter();
+		$footer = new Footer();
+		$footer->showFooter();
 	}
 	
 	public function getHtmlHeaders() { ?>

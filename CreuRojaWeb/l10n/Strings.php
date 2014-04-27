@@ -112,4 +112,13 @@ class Strings{
 		$strings = $this->strings[$string];
 		return $strings[$this->language];
 	}
+	
+	public static function getDefaultLanguage() {
+		switch(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2)){
+			case self::LANG_ENGLISH:
+				return Strings::LANG_ENGLISH;
+			default:
+				return Strings::LANG_CATALAN;
+		}
+	}
 }

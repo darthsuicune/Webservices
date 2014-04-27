@@ -16,7 +16,7 @@ function testUsersProviderImpl(){
 }
 
 function testGetUserFromEmail(UsersProvider $provider) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 
 	$email = false;
 	$user = $provider->getUserFromEmail($email);
@@ -36,7 +36,7 @@ function testGetUserFromEmail(UsersProvider $provider) {
 }
 
 function testGetUserFromLoginData(UsersProvider $provider) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 	
 	$email = "Email@something.com";
 	$password = "";
@@ -53,7 +53,7 @@ function testGetUserFromLoginData(UsersProvider $provider) {
 }
 
 function testGetUserFromAccessToken(UsersProvider $provider) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
 	
 	$token = false;
 	$user = $provider->getUserFromAccessToken($token);
@@ -73,8 +73,8 @@ function testGetUserFromAccessToken(UsersProvider $provider) {
 }
 
 function testGetUserList(UsersProvider $provider) {
-	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
-	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
+	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1, "ca");
 	
 	$result = $provider->getUserList(array("role"));
 	assertEquals("Gets partial list", $result, array($user1));
@@ -90,8 +90,8 @@ class MockUserStorage implements DataStorage {
 	var $token = "accessTokenThatHas30Characters";
 
 	public function __construct(){
-		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
-		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0, "ca");
+		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1, "ca");
 		$this->password = password_hash(sha1("passwordTest"), PASSWORD_BCRYPT);
 	}
 
@@ -99,7 +99,6 @@ class MockUserStorage implements DataStorage {
 		if(($where == "") || (substr_count($where, "?") != count($whereArgs))){
 			return false;
 		}
-		
 		if(strpos($where, UsersContract::COLUMN_ROLE) !== false) {
 			if($whereArgs == array("role", "role2")){
 				return array($this->user1->to_array(), $this->user2->to_array());
@@ -112,7 +111,8 @@ class MockUserStorage implements DataStorage {
 				UsersContract::COLUMN_E_MAIL=>$this->user1->email,
 				UsersContract::COLUMN_ROLE=>$this->user1->role,
 				UsersContract::COLUMN_ID=>$this->user1->id,
-				UsersContract::COLUMN_PASSWORD=>$this->password));
+				UsersContract::COLUMN_PASSWORD=>$this->password,
+				UsersContract::COLUMN_LANGUAGE=>$this->user1->language));
 		} else {
 			return array(array());
 		}

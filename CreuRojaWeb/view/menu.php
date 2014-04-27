@@ -11,7 +11,7 @@
 		<li><a href="index.php?q=map">Map</a>
 		</li>
 		<?php } 
-			if($user->isAllowedTo(Actions::REGISTER_USER)) { ?>
+			if($user->isAllowedTo(Actions::REGISTER)) { ?>
 
 		<li><a href="index.php?q=register"> <?php echo $lang->get(Strings::MENU_REGISTER_USER); ?>
 		</a></li>
