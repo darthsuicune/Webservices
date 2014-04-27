@@ -10,6 +10,8 @@ function testUsersProviderImpl(){
 	testGetUserFromLoginData($provider);
 	echo "<td>testGetUserFromAccessToken<br>\n";
 	testGetUserFromAccessToken($provider);
+	echo "<td>testGetUserList<br>\n";
+	testGetUserList($provider);
 	echo "</td><br>\n";
 }
 
@@ -83,14 +85,20 @@ function testGetUserFromAccessToken(UsersProvider $provider) {
 	assertEquals("Valid token", $user, $user1);
 }
 
+function testGetUserList(UserProvider $provider) {
+	$user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+	$user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
+}
 
 class MockUserStorage implements DataStorage {
 	var $user1;
+	var $user2;
 	var $password;
 	var $token = "accessTokenThatHas30Characters";
 
 	public function __construct(){
 		$this->user1 = new User("Name", "Surname", "Email@something.com", "role", 0);
+		$this->user2 = new User("Name2", "Surname2", "Email2@something.com", "role2", 1);
 		$this->password = password_hash(sha1("passwordTest"), PASSWORD_BCRYPT);
 	}
 

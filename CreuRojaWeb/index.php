@@ -15,72 +15,92 @@ foreach (glob("db/*.php") as $filename)
 {
 	require_once($filename);
 }
+foreach (glob("view/*.php") as $filename)
+{
+	require_once($filename);
+}
+foreach (glob("view/static/*.php") as $filename)
+{
+	require_once($filename);
+}
+
 require_once('ClientConfiguration.php');
 require_once('WebClient.php');
 
-const REQUEST_LOGIN = "login";
-const REQUEST_LOGOUT = "logout";
-const REQUEST_UPDATE_LOCATION = "update";
-const REQUEST_ADD_LOCATION = "addNew";
-const REQUEST_DELETE_LOCATION = "delete";
-const REQUEST_REGISTER = "register";
-const REQUEST_CHANGE_PASSWORD = "changePassword";
-const REQUEST_RECOVER_PASSWORD = "recoverPassword";
-const REQUEST_ABOUT = "about";
-const REQUEST_CONTACT = "contact";
 const REQUEST_TYPE = "q";
 
-session_start();
+if(isset($_COOKIE['PHPSESSID'])) {
+	session_start();
+}
 
-$language = Strings::LANG_ENGLISH; //TODO get the language
+$language = getLanguage();
 
 $clientConfig = new ClientConfiguration();
 $webClient = $clientConfig->getClient(ClientConfiguration::WEB, $language);
 
-$request[0] = false;
-if(isset($_GET[REQUEST_TYPE])){
-	$request = explode("/", $_GET[REQUEST_TYPE]);
+handleRequest($webClient);
+
+function getLanguage() {
+	//TODO get the language
+	return Strings::LANG_ENGLISH;
 }
-if(isset($request[1])){
-	switch($request[0]){
-		case REQUEST_UPDATE_LOCATION:
-			$webClient->handleLocationUpdateRequest($request[1]);
-			break;
-		case REQUEST_DELETE_LOCATION:
-			$webClient->handleLocationDeleteRequest($request[1]);
-			break;
-		default:
-			$webClient->showRoot();
-			break;
+
+function handleRequest($webClient){
+	$request = false;
+	if(isset($_GET[REQUEST_TYPE])){
+		$request = $_GET[REQUEST_TYPE];
 	}
-} else {
-	switch($request[0]){
-		case REQUEST_LOGIN:
-			$webClient->handleLoginRequest();
+	switch($request){
+		case Actions::ABOUT:
+			$webClient->showAbout();
 			break;
-		case REQUEST_LOGOUT:
+		case Actions::CONTACT:
+			$webClient->showContact();
+			break;
+		case Actions::LOGOUT:
 			$webClient->handleLogoutRequest();
 			break;
-		case REQUEST_ADD_LOCATION:
-			$webClient->handleLocationAddRequest();
-			break;
-		case REQUEST_REGISTER:
-			$webClient->handleRegisterRequest();
-			break;
-		case REQUEST_CHANGE_PASSWORD:
-			$webClient->handlePasswordChangeRequest();
-			break;
-		case REQUEST_RECOVER_PASSWORD:
-			$webClient->handlePasswordRecoverRequest();
-			break;
-		case REQUEST_ABOUT:
-			$webClient->handleAboutRequest();
-			break;
-		case REQUEST_CONTACT:
-			$webClient->handleContactRequest();
-			break;
 		default:
-			$webClient->showRoot();
-			break;
+			if(isset($_SESSION[SessionsController::USER])) {
+				$user = $_SESSION[SessionsController::USER];
+				return handleUserRequest($webClient, $request, $user);
+			} else {
+				return $webClient->handleLoginRequest();
+			}
+	}
+}
+
+function handleUserRequest(WebClient $webClient, $request, User $user) {
+	$lang = $_SESSION[SessionsController::LANGUAGE];
+
+	if($user->isAllowedTo($request[0])){
+		switch($request[0]){
+			case Actions::UPDATE_LOCATION:
+				return $webClient->handleLocationUpdateRequest($request[1]);
+			case Actions::DELETE_LOCATION:
+				return $webClient->handleLocationDeleteRequest($request[1]);
+			case Actions::MANAGE_LOCATIONS:
+				return $webClient->handleLocationManagementRequest();
+			case Actions::MANAGE_USERS:
+				return $webClient->handleUserManagementRequest();
+			case Actions::REGISTER:
+				return $webClient->handleRegisterRequest();
+			case Actions::ADD_LOCATION:
+				return $webClient->handleLocationAddRequest();
+			case Actions::CHANGE_PASSWORD:
+				return $webClient->handlePasswordChangeRequest();
+			case Actions::RECOVER_PASSWORD:
+				return $webClient->handlePasswordRecoverRequest();
+			case Actions::MAP:
+				return $webClient->showMap();
+			default:
+				$notice = new Notice(array(Notice::NOTICE_TYPE_ERROR,
+				$lang->get(Strings::ERROR_UNAUTHORIZED)));
+				return $webClient->showDefaultView($user);
+		}
+	} else {
+		$notice = new Notice(array(Notice::NOTICE_TYPE_ERROR,
+				$lang->get(Strings::ERROR_UNAUTHORIZED)));
+		return $webClient->showDefaultView($user);
 	}
 }

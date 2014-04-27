@@ -30,7 +30,7 @@ class User{
 				UsersContract::COLUMN_SURNAME=>$this->surname
 		);
 	}
-	
+
 	public function equals(User $user) {
 		return (($this->id == $user->id)
 				&& ($this->name == $user->name)
@@ -39,32 +39,48 @@ class User{
 				&& ($this->role == $user->role));
 	}
 	
+	public function getDefaultView() {
+		$content = false;
+		switch($this->role) {
+			case UsersContract::ROLE_ADMIN:
+				$content = new Map();
+				break;
+			case UsersContract::ROLE_REGISTER:
+				$content = new UserManager();
+				break;
+			default:
+				$content = new Map();
+				break;
+		}
+		return $content;
+	}
+
 	public function isAllowedTo($action) {
-		if($this->role){
+		//Admins can do anything
+		if($this->role == UsersContract::ROLE_ADMIN){
 			return true;
 		}
 		$isAllowed = false;
 		switch ($action) {
-			case Actions::MENU:
-				switch ($this->role) {
-					case UsersContract::ROLE_MARITIMOS:
-					case UsersContract::ROLE_SOCIAL:
-					case UsersContract::ROLE_SOCIAL_SOCORROS:
-					case UsersContract::ROLE_SOCORROS:
-					case UsersContract::ROLE_SOCORROS_MARITIMOS:
-					case UsersContract::ROLE_REGISTER:
-					default:
-						break;
-				}
+			//This actions are all allowed by default
+			case Actions::ABOUT:
+			case Actions::CONTACT:
+			case Actions::LOGIN:
+			case Actions::LOGOUT:
+			case Actions::CHANGE_PASSWORD:
+			case Actions::RECOVER_PASSWORD:
+				$isAllowed = true;
 				break;
-			case Actions::MENU_MANAGEMENT:
-				switch ($this->role) {
-					case UsersContract::ROLE_MARITIMOS:
-					case UsersContract::ROLE_SOCIAL:
-					case UsersContract::ROLE_SOCIAL_SOCORROS:
-					case UsersContract::ROLE_SOCORROS:
-					case UsersContract::ROLE_SOCORROS_MARITIMOS:
-						break;
+			//Currently this actions can only be performed by admins
+			case Actions::UPDATE_LOCATION:
+			case Actions::ADD_LOCATION:
+			case Actions::DELETE_LOCATION:
+			case Actions::MANAGE_LOCATIONS:
+				break;
+			//This actions can be performed also by register users
+			case Actions::MANAGE_USERS:
+			case Actions::REGISTER:
+				switch($this->role) {
 					case UsersContract::ROLE_REGISTER:
 						$isAllowed = true;
 						break;
@@ -72,7 +88,8 @@ class User{
 						break;
 				}
 				break;
-			case Actions::SEE_MAP:
+			//Register users can't see the map
+			case Actions::MAP:
 				switch($this->role) {
 					case UsersContract::ROLE_MARITIMOS:
 					case UsersContract::ROLE_SOCIAL:
@@ -81,7 +98,6 @@ class User{
 					case UsersContract::ROLE_SOCORROS_MARITIMOS:
 						$isAllowed = true;
 						break;
-					case UsersContract::ROLE_REGISTER:
 					default:
 						break;
 				}

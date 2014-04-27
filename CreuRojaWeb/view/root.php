@@ -5,71 +5,41 @@ class Root {
 	const CONTACT = "contact";
 	const LOGIN = "login";
 
-	var $languages;
 	var $user;
-	var $hasErrors = false;
-	var $errors = array();
+	var $hasNotice = false;
 
-	public function __construct(Strings $lang, User $user = null) {
-		$this->languages = $lang;
+	public function __construct(User $user = null) {
 		$this->user = $user;
 	}
 
-	public function setUser(User $user){
+	public function setUser(User $user = null){
 		$this->user = $user;
 	}
 
-	public function showRoot($type = self::LOGIN, $hasErrors = false, array $errors = null) {
-		if($hasErrors) {
-			$this->hasErrors = $hasErrors;
-			$this->errors = $errors;
+	public function showRoot(Content $content, Notice $notice = null) {
+		if ($notice) {
+			$this->hasNotice = count($notice->notices) > 0;
 		}
-		$isMap = strcmp($type, self::MAP) == 0;
+		$isMap = $content instanceof Map;
 		?>
-
 <!DOCTYPE html>
 <HTML>
 <head>
 <link rel="shortcut icon" href="view/icons/favicon.ico" />
+<?php
+$content->getHtmlHeaders(); 
+?>
 <meta http-equiv="Content-Style-Type" content="text/css" />
-<?php if ($isMap) { ?>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<?php require_once('scripts/gmaps.php');
-		} else { ?>
-<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
-<?php } ?>
 <link href="view/css/main.css" rel="stylesheet" type="text/css" />
 <title><?php 
-echo $this->languages->get(Strings::WEB_TITLE);
+echo $_SESSION[SessionsController::LANGUAGE]->get(Strings::WEB_TITLE);
 ?>
 </title>
 </head>
 
 <BODY <?php if($isMap) { echo 'onload="initialize()"'; }?>>
 	<?php
-	require_once('header.php');
-
-	switch($type){
-		case self::ABOUT:
-			require_once('static/about.php');
-			break;
-		case self::CONTACT:
-			require_once('static/contact.php');
-			break;
-		case self::LOGIN:
-			require_once('login.php');
-			break;
-		case self::MAP:
-			require_once('map.php');
-			break;
-		default:
-			require_once('login.php');
-			break;
-	}
-
-	if(!$isMap) {
-		require_once('footer.php');
-	}
+	$content->showContent($notice);
 	?>
 </BODY>
 </HTML>

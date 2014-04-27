@@ -26,6 +26,10 @@ class Strings{
 	const ERRORS_TITLE = "errorsTitle";
 	const ERROR_INVALID_LOGIN = "errorInvalidLogin";
 	const ERROR_NO_LOGIN = "errorNoLogin";
+	const ERROR_UNAUTHORIZED = "errorUnauthorized";
+	
+	const NOTICE_TITLE = "noticeTitle";
+	const LOGOUT_MESSAGE = "logoutMessage";
 
 	var $strings = array(
 			self::WEB_TITLE=>array(self::LANG_SPANISH=>"Mapa de Cruz Roja Barcelona",
@@ -40,9 +44,9 @@ class Strings{
 			self::LOGIN_BUTTON=>array(self::LANG_SPANISH=>"Iniciar sesión",
 					self::LANG_CATALAN=>"Iniciar sessió",
 					self::LANG_ENGLISH=>"Log in"),
-			self::COOKIES_WARNING=>array(self::LANG_SPANISH=>"Este mapa usa cookies para mejorar la experiencia de uso, si inicias sesión entendemos que aceptas el uso de cookies.",
+			self::COOKIES_WARNING=>array(self::LANG_SPANISH=>"Esta página usa cookies para mejorar la experiencia de uso, si inicias sesión entendemos que aceptas el uso de cookies.",
 					self::LANG_CATALAN=>"Aquest mapa fa servir cookies per millorar l'experiència d'ús, si inicies sessió entenem que acceptes l'ús de cookies.",
-					self::LANG_ENGLISH=>"This map uses cookies to enhance the user experience, if you log in mean you accept the use of cookies."),
+					self::LANG_ENGLISH=>"This webpage uses cookies to enhance the user experience, if you log in mean you accept the use of cookies."),
 			self::RECOVER_PASSWORD=>array(self::LANG_SPANISH=>"¿Ha olvidado su contraseña?",
 					self::LANG_CATALAN=>"Ha oblidat la seva contrasenya?",
 					self::LANG_ENGLISH=>"Have you forgotten your password?"),
@@ -73,6 +77,9 @@ class Strings{
 			self::TITLE_CONTACT=>array(self::LANG_SPANISH=>"Contacto",
 					self::LANG_CATALAN=>"",
 					self::LANG_ENGLISH=>"Contact"),
+			self::NOTICE_TITLE=>array(self::LANG_SPANISH=>"Información:",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Information:"),
 			self::ERRORS_TITLE=>array(self::LANG_SPANISH=>"Se han encontrado errores al procesar el formulario:",
 					self::LANG_CATALAN=>"",
 					self::LANG_ENGLISH=>"Errors were found when processing the form:"),
@@ -82,6 +89,12 @@ class Strings{
 			self::ERROR_NO_LOGIN=>array(self::LANG_SPANISH=>"La dirección de correo y contraseña son obligatorios",
 					self::LANG_CATALAN=>"",
 					self::LANG_ENGLISH=>"E-mail address and password are mandatory."),
+			self::ERROR_UNAUTHORIZED=>array(self::LANG_SPANISH=>"No está autorizado a hacer esa acción.",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"You aren't authorized to perform such action."),
+			self::LOGOUT_MESSAGE=>array(self::LANG_SPANISH=>"Sesión cerrada correctamente.",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Successfully logged out."),
 	);
 
 	var $language;

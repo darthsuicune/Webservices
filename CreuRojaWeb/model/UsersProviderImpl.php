@@ -7,7 +7,7 @@ class UsersProviderImpl implements UsersProvider {
 		$this->dataStorage = $dataStorage;
 	}
 
-	public function getUserFromEmail($email){
+	public function getUserFromEmail($email) {
 		$columns = array(UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_NAME, UsersContract::COLUMN_SURNAME,
 				UsersContract::COLUMN_ROLE);
@@ -33,7 +33,7 @@ class UsersProviderImpl implements UsersProvider {
 		}
 	}
 
-	public function getUserFromAccessToken($accessToken){
+	public function getUserFromAccessToken($accessToken) {
 		$columns = array(AccessTokenContract::COLUMN_LOGIN_TOKEN, UsersContract::COLUMN_ID,
 				UsersContract::COLUMN_E_MAIL, UsersContract::COLUMN_NAME,
 				UsersContract::COLUMN_SURNAME, UsersContract::COLUMN_ROLE);
@@ -42,6 +42,10 @@ class UsersProviderImpl implements UsersProvider {
 		$whereArgs = array($accessToken);
 		$result = $this->dataStorage->query($columns, $tables, $where, $whereArgs);
 		return $this->getUserObject($result[0]);
+	}
+
+	public function getUserList() {
+		return false;
 	}
 
 	function getUserObject(array $userArray) {

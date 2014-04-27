@@ -1,22 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<HTML>
-	<?php
-		$user = false;
-		if (isset($_SESSION['user'])) {
-			$user = $_SESSION['user'];
-		}
-		require_once('header.php');
-	?>
-	<BODY>
-		<?php
-			if ($user && $user->isAllowedTo(Actions::SIDEBAR)) {
-				require_once('menu.php');
-			}
+<?php class UserManager implements Content {
+	public function showContent(Notice $notices = null) {
 		?>
-		<div class="content">
-		</div>
-		<?php 
-			require_once('footer.php');
-		?>
-	</BODY>
-</HTML>
+<div id="user_manager">
+</div>
+<?php 
+require_once('footer.php');
+	}
+
+	public function getHtmlHeaders() { ?>
+<link href="view/css/usermanager.css" rel="stylesheet" type="text/css" />
+<?php 
+	}
+}?>

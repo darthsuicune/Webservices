@@ -15,10 +15,10 @@ foreach (glob("db/*.php") as $filename)
 {
 	require_once($filename);
 }
-require_once('Client.php');
+require_once('ClientConfiguration.php');
 require_once('AndroidClient.php');
 
-$clientConfig = new ClientConfiguration(ClientConfiguration::ANDROID);
-$androidClient = $clientConfig->getClient();
+$clientConfig = new ClientConfiguration();
+$androidClient = $clientConfig->getClient(ClientConfiguration::ANDROID);
 
 

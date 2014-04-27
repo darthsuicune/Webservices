@@ -9,7 +9,7 @@ class ClientConfiguration{
 	const ANDROID = 1;
 	const WEB = 2;
 
-	public function getClient($clientType, $lang){
+	public function getClient($clientType, $lang = Strings::LANG_CATALAN){
 		$dsn = "mysql:dbname=" . self::DB_DATABASE . ";host=" . self::DB_ADDRESS
 		. ";charset=" . self::CHARSET;
 		$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
@@ -25,10 +25,13 @@ class ClientConfiguration{
 			case self::WEB:
 				require_once("view/root.php");
 				$sessionsController = new SessionsControllerImpl($dataStorage);
-				$strings = new Strings(Strings::LANG_ENGLISH);
-				$root = new Root(new Strings($lang));
-				return new WebClient($usersController, $locationsController, $sessionsController, $strings,
-						$root);
+				$sessionsController->setLanguage($lang);
+				$user = null;
+				if(isset($_SESSION[SessionsController::USER])){
+					$user = $_SESSION[SessionsController::USER];
+				}
+				$root = new Root($user);
+				return new WebClient($usersController, $locationsController, $sessionsController, $root);
 			default:
 				return false;
 		}

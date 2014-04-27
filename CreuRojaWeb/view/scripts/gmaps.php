@@ -9,6 +9,7 @@ if(!isset($_SESSION['markers'])){
 	$_SESSION['markers'] = "";
 }
 ?>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script
 	src="<?php echo $JQUERY; ?>"></script>
 <script type="text/javascript" src="<?php echo $GMAPS_SCRIPT; ?>"> </script>
