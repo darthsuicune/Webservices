@@ -42,5 +42,6 @@
 	
 	public function getHtmlHeaders() { ?>
 <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<link href="view/css/notice.css" rel="stylesheet" type="text/css" />
 	<?php }
 }?>

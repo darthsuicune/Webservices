@@ -30,7 +30,23 @@ class Strings{
 	
 	const NOTICE_TITLE = "noticeTitle";
 	const LOGOUT_MESSAGE = "logoutMessage";
-
+	
+	const INSTALL_TITLE = "installTitle";
+	const INSTALL_ADDRESS = "installAddress";
+	const INSTALL_BUTTON = "installButton";
+	const INSTALL_DATABASE = "installDatabase";
+	const INSTALL_USERNAME = "installUsername";
+	const INSTALL_PASSWORD = "installPassword";
+	const INSTALL_CONFIRM_PASSWORD = "installConfirmPassword";
+	
+	const INSTALL_ERROR_EMPTY_ADDRESS = "installEmptyAddress";
+	const INSTALL_ERROR_EMPTY_DATABASE = "installEmptyDatabase";
+	const INSTALL_ERROR_EMPTY_USERNAME = "installEmptyUsername";
+	const INSTALL_ERROR_EMPTY_PASSWORD = "installEmptyPassword";
+	const INSTALL_ERROR_EMPTY_PASSWORD_CONFIRMATION = "installEmptyPasswordConfirmation";
+	const INSTALL_ERROR_PASSWORDS_DONT_MATCH = "installPasswordsDontMatch";
+	const INSTALL_ERROR_CANNOT_CONNECT = "installCantConnect";
+	
 	var $strings = array(
 			self::WEB_TITLE=>array(self::LANG_SPANISH=>"Mapa de Cruz Roja Barcelona",
 					self::LANG_CATALAN=>"Mapa de Creu Roja Barcelona",
@@ -95,6 +111,48 @@ class Strings{
 			self::LOGOUT_MESSAGE=>array(self::LANG_SPANISH=>"Sesión cerrada correctamente.",
 					self::LANG_CATALAN=>"",
 					self::LANG_ENGLISH=>"Successfully logged out."),
+			self::INSTALL_TITLE=>array(self::LANG_SPANISH=>"Instalación",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Installation"),
+			self::INSTALL_ADDRESS=>array(self::LANG_SPANISH=>"Dirección de la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Address of the database"),
+			self::INSTALL_BUTTON=>array(self::LANG_SPANISH=>"Confirmar",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Confirm"),
+			self::INSTALL_DATABASE=>array(self::LANG_SPANISH=>"Nombre de la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Database name"),
+			self::INSTALL_PASSWORD=>array(self::LANG_SPANISH=>"Contraseña del usuario de la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Database user password"),
+			self::INSTALL_CONFIRM_PASSWORD=>array(self::LANG_SPANISH=>"Confirmar contraseña del usuario de la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Confirm database user password"),
+			self::INSTALL_USERNAME=>array(self::LANG_SPANISH=>"Nombre del usuario de la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Database user name"),
+			self::INSTALL_ERROR_EMPTY_ADDRESS=>array(self::LANG_SPANISH=>"La dirección de la base de datos no puede estar vacío",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The database address cannot be empty."),
+			self::INSTALL_ERROR_EMPTY_DATABASE=>array(self::LANG_SPANISH=>"El nombre de la base de datos no puede estar vacío",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The database name cannot be empty."),
+			self::INSTALL_ERROR_EMPTY_PASSWORD=>array(self::LANG_SPANISH=>"La contraseña del usuario de la base de datos no puede estar vacío",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The password cannot be empty."),
+			self::INSTALL_ERROR_EMPTY_PASSWORD_CONFIRMATION=>array(self::LANG_SPANISH=>"La confirmación de contraseña del usuario de la base de datos no puede estar vacío",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The password confirmation cannot be empty."),
+			self::INSTALL_ERROR_EMPTY_USERNAME=>array(self::LANG_SPANISH=>"Nombre del usuario de la base de datos no puede estar vacío",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The database user name cannot be empty."),
+			self::INSTALL_ERROR_PASSWORDS_DONT_MATCH=>array(self::LANG_SPANISH=>"La contraseña y su confirmación no coinciden",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"The password and its confirmation don't match"),
+			self::INSTALL_ERROR_CANNOT_CONNECT=>array(self::LANG_SPANISH=>"No se pudo establecer la conexión con la base de datos",
+					self::LANG_CATALAN=>"",
+					self::LANG_ENGLISH=>"Can't connect to the database."),
 	);
 
 	var $language;

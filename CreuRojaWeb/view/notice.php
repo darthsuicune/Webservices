@@ -6,10 +6,10 @@
 	var $type;
 	var $title;
 	
-	public function __construct(array $notices = null) {
+	public function __construct(Strings $lang, array $notices = null) {
 		$this->notices = $notices;
 		$this->type = $notices[0];
-		$this->setTitle();
+		$this->setTitle($lang);
 		array_shift($this->notices);
 	}
 
@@ -27,13 +27,13 @@
 </div>
 <?php }
 
-	function setTitle() {
+	function setTitle($lang) {
 		switch ($this->type) {
 			case self::NOTICE_TYPE_ERROR:
-				$this->title = $_SESSION[SessionsController::LANGUAGE]->get(Strings::ERRORS_TITLE);
+				$this->title = $lang->get(Strings::ERRORS_TITLE);
 				break;
 			case self::NOTICE_TYPE_NOTICE:
-				$this->title = $_SESSION[SessionsController::LANGUAGE]->get(Strings::NOTICE_TITLE);
+				$this->title = $lang->get(Strings::NOTICE_TITLE);
 				break;
 			default:
 				break;

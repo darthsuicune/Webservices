@@ -61,8 +61,9 @@ class WebClient {
 				$this->root->setUser($user);
 				$this->showDefaultView($user);
 			} else {
-				$errors = new Notice(array(Notice::NOTICE_TYPE_ERROR,
-						$_SESSION[SessionsController::LANGUAGE]->get(Strings::ERROR_INVALID_LOGIN)));
+				$lang = $_SESSION[SessionsController::LANGUAGE];
+				$errors = new Notice($lang, array(Notice::NOTICE_TYPE_ERROR,
+						$lang->get(Strings::ERROR_INVALID_LOGIN)));
 				$this->showLogin($errors);
 			}
 		} else {
@@ -73,8 +74,9 @@ class WebClient {
 	public function handleLogoutRequest(){
 		$notice = null;
 		if (isset($_SESSION[SessionsController::USER])) {
-			$notice = new Notice(array(Notice::NOTICE_TYPE_NOTICE,
-					$_SESSION[SessionsController::LANGUAGE]->get(Strings::LOGOUT_MESSAGE)));
+			$lang = $_SESSION[SessionsController::LANGUAGE];
+			$notice = new Notice($lang, array(Notice::NOTICE_TYPE_NOTICE,
+					$lang->get(Strings::LOGOUT_MESSAGE)));
 		}
 		$this->sessionsController->destroySession();
 		$this->root->setUser();

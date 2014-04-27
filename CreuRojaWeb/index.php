@@ -89,13 +89,15 @@ function handleUserRequest(WebClient $webClient, $request, User $user) {
 			case Actions::MAP:
 				return $webClient->showMap();
 			default:
-				$notice = new Notice(array(Notice::NOTICE_TYPE_ERROR,
-				$lang->get(Strings::ERROR_UNAUTHORIZED)));
-				return $webClient->showDefaultView($user);
+				showUnauthorized($webClient, $user, $lang);
 		}
 	} else {
-		$notice = new Notice(array(Notice::NOTICE_TYPE_ERROR,
-				$lang->get(Strings::ERROR_UNAUTHORIZED)));
-		return $webClient->showDefaultView($user);
+		showUnauthorized($webClient, $user, $lang);
 	}
+}
+
+function showUnauthorized($webClient, $user, $lang) {
+	$notice = new Notice($lang, array(Notice::NOTICE_TYPE_ERROR,
+			$lang->get(Strings::ERROR_UNAUTHORIZED)));
+	$webClient->showDefaultView($user);
 }
