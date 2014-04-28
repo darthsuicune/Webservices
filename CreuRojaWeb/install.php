@@ -14,7 +14,7 @@ foreach (glob("install/*.php") as $filename)
 	require_once($filename);
 }
 
-if(!file_exists("config.php")){
+if(!file_exists("config.php")){ //TODO Remove ! mark
 	header("Location: index.php");
 } else {
 	$language = Strings::getDefaultLanguage();
@@ -107,9 +107,8 @@ function initializeDb($address, $database, $username, $password){
 	$dsn = "mysql:dbname=$database;host=$address;charset=UTF8";
 	try {
 		$pdo = new PDO($dsn, $username, $password);
-// 		$statement = readfile("db/installscript");
-// 		$pdo->exec($statement);
-		
+		$statement = readfile("db/installscript");
+		$pdo->exec($statement);
 		return true;
 	} catch (PDOException $e) {
 		error_log($e->getMessage());
