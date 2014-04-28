@@ -7,10 +7,6 @@ foreach (glob("model/*.php") as $filename)
 {
 	require_once($filename);
 }
-foreach (glob("l10n/*.php") as $filename)
-{
-	require_once($filename);
-}
 foreach (glob("db/*.php") as $filename)
 {
 	require_once($filename);
@@ -24,6 +20,7 @@ foreach (glob("view/static/*.php") as $filename)
 	require_once($filename);
 }
 
+require_once("l10n/Strings.php");
 require_once('ClientConfiguration.php');
 require_once('WebClient.php');
 
