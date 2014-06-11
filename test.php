@@ -6,45 +6,11 @@ include_once('User.php');
 require_once('DbLayer.php');
 ?>
 <table border=1>
-<tr><td>
-<?php
-echo "testing login service";
-$dbLayer = new DbLayer();
-
-
-function testCheckUser(LoginService $ls){
-	$email = "user@example.com";
-	$password = sha1("user");
-	$result = $ls->checkUser($email, $password);
-	if($result != null){
-		pass();
-	} else {
-		var_dump($result);
-		fail();
-	}
-}
-function testAccessToken(LoginService $ls){
-	$dbLayer = new DbLayer();
-	$token = "token";
-	$values = array(UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN => $token, UsersContract::ACCESS_TOKEN_EMAIL => 1);
-	$dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME, $values);
-	
-	$result = $ls->validateAccessToken($token);
-	if($result != null){
-		pass();
-		$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME, UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array("token"));
-	} else {
-		var_dump($result);
-		fail();
-	}
-}
-?>
-</td>
-</tr>
 <tr>
 <td>
 <?php 
 echo "testing db connection...";
+$dbLayer = new DbLayer();
 
 if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 	pass();
@@ -53,6 +19,27 @@ if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 	fail();
 	echo "Error message: ";
 	var_dump($dbLayer->pdo->errorInfo());
+}
+
+function testLocations() {
+	$user = new User("name", "surname", UsersContract::ROLE_ADMIN, );
+	$ls = new LocationsService();
+	testGetLocations($ls);
+	testGetAdminLocations($ls);
+	testGetWebLocations($ls);
+}
+function testGetLocations(LocationsService $ls) {
+	
+	$result = $ls->getLocations($user, $lastUpdateTime);
+	var_dump($result);
+}
+
+function testGetAdminLocations(LocationsService $ls) {
+	$ls->getAdminLocations($user);
+}
+
+function testGetWebLocations(LocationsService $ls) {
+	$ls->getWebLocations($user);
 }
 
 function testcalls($dbLayer){
@@ -147,6 +134,32 @@ function testDelete(DbLayer $dbLayer){
 	}
 }
 
+function testCheckUser(LoginService $ls){
+	$email = "user@example.com";
+	$password = sha1("user");
+	$result = $ls->checkUser($email, $password);
+	if($result != null){
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
+}
+function testAccessToken(LoginService $ls){
+	$dbLayer = new DbLayer();
+	$token = "token";
+	$values = array(UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN => $token, UsersContract::ACCESS_TOKEN_EMAIL => 1);
+	$dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME, $values);
+
+	$result = $ls->validateAccessToken($token);
+	if($result != null){
+		pass();
+		$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME, UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array("token"));
+	} else {
+		var_dump($result);
+		fail();
+	}
+}
 function pass(){
 	echo "<font color=\"green\">PASSED</font><br>\n";
 }
