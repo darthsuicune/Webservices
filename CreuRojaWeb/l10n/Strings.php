@@ -52,7 +52,7 @@ class Strings{
 
 	public function __construct($language = Strings::LANG_CATALAN) {
 		$this->language = $language;
-		require("l10n/$language.php");
+		require("$language.php");
 		$this->strings = $strings;
 	}
 

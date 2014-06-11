@@ -6,38 +6,35 @@
  */
 include_once('Location.php');
 include_once('User.php');
+require_once 'config.php';
 class DbLayer {
 
-	const DB_ADDRESS = 'localhost'; // TODO: Set values
-	const DB_USERNAME = 'testuser'; // TODO: Set values
-	const DB_PASSWORD = 'testpass'; // TODO: Set values
-	const DB_DATABASE = 'webservice';
-	const CHARSET = 'UTF8';
-
-	const RESULT_DB_CONNECTION_SUCCESFUL = 0;
-	const RESULT_DB_CONNECTION_ERROR = 1;
+	const RESULT_DB_CONNECTION_SUCCESFUL = 10;
+	const RESULT_DB_CONNECTION_ERROR = 11;
 
 	var $dbDsn;
 	var $pdo;
+	var $result;
 
 	public function __construct() {
-		$this->dbDsn = 'mysql:dbname=' . self::DB_DATABASE . ';host=' . self::DB_ADDRESS
-		. ';charset=' . self::CHARSET;
+		$this->dbDsn = 'mysql:dbname=' . DB_DATABASE . ';host=' . DB_ADDRESS
+		. ';charset=' . CHARSET;
+		try{
+			$this->pdo = new PDO ( $this->dbDsn, DB_USERNAME, DB_PASSWORD );
+			$this->result = self::RESULT_DB_CONNECTION_SUCCESFUL;
+		} catch (PDOException $e) {
+			$this->result = self::RESULT_DB_CONNECTION_ERROR;
+		}
 	}
 	public function connect() {
-		try{
-			$this->pdo = new PDO ( $this->dbDsn, self::DB_USERNAME, self::DB_PASSWORD );
-			return self::RESULT_DB_CONNECTION_SUCCESFUL;
-		} catch (PDOException $e) {
-			return self::RESULT_DB_CONNECTION_ERROR;
-		}
+		return $this->result;
 	}
 	
 	public function joinTables($tables) {
 		$table = "";
 		if(is_array($tables)){
 			if (count($tables) > 1) {
-				$table = "$tables[0] JOIN $tables[1] ON `$tables[0]`.`id` = `$tables[1]`.`user_id`";
+				$table = "$tables[0]` JOIN `$tables[1]` ON `$tables[0]`.`id` = `$tables[1]`.`user_id";
 			} else {
 				$table = array_pop($tables);
 			}
@@ -68,7 +65,7 @@ class DbLayer {
 			$projection = '*';
 		}
 
-		$query = "SELECT $projection FROM `$sources`";
+		$query = "SELECT $projection FROM `$tables`";
 		if($where != ""){
 			$query .= " WHERE $where";
 		}
@@ -203,6 +200,7 @@ class DbLayer {
 				}
 			}
 		} catch (PDOException $e) {
+			var_dump($e);
 			if($statement){
 				$statement->closeCursor();
 			}

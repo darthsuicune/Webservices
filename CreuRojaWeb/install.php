@@ -146,7 +146,7 @@ function showInstallForm($language, $errors = array()) {
 	?>
 	<div id="install_form">
 		<form accept-charset="utf8" novalidate="novalidate" autocomplete="on" method="POST"
-			action="install.php" name="Login">
+			action="install.php" name="Install">
 			<label for="<?php echo DB_ADDRESS; ?>"> 
 					<?php echo $lang->get(Strings::INSTALL_ADDRESS); ?>:</label> 
 			<input required="required" name="<?php echo DB_ADDRESS; ?>" type="text" 

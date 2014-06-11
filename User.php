@@ -14,7 +14,7 @@ class UsersContract {
 	const USERS_COLUMN_PASSWORD_RESET_TOKEN = "resettoken";
 	const USERS_COLUMN_PASSWORD_RESET_TIME = "resettime";
 
-	const ACCESS_TOKEN_TABLE_NAME = "accesstoken";
+	const ACCESS_TOKEN_TABLE_NAME = "sessions";
 	const ACCESS_TOKEN_EMAIL = "user_id";
 	const ACCESS_TOKEN_COLUMN_LOGIN_TOKEN = "token";
 

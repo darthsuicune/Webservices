@@ -1,37 +1,42 @@
 <?php
 include_once('LocationsService.php');
+include_once('LoginService.php');
 include_once('User.php');
 
 require_once('DbLayer.php');
-
-// $name = "test1";
-// $surname = "test1";
-// $role = "admin";
-// $email = "denis@localhost";
-// $accessToken = new AccessToken("whatever");
-// $user = new User($name, $surname, $role, $email, $accessToken);
-
-// $ls = new LocationsService();
-
-// print json_encode($ls->getLocations($user, (isset($_GET['lup'])) ? $_GET['lup'] : 0));
 ?>
 <table border=1>
 <tr><td>
 <?php
 echo "testing login service";
-$ls = new LoginService();
 $dbLayer = new DbLayer();
-testInsert($dbLayer);
-testCheckUser($ls,"user@example.com", sha1("user"));
-testAccessToken($ls, "");
 
-testDelete($dbLayer);
 
-function testCheckUser(LoginService $ls, $username, $password){
-	
+function testCheckUser(LoginService $ls){
+	$email = "user@example.com";
+	$password = sha1("user");
+	$result = $ls->checkUser($email, $password);
+	if($result != null){
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
 }
-function testAccessToken(LoginService $ls, $token){
-
+function testAccessToken(LoginService $ls){
+	$dbLayer = new DbLayer();
+	$token = "token";
+	$values = array(UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN => $token, UsersContract::ACCESS_TOKEN_EMAIL => 1);
+	$dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME, $values);
+	
+	$result = $ls->validateAccessToken($token);
+	if($result != null){
+		pass();
+		$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME, UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array("token"));
+	} else {
+		var_dump($result);
+		fail();
+	}
 }
 ?>
 </td>
@@ -39,7 +44,6 @@ function testAccessToken(LoginService $ls, $token){
 <tr>
 <td>
 <?php 
-$dbLayer = new DbLayer();
 echo "testing db connection...";
 
 if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
@@ -52,10 +56,20 @@ if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 }
 
 function testcalls($dbLayer){
+	$ls = new LoginService();
+	
 	echo "Testing insert...";
 	testInsert($dbLayer);
+	
+	echo "Testing check user...";
+	testCheckUser($ls);
+	
 	echo "Testing update...";
 	testUpdate($dbLayer);
+	
+	echo "Testing access token";
+	testAccessToken($ls);
+	
 	echo "Testing query...";
 	testQuery($dbLayer);
 	echo "Testing delete...";
@@ -106,7 +120,7 @@ function testUpdate(DbLayer $dbLayer){
 
 function testQuery(DbLayer $dbLayer){
 	$columns = array();
-	$tables = array(UsersContract::USERS_TABLE_NAME);
+	$tables = UsersContract::USERS_TABLE_NAME;
 	$where = "";
 	$whereArgs = array();
 	$result = $dbLayer->query($columns, $tables, $where, $whereArgs);
