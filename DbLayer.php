@@ -32,6 +32,21 @@ class DbLayer {
 			return self::RESULT_DB_CONNECTION_ERROR;
 		}
 	}
+	
+	public function joinTables($tables) {
+		$table = "";
+		if(is_array($tables)){
+			if (count($tables) > 1) {
+				$table = "$tables[0] JOIN $tables[1] ON `$tables[0]`.`id` = `$tables[1]`.`user_id`";
+			} else {
+				$table = array_pop($tables);
+			}
+		} else {
+			$table = $tables;
+		}
+		return $table;
+	}
+	
 	/**
 	 * Abstraction layer for the query to the database.
 	 *
@@ -41,9 +56,8 @@ class DbLayer {
 	 * @param array $whereArgs
 	 * @return mixed
 	 */
-	public function query(array $columns, array $tables, $where, array $whereArgs) {
-		if(substr_count($where, "?") != count($whereArgs)
-				|| count($tables) < 1) {
+	public function query(array $columns, $tables, $where, array $whereArgs) {
+		if(substr_count($where, "?") != count($whereArgs)) {
 			return false;
 		}
 
@@ -53,8 +67,6 @@ class DbLayer {
 		} else {
 			$projection = '*';
 		}
-
-		$sources = join ( '` NATURAL JOIN `', $tables );
 
 		$query = "SELECT $projection FROM `$sources`";
 		if($where != ""){

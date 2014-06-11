@@ -35,10 +35,10 @@ class LocationsContract {
     const LOCATIONS_COLUMN_LATITUDE = "latitude";
     const LOCATIONS_COLUMN_LONGITUDE = "longitude";
     const LOCATIONS_COLUMN_NAME = "name";
-    const LOCATIONS_COLUMN_TYPE = "type";
+    const LOCATIONS_COLUMN_TYPE = "location_type";
     const LOCATIONS_COLUMN_ADDRESS = "address";
-    const LOCATIONS_COLUMN_OTHER = "other";
-    const LOCATIONS_COLUMN_LAST_UPDATED = "lastupdated";
+    const LOCATIONS_COLUMN_OTHER = "description";
+    const LOCATIONS_COLUMN_LAST_UPDATED = "updated_at";
     const LOCATIONS_COLUMN_EXPIRE_DATE = "expiredate";
 
     const TYPE_ADAPTADAS = "adaptadas";

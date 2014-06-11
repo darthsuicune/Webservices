@@ -5,18 +5,18 @@ class UsersContract {
 	 * Users table
 	 */
 	const USERS_TABLE_NAME = "users";
-	const USERS_COLUMN_ID = "ID";
+	const USERS_COLUMN_ID = "id";
 	const USERS_COLUMN_NAME = "name";
 	const USERS_COLUMN_SURNAME = "surname";
-	const USERS_COLUMN_PASSWORD = "password";
+	const USERS_COLUMN_PASSWORD = "password_digest";
 	const USERS_COLUMN_E_MAIL = "email";
 	const USERS_COLUMN_ROLE = "role";
 	const USERS_COLUMN_PASSWORD_RESET_TOKEN = "resettoken";
 	const USERS_COLUMN_PASSWORD_RESET_TIME = "resettime";
 
 	const ACCESS_TOKEN_TABLE_NAME = "accesstoken";
-	const ACCESS_TOKEN_EMAIL = "email";
-	const ACCESS_TOKEN_COLUMN_LOGIN_TOKEN = "accesstoken";
+	const ACCESS_TOKEN_EMAIL = "user_id";
+	const ACCESS_TOKEN_COLUMN_LOGIN_TOKEN = "token";
 
 	const ROLE_SOCIAL = "social";
 	const ROLE_SOCORROS = "socorros";

@@ -44,6 +44,7 @@ class LoginService {
 			return null;
 		}
 		$projection = array(
+				UsersContract::USERS_TABLE_NAME . "`.`" . UsersContract::USERS_COLUMN_ID,
 				UsersContract::USERS_TABLE_NAME . "`.`" . UsersContract::USERS_COLUMN_E_MAIL,
 				UsersContract::USERS_COLUMN_NAME,
 				UsersContract::USERS_COLUMN_SURNAME,
@@ -95,11 +96,11 @@ class LoginService {
 		$dbLayer = new DbLayer();
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 			$columns = array();
-			$tables = array(UsersContract::USERS_TABLE_NAME);
+			$table = UsersContract::USERS_TABLE_NAME;
 			$where = UsersContract::USERS_COLUMN_E_MAIL . "=? AND "
 					. UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN . "=?";
 			$whereArgs = array($email, $token);
-			$userRow = $dbLayer->query($columns, $tables, $where, $whereArgs);
+			$userRow = $dbLayer->query($columns, $table, $where, $whereArgs);
 			$userRow = $userRow[0];
 			if($userRow != null
 					&& $userRow[UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN] == $token) {
@@ -132,8 +133,11 @@ class LoginService {
 
 	function getUserData($projection, $tables, $where, $whereargs){
 		$dbLayer = new DbLayer();
+		
+		$table = $dbLayer->joinTables($tables);
+		
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
-			$data = $dbLayer->query($projection, $tables, $where, $whereargs);
+			$data = $dbLayer->query($projection, $table, $where, $whereargs);
 			if($data != null && is_array($data)){
 				$data = $data[0];
 			}

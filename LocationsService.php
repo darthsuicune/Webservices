@@ -57,9 +57,9 @@ class LocationsService {
     			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
     			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
     	);
-    	$tables = array(LocationsContract::LOCATIONS_TABLE_NAME);
+    	$table = LocationsContract::LOCATIONS_TABLE_NAME;
     	
-    	$result = $dbLayer->query($projection, $tables, $where, $whereArgs);
+    	$result = $dbLayer->query($projection, $table, $where, $whereArgs);
     	if(!is_array($result) || $result == null){
     		return null;
     	}
