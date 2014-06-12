@@ -91,12 +91,12 @@ class User {
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 			$currentTime = round(microtime(true) * 1000);
 			$values = array(UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>$currentTime,
-					UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>sha1($currentTime));
+					UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>$currentTime);
 			$table = UsersContract::USERS_TABLE_NAME;
 			$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
 			$whereArgs = array($email);
 			$dbLayer->update($values, $table, $where, $whereArgs);
-			return sha1($currentTime);
+			return $currentTime;
 		}
 		return false;
 	}

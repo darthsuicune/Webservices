@@ -139,7 +139,7 @@ class Index {
 					&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
 				include_once('Register.php');
 				$register = new Register();
-				$newPassword = sha1($_POST[self::PASSWORD]);
+				$newPassword = $_POST[self::PASSWORD];
 				if($register->changePassword($email, $newPassword)){
 					echo "Canvi de contrasenya completat amb èxit";
 				} else {
@@ -165,7 +165,7 @@ class Index {
 			}
 		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
 				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
-			if($loginService->updateUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]))){
+			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
 				echo "Canvi de contrasenya completat amb èxit";
 			} else {
 				echo "Error en el canvi de contrasenya";
@@ -201,7 +201,7 @@ class Index {
 				$register = new Register();
 				$name = $_POST[self::NAME];
 				$surname = $_POST[self::SURNAME];
-				$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
+				$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
 				$email = $_POST[self::EMAIL];
 				$roles = $_POST[self::ROLES];
 				if ($register->registerUser($password, $email, $roles, $name, $surname) === array()) {
@@ -256,7 +256,7 @@ class Index {
 			return;
 		}		
 		$loginService = new LoginService();
-		return $loginService->checkUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]));
+		return $loginService->checkUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
 	}
 
 	function createLocationValues(){

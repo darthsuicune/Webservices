@@ -78,7 +78,7 @@ function testInsert(DbLayer $dbLayer){
 	$table = UsersContract::USERS_TABLE_NAME;
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"user@example.com",
 			UsersContract::USERS_COLUMN_NAME=>"user",
-			UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("user"), PASSWORD_BCRYPT),
+			UsersContract::USERS_COLUMN_PASSWORD=>password_hash("user"), PASSWORD_BCRYPT,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>0,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"asdfasdf",
 			UsersContract::USERS_COLUMN_ROLE=>"admin",
@@ -148,7 +148,7 @@ function testDelete(DbLayer $dbLayer){
 
 function testCheckUser(LoginService $ls){
 // 	$email = "user@example.com";
-// 	$password = sha1("user");
+// 	$password = "user";
 // 	$result = $ls->checkUser($email, $password);
 // 	if($result != null){
 // 		pass();
