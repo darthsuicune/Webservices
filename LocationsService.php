@@ -7,34 +7,21 @@ class LocationsService {
         if($user == null){
             return null;
         }
-        $types = $user->getAllowedTypes();
-        $where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" . 
-        		implode(',', array_fill(0, count($types), '?')) . ") AND " . 
-        		LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">?";
-        $types[] = $lastUpdateTime;
+        $where = LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED . ">?";
+        $whereArgs = array($lastUpdateTime);
         
-        return $this->getLocationsFromDb($user, $where, $types);
+        return $this->getLocationsFromDb($user, $where, $whereArgs);
     }
     
     public function getWebLocations($user) {
-    	if($user == null || $user->role == UsersContract::ROLE_REGISTER){
+    	if($user == null){
     		return null;
     	}
     	
-    	$types = $user->getAllowedTypes();
-    	$where = LocationsContract::LOCATIONS_COLUMN_TYPE . " IN (" .
-    			implode(',', array_fill(0, count($types), '?')) . ") AND (" . 
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?)";
-    	$types[] = round(microtime(true)* 1000);
+    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?";
+    	$whereArgs = array(round(microtime(true)* 1000));
     	
-    	return $this->getLocationsFromDb($user, $where, $types);
-    }
-    
-    public function getAdminLocations($user) {
-    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">? OR " .
-        		LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0";
-    	$whereArgs = array(round(microtime(true) * 1000));
     	return $this->getLocationsFromDb($user, $where, $whereArgs);
     }
     

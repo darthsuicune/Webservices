@@ -14,6 +14,7 @@ class LoginService {
 			return null;
 		}
 		$projection = array(
+				UsersContract::USERS_COLUMN_ID,
 				UsersContract::USERS_COLUMN_NAME,
 				UsersContract::USERS_COLUMN_SURNAME,
 				UsersContract::USERS_COLUMN_PASSWORD,
@@ -29,7 +30,8 @@ class LoginService {
 			return User::generateToken($userRow[UsersContract::USERS_COLUMN_NAME],
 					$userRow[UsersContract::USERS_COLUMN_SURNAME],
 					$userRow[UsersContract::USERS_COLUMN_ROLE],
-					$userRow[UsersContract::USERS_COLUMN_E_MAIL]);
+					$userRow[UsersContract::USERS_COLUMN_E_MAIL],
+					$userRow[UsersContract::USERS_COLUMN_ID]);
 		} else {
 			return null;
 		}
@@ -131,19 +133,19 @@ class LoginService {
 		return $user->changePassword($newPassword);
 	}
 
-	function getUserData($projection, $tables, $where, $whereargs){
+	function getUserData($projection, $tables, $where, $whereArgs){
 		$dbLayer = new DbLayer();
-		
+
 		$table = $dbLayer->joinTables($tables);
 		
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
-			$data = $dbLayer->query($projection, $table, $where, $whereargs);
+			$data = $dbLayer->query($projection, $table, $where, $whereArgs);
 			if($data != null && is_array($data)){
 				$data = $data[0];
 			}
 			return $data;
 		} else {
 			return null;
-		}
+		};
 	}
 }

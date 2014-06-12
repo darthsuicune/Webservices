@@ -66,6 +66,7 @@ class DbLayer {
 		}
 
 		$query = "SELECT $projection FROM `$tables`";
+		
 		if($where != ""){
 			$query .= " WHERE $where";
 		}

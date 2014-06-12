@@ -15,6 +15,7 @@ $dbLayer = new DbLayer();
 if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 	pass();
 	testcalls($dbLayer);
+	testLocations();
 } else {
 	fail();
 	echo "Error message: ";
@@ -22,24 +23,33 @@ if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 }
 
 function testLocations() {
-	$user = new User("name", "surname", UsersContract::ROLE_ADMIN, );
 	$ls = new LocationsService();
-	testGetLocations($ls);
-	testGetAdminLocations($ls);
-	testGetWebLocations($ls);
-}
-function testGetLocations(LocationsService $ls) {
+	$user = new User("name", "surname", UsersContract::ROLE_ADMIN, "asdf@asdf.asdf", "token");
 	
+	echo "Testing locations...";
+	testGetLocations($user, $ls);
+	echo "Testing web locations...";
+	testGetWebLocations($user, $ls);
+}
+function testGetLocations(User $user, LocationsService $ls) {
+	$lastUpdateTime = 0;
 	$result = $ls->getLocations($user, $lastUpdateTime);
-	var_dump($result);
+	if($result) {
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
 }
 
-function testGetAdminLocations(LocationsService $ls) {
-	$ls->getAdminLocations($user);
-}
-
-function testGetWebLocations(LocationsService $ls) {
-	$ls->getWebLocations($user);
+function testGetWebLocations(User $user, LocationsService $ls) {
+	$result = $ls->getWebLocations($user);
+	if($result) {
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
 }
 
 function testcalls($dbLayer){
@@ -54,11 +64,12 @@ function testcalls($dbLayer){
 	echo "Testing update...";
 	testUpdate($dbLayer);
 	
-	echo "Testing access token";
-	testAccessToken($ls);
-	
 	echo "Testing query...";
-	testQuery($dbLayer);
+	$id = testQuery($dbLayer);
+	
+	echo "Testing access token";
+	testAccessToken($ls, $id);
+	
 	echo "Testing delete...";
 	testDelete($dbLayer);
 }
@@ -70,7 +81,7 @@ function testInsert(DbLayer $dbLayer){
 			UsersContract::USERS_COLUMN_PASSWORD=>password_hash(sha1("user"), PASSWORD_BCRYPT),
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>0,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"asdfasdf",
-			UsersContract::USERS_COLUMN_ROLE=>"social",
+			UsersContract::USERS_COLUMN_ROLE=>"admin",
 			UsersContract::USERS_COLUMN_SURNAME=>"example");
 
 	$result = $dbLayer->insert($table, $values);
@@ -114,6 +125,7 @@ function testQuery(DbLayer $dbLayer){
 	var_dump($result);
 	if($result){
 		pass();
+		return $result[0][UsersContract::USERS_COLUMN_ID];
 	} else {
 		var_dump($dbLayer->pdo->errorInfo());
 		fail();
@@ -135,30 +147,33 @@ function testDelete(DbLayer $dbLayer){
 }
 
 function testCheckUser(LoginService $ls){
-	$email = "user@example.com";
-	$password = sha1("user");
-	$result = $ls->checkUser($email, $password);
-	if($result != null){
-		pass();
-	} else {
-		var_dump($result);
-		fail();
-	}
+// 	$email = "user@example.com";
+// 	$password = sha1("user");
+// 	$result = $ls->checkUser($email, $password);
+// 	if($result != null){
+// 		pass();
+// 	} else {
+// 		var_dump($result);
+// 		fail();
+// 	}
 }
-function testAccessToken(LoginService $ls){
+function testAccessToken(LoginService $ls, $id){
 	$dbLayer = new DbLayer();
 	$token = "token";
-	$values = array(UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN => $token, UsersContract::ACCESS_TOKEN_EMAIL => 1);
+	$values = array(UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN => $token, 
+			UsersContract::ACCESS_TOKEN_ID => $id);
 	$dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME, $values);
 
 	$result = $ls->validateAccessToken($token);
 	if($result != null){
 		pass();
-		$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME, UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array("token"));
 	} else {
 		var_dump($result);
 		fail();
 	}
+	
+	$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME,
+			UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array($token));
 }
 function pass(){
 	echo "<font color=\"green\">PASSED</font><br>\n";

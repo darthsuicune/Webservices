@@ -15,16 +15,12 @@ class UsersContract {
 	const USERS_COLUMN_PASSWORD_RESET_TIME = "resettime";
 
 	const ACCESS_TOKEN_TABLE_NAME = "sessions";
-	const ACCESS_TOKEN_EMAIL = "user_id";
+	const ACCESS_TOKEN_ID = "user_id";
 	const ACCESS_TOKEN_COLUMN_LOGIN_TOKEN = "token";
 
-	const ROLE_SOCIAL = "social";
-	const ROLE_SOCORROS = "socorros";
-	const ROLE_SOCIAL_SOCORROS = "socialsocorros";
-	const ROLE_MARITIMOS = "maritimos";
 	const ROLE_ADMIN = "admin";
-	const ROLE_SOCORROS_MARITIMOS = "socorrosmaritimos";
-	const ROLE_REGISTER = "register";
+	const ROLE_VOLUNTEER = "volunteer";
+	const ROLE_TECHNICIAN = "technician";
 }
 
 class User {
@@ -39,46 +35,6 @@ class User {
 		$this->role = $role;
 		$this->email = $email;
 		$this->accessToken = new AccessToken($accessToken);
-	}
-
-	public function getAllowedTypes(){
-		$types = array();
-		switch($this->role){
-			case UsersContract::ROLE_SOCIAL_SOCORROS:
-				$types[] = LocationsContract::TYPE_SOCIAL;
-			case UsersContract::ROLE_SOCORROS:
-				$this->addSocorros($types);
-				break;
-			case UsersContract::ROLE_SOCORROS_MARITIMOS:
-				$this->addSocorros($types);
-			case UsersContract::ROLE_MARITIMOS:
-				$types[] = LocationsContract::TYPE_MARITIMO;
-				break;
-			case UsersContract::ROLE_SOCIAL:
-				$types[] = LocationsContract::TYPE_SOCIAL;
-				$types[] = LocationsContract::TYPE_ASAMBLEA;
-				break;
-			case UsersContract::ROLE_ADMIN:
-				$this->addSocorros($types);
-				$types[] = LocationsContract::TYPE_SOCIAL;
-				$types[] = LocationsContract::TYPE_MARITIMO;
-				break;
-			case UsersContract::ROLE_REGISTER:
-				// The register users don't see points
-				break;
-		}
-		return $types;
-	}
-
-	function addSocorros(&$array){
-		$array[] = LocationsContract::TYPE_ADAPTADAS;
-		$array[] = LocationsContract::TYPE_ASAMBLEA;
-		$array[] = LocationsContract::TYPE_BRAVO;
-		$array[] = LocationsContract::TYPE_CUAP;
-		$array[] = LocationsContract::TYPE_HOSPITAL;
-		$array[] = LocationsContract::TYPE_NOSTRUM;
-		$array[] = LocationsContract::TYPE_TERRESTRE;
-		return $array;
 	}
 
 	public function changePassword($newPassword){
@@ -115,13 +71,13 @@ class User {
 		
 	}
 	
-	public static function generateToken($name, $surname, $role, $email){
+	public static function generateToken($name, $surname, $role, $email, $id){
 		$accessToken = AccessToken::createAccessToken();
 		$dbLayer = new DbLayer();
 		if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 			$result = $dbLayer->insert(UsersContract::ACCESS_TOKEN_TABLE_NAME,
 					array(
-							UsersContract::ACCESS_TOKEN_EMAIL=>$email,
+							UsersContract::ACCESS_TOKEN_ID=>$id,
 							UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN=>$accessToken->accessTokenString
 					));
 			return new User($name, $surname, $role, $email, $accessToken->accessTokenString);

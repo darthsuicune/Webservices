@@ -32,7 +32,7 @@ class AdminPanel{
 	function getLocationList($user){
 		include_once('LocationsService.php');
 		$locationService = new LocationsService();
-		return $locationService->getAdminLocations($user);
+		return $locationService->getWebLocations($user);
 	}
 
 	function getLocationTable($locationList){
