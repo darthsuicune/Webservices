@@ -28,13 +28,25 @@ function testLocations() {
 	
 	echo "Testing locations...";
 	testGetLocations($user, $ls);
+	echo "Testing locations...";
+	testGetAllLocations($user, $ls);
 	echo "Testing web locations...";
 	testGetWebLocations($user, $ls);
 }
 function testGetLocations(User $user, LocationsService $ls) {
+	$lastUpdateTime = "2014-06-01 18:25:27";
+	$result = $ls->getLocations($user, $lastUpdateTime);
+	if(count($result) < 40) {
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
+}
+function testGetAllLocations(User $user, LocationsService $ls) {
 	$lastUpdateTime = 0;
 	$result = $ls->getLocations($user, $lastUpdateTime);
-	if($result) {
+	if(count($result) > 40) {
 		pass();
 	} else {
 		var_dump($result);
@@ -44,7 +56,7 @@ function testGetLocations(User $user, LocationsService $ls) {
 
 function testGetWebLocations(User $user, LocationsService $ls) {
 	$result = $ls->getWebLocations($user);
-	if($result) {
+	if(count($result) > 40) {
 		pass();
 	} else {
 		var_dump($result);
@@ -78,14 +90,13 @@ function testInsert(DbLayer $dbLayer){
 	$table = UsersContract::USERS_TABLE_NAME;
 	$values = array(UsersContract::USERS_COLUMN_E_MAIL=>"user@example.com",
 			UsersContract::USERS_COLUMN_NAME=>"user",
-			UsersContract::USERS_COLUMN_PASSWORD=>password_hash("user"), PASSWORD_BCRYPT,
+			UsersContract::USERS_COLUMN_PASSWORD=>password_hash("user", PASSWORD_BCRYPT),
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TIME=>0,
 			UsersContract::USERS_COLUMN_PASSWORD_RESET_TOKEN=>"asdfasdf",
 			UsersContract::USERS_COLUMN_ROLE=>"admin",
 			UsersContract::USERS_COLUMN_SURNAME=>"example");
 
 	$result = $dbLayer->insert($table, $values);
-	var_dump($result);
 
 	if($result === array()){
 		pass();
@@ -107,7 +118,6 @@ function testUpdate(DbLayer $dbLayer){
 	$where = "`".UsersContract::USERS_COLUMN_E_MAIL . "`=?";
 	$whereArgs = array("user@example.com");
 	$result = $dbLayer->update($values, $table, $where, $whereArgs);
-	var_dump($result);
 	if($result === array()){
 		pass();
 	} else {
@@ -137,7 +147,6 @@ function testDelete(DbLayer $dbLayer){
 	$where = UsersContract::USERS_COLUMN_NAME . "=?";
 	$whereArgs = array("user");
 	$result = $dbLayer->delete($table, $where, $whereArgs);
-	var_dump($result);
 	if($result === array()){
 		pass();
 	} else {
