@@ -1,6 +1,6 @@
 <?php
 
-class AndroidClient implements Client {
+class AndroidClient {
 	const REQUEST_TYPE = 'q';
 	const REQUEST_LOCATIONS = 'get_locations';
 	const REQUEST_ACCESS = 'request_access';
@@ -17,9 +17,5 @@ class AndroidClient implements Client {
 			LocationsController $locationsController){
 		$this->usersController = $usersController;
 		$this->locationsController = $locationsController;
-	}
-	
-	public function handleRequest(){
-		
 	}
 }

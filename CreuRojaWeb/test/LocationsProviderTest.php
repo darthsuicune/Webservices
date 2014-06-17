@@ -49,7 +49,7 @@ function testGetLocation(LocationsProvider $provider){
 	$location1 = new Location("12.2", "2.2", "Sitio 1", "asamblea", "Direccion 1", "Tfno 1", 1, 0, 0);
 	$id = 0;
 	$result = $provider->getLocation($id);
-	assertEquals("Id 0", array_values($result->to_array()), array_values($location1->to_array()));
+	assertEquals("Id 0", $result, $location1);
 }
 
 function testAddLocation(LocationsProvider $provider){

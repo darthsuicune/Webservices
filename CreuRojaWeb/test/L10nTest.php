@@ -8,10 +8,10 @@ function testLocalization(){
 }
 
 function testGetWebTitle(){
-	$strings = new Strings(Strings::SPANISH);
-	assertEquals("Web Title (ES)", $strings->get(Strings::WEB_TITLE, Strings::SPANISH), "Mapa de Cruz Roja Barcelona");
-	$strings = new Strings(Strings::ENGLISH);
-	assertEquals("Web Title (EN)", $strings->get(Strings::WEB_TITLE, Strings::ENGLISH), "Barcelona Red Cross Map");
+	$strings = new Strings(Strings::LANG_SPANISH);
+	assertEquals("Web Title (ES)", $strings->get(Strings::WEB_TITLE, Strings::LANG_SPANISH), "Mapa de Cruz Roja Barcelona");
+	$strings = new Strings(Strings::LANG_ENGLISH);
+	assertEquals("Web Title (EN)", $strings->get(Strings::WEB_TITLE, Strings::LANG_ENGLISH), "Barcelona Red Cross Map");
 	$strings = new Strings();
 	assertEquals("Web Title (CA)", $strings->get(Strings::WEB_TITLE), "Mapa de Creu Roja Barcelona");
 }

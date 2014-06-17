@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+
+.logo {
+	margin-top: 60px;
+	margin-left: 20%;
+}
+
+.title {
+	margin-top: -70px;
+	margin-right: 45%;
+	float: right;
+}
+
+#install_form {
+	margin-left: 20%;
+	margin-right: 40%;
+	margin-top:30px;
+}
+
+#install_form label {
+}
+
+#install_form input {
+	color: black;
+	padding: 10px;
+	border-radius: 5px;
+	display: block;
+	width: 100%;
+	margin-top: 4px;
+	margin-bottom: 8px;
+	background-color: #eee;
+	border: 1px solid #bbb;
+}
+
+#install_form input[type="submit"] {
+	margin-top: 15px;
+	background-color: #a00;
+	color: white;
+	border: 0px;
+	width: 100px;
+}
+
+#install_form input[type="submit"]:hover {
+	background-color: #600;
+	border: 0px;
+}

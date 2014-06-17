@@ -10,6 +10,7 @@ class UsersContract {
 	const COLUMN_PASSWORD = "password";
 	const COLUMN_E_MAIL = "email";
 	const COLUMN_ROLE = "role";
+	const COLUMN_LANGUAGE = "language";
 	const COLUMN_PASSWORD_RESET_TOKEN = "resettoken";
 	const COLUMN_PASSWORD_RESET_TIME = "resettime";
 
