@@ -156,15 +156,27 @@ function testDelete(DbLayer $dbLayer){
 }
 
 function testCheckUser(LoginService $ls){
-// 	$email = "user@example.com";
-// 	$password = "user";
-// 	$result = $ls->checkUser($email, $password);
-// 	if($result != null){
-// 		pass();
-// 	} else {
-// 		var_dump($result);
-// 		fail();
-// 	}
+	$dbLayer = new DbLayer();
+	include_once("Register.php");
+	$register = new Register();
+	$email = "weirdmail@example.com";
+	$password = "user";
+	$hash = password_hash($password, PASSWORD_BCRYPT);
+	$roles = UsersContract::ROLE_ADMIN;
+	$name = "asdf";
+	$surname = "asdfasdf";
+	$register->registerUser($hash, $email, $roles, $name, $surname);
+	
+	$result = $ls->checkUser($email, $password);
+	if($result != null){
+		pass();
+	} else {
+		var_dump($result);
+		fail();
+	}
+	$dbLayer->delete(UsersContract::USERS_TABLE_NAME, UsersContract::USERS_COLUMN_E_MAIL . "=?", array($email));
+	$dbLayer->delete(UsersContract::ACCESS_TOKEN_TABLE_NAME,
+			UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?", array($result->accessToken->accessTokenString));
 }
 function testAccessToken(LoginService $ls, $id){
 	$dbLayer = new DbLayer();
