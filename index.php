@@ -5,6 +5,7 @@
  * @package Webserver
  */
 include_once('User.php');
+include_once('Log.php');
 include_once('LocationsService.php');
 include_once('LoginService.php');
 
@@ -12,8 +13,7 @@ $index = new Index();
 $index->getIndex();
 
 
-class Index {
-	const LOGIN_REQUEST = "login";
+class Index {const LOGIN_REQUEST = "login";
 	const UPDATE_REQUEST = "update";
 	const ADD_REQUEST = "addNew";
 	const DELETE_REQUEST = "delete";
@@ -40,6 +40,7 @@ class Index {
 			$user = $this->getUserDetails();
 				
 			if($user && isset($_GET[self::REQUEST_TYPE])){
+				Log::write($user, $_GET[self::REQUEST_TYPE]);
 				$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
 				switch($requestType[0]){
 					case self::LOGIN_REQUEST:
@@ -65,23 +66,26 @@ class Index {
 						break;
 				}
 			} else if ($user) {
+				Log::write($user, "map");
 				$this->showMap($user);
 			} else {
+				Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
 				$this->showLoginForm();
 			}
 		}
 	}
 
-	function handleLoginRequest($user){
+	function handleLoginRequest(User $user = null){
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
-		if($user->role == UsersContract::ROLE_ADMIN){
-			$this->showAdminPanel($user);
-		} else if ($user->role == UsersContract::ROLE_REGISTER){
-			$this->showRegister();
-		} else if ($user) {
-			$this->showMap($user);
+		if($user) {
+			if($user->role == UsersContract::ROLE_ADMIN){
+				$this->showAdminPanel($user);
+			} else if ($user->role == UsersContract::ROLE_REGISTER){
+				$this->showRegister();
+			} else {
+				$this->showMap($user);
+			}
 		} else {
-			echo "WHAT?";
 			$this->showLoginForm();
 		}
 	}
@@ -254,7 +258,7 @@ class Index {
 		if(!isset($_POST[self::PASSWORD]) || $_POST[self::PASSWORD] == ""){
 			$this->showLoginForm();
 			return;
-		}		
+		}
 		$loginService = new LoginService();
 		return $loginService->checkUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
 	}
