@@ -15,6 +15,7 @@ class DbLayer {
 	var $dbDsn;
 	var $pdo;
 	var $result;
+	var $error;
 
 	public function __construct() {
 		$this->dbDsn = 'mysql:dbname=' . DB_DATABASE . ';host=' . DB_ADDRESS
@@ -24,6 +25,7 @@ class DbLayer {
 			$this->result = self::RESULT_DB_CONNECTION_SUCCESFUL;
 		} catch (PDOException $e) {
 			$this->result = self::RESULT_DB_CONNECTION_ERROR;
+			$this->error = $e;
 		}
 	}
 	public function connect() {

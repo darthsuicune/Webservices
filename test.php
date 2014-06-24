@@ -19,7 +19,7 @@ if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 } else {
 	fail();
 	echo "Error message: ";
-	var_dump($dbLayer->pdo->errorInfo());
+	var_dump($dbLayer->error);
 }
 
 function testLocations() {
