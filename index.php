@@ -69,7 +69,11 @@ class Index {const LOGIN_REQUEST = "login";
 				Log::write($user, "map");
 				$this->showMap($user);
 			} else {
-				Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
+				if(isset($_POST[self::EMAIL])) {
+					Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
+				} else {
+					Log::write(null, "view login");
+				}
 				$this->showLoginForm();
 			}
 		}

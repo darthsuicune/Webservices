@@ -1,6 +1,5 @@
 <?php
 class Log {
-	const LOG_FILE = "/tmp/CRwebservice.log";
 	
 	public static function write(User $user = null, $action) {
 		$data = "";
@@ -22,6 +21,6 @@ class Log {
 	
 	static function writeToFile($data) {
 		$time = date("Y-m-d H:i:s");
-		file_put_contents(self::LOG_FILE, $data . " at $time\n", FILE_APPEND);
+		file_put_contents(LOG_FILE, $data . " at $time\n", FILE_APPEND);
 	}
 }
