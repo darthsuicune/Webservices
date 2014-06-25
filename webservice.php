@@ -8,6 +8,7 @@ include_once ('Response.php');
 include_once ('LocationsService.php');
 include_once ('LoginService.php');
 include_once ('User.php');
+include_once ('Log.php');
 
 $server = new Webservice ();
 print ( $server->parseRequest () );
@@ -56,7 +57,8 @@ class Webservice {
 			Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 		}
 
-		return $response;
+		header("Content-Type: application/json");
+		return json_encode($response);
 	}
 	/**
 	 * Handles a locations request.
@@ -88,8 +90,7 @@ class Webservice {
 				Log::write($user, self::QUERY_REQUEST_LOCATIONS, $this->version);
 			}
 		}
-		header("Content-Type: application/json");
-		return json_encode($response);
+		return $response;
 	}
 	/**
 	 * Handles a request for access.
@@ -127,6 +128,6 @@ class Webservice {
 			}
 		}
 		header("Content-Type: application/json");
-		return json_encode($response);
+		return $response;
 	}
 }
