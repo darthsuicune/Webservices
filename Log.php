@@ -1,18 +1,18 @@
 <?php
 class Log {
 	
-	public static function write(User $user = null, $action) {
+	public static function write(User $user = null, $action, $version = "web") {
 		$data = "";
 		if($user) {
-			$data = "User { $user->name $user->surname, $user->email } has requested [ $action ]";
+			$data = "User { $user->name $user->surname, $user->email } has requested [ $action ] from $version version";
 		} else {
-			$data = "Requested action [ $action ]";
+			$data = "Requested action [ $action ] from $version version";
 		}
 		Log::writeToFile($data);
 	}
 	
-	public static function failWrite(User $user = null, $action) {
-		$data = "Failed action [ $action ]";
+	public static function failWrite(User $user = null, $action, $version = "web") {
+		$data = "Failed action [ $action ] in $version version";
 		if($user) {
 			$data .= " by user { $user->name $user->surname, $user->email }";
 		}
