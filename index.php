@@ -84,7 +84,7 @@ class Index {const LOGIN_REQUEST = "login";
 		if($user) {
 			if($user->role == UsersContract::ROLE_ADMIN){
 				$this->showAdminPanel($user);
-			} else if ($user->role == UsersContract::ROLE_REGISTER){
+			} else if ($user->role == UsersContract::ROLE_TECHNICIAN){
 				$this->showRegister();
 			} else {
 				$this->showMap($user);
@@ -132,7 +132,7 @@ class Index {const LOGIN_REQUEST = "login";
 	}
 
 	function handleRegisterRequest($user) {
-		if($user && ($user->role == UsersContract::ROLE_REGISTER
+		if($user && ($user->role == UsersContract::ROLE_TECHNICIAN
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
 			$this->showRegister();
 		} else {
