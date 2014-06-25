@@ -4,10 +4,10 @@ class Location {
     var $latitude;
     var $longitude;
     var $name;
-    var $type;
+    var $location_type;
     var $address;
-    var $other;
-    var $lastUpdateTime;
+    var $description;
+    var $updated_at;
     var $expireDate;
     /**
      * Public constructor
@@ -18,10 +18,10 @@ class Location {
         $this->latitude = $values[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
         $this->longitude = $values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
         $this->name = $values[LocationsContract::LOCATIONS_COLUMN_NAME];
-        $this->type = $values[LocationsContract::LOCATIONS_COLUMN_TYPE];
+        $this->location_type = $values[LocationsContract::LOCATIONS_COLUMN_TYPE];
         $this->address = $values[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
-        $this->other = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
-        $this->lastUpdateTime = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
+        $this->description = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
+        $this->updated_at = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
         $this->expireDate = $values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
     }
 }

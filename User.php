@@ -32,6 +32,7 @@ class User {
 
 	function __construct( $name, $surname, $role, $email, $accessToken){
 		$this->name = $name;
+		$this->surname = $surname;
 		$this->role = $role;
 		$this->email = $email;
 		$this->accessToken = new AccessToken($accessToken);

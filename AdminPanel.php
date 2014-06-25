@@ -82,7 +82,7 @@ class AdminPanel{
 		$location .= $this->getLatitudeCell($row->latitude);
 		$location .= $this->getLongitudeCell($row->longitude);
 		$location .= $this->getNameCell($row->name);
-		$location .= $this->getTypeCell($row->type);
+		$location .= $this->getTypeCell($row->location_type);
 		$location .= $this->getAddressCell($row->address);
 		$location .= $this->getotherCell($row->other);
 		$location .= $this->getexpireDateCell($row->expireDate);
