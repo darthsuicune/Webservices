@@ -56,15 +56,15 @@ class User {
 		$token = self::createPasswordValidationToken($email);
 		if($token){
 			$to = $email;
-			$subject = "Solicitud de recuperacion de contrasenya";
-			$message = "Ha solicitado un cambio de contrasenya.
-				
-			Se le envia este correo para confirmar que ha sido usted y no un tercero."
-			. "Este link expira tras pasar las 4 horas siguientes a su peticion. En caso ".
-			"de que necesite mas tiempo, necesitara solicitarlo de nuevo: "
-			. "<a href='http://voluntarios.tk/index.php?q=recoverPassword&email=$email&token=" . substr($token, 0, 30) ."'>Cambio de contrasenya</a>";
-			echo "$message";
-			//return mail($to, $subject, $message);
+			$subject = "Sol·licitud de recuperació de contrasenya";
+			$message = "Heu sol·licitat un canvi de contrasenya per al mapa de Creu Roja.
+			
+Se li envia aquest correu per confirmar que és vostè qui sol·licita el canvi de contrasenya. Aquest enllaç expira després de passar les 4 hores següents a la seva petició.
+
+http://creuroja.net/index.php?q=recoverPassword&email=$email&token=" . substr($token, 0, 30) ."";
+			$headers = 'From: 08000-Tècnics Socors Oficina Local de Barcelona <tecnicssocors@creuroja.org>' . "\r\n" .
+				   'Reply-To: 08000-Tècnics Socors Oficina Local de Barcelona <tecnicssocors@creuroja.org>' . "\r\n";
+			return mail($to, $subject, $message, $headers);
 		} else {
 			return false;
 		}

@@ -182,7 +182,7 @@ class Index {const LOGIN_REQUEST = "login";
 			require_once('Register.php');
 			$register = new Register();
 			if($register->recoverPassword($_POST[self::EMAIL])){
-				echo "An Email has been sent to your account";
+				echo "S'ha enviat un correu electrònic al seu compte";
 			} else {
 				echo "An error ocurred";
 			}
