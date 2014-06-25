@@ -22,6 +22,8 @@ class Webservice {
 	const PARAMETER_PASSWORD = "password";
 	const PARAMETER_ACCESS_TOKEN = "access_token";
 	const PARAMETER_LAST_UPDATE_TIME = 'last_update';
+	const PARAMETER_VERSION = "version";
+	var $version;
 
 	/**
 	 * This method must $response = a string containing the response to the original request.
@@ -31,6 +33,11 @@ class Webservice {
 	 * @$response = string with the response or fail screen
 	 */
 	public function parseRequest() {
+		if(isset ($_GET [self::PARAMETER_VERSION])){
+			$this->version = $_GET [self::PARAMETER_VERSION];
+		} else {
+			$this->version = "unreported";
+		}
 		$response;
 		if (isset ( $_GET [self::QUERY_REQUEST] )) {
 			switch ($_GET [self::QUERY_REQUEST]) {
@@ -45,12 +52,12 @@ class Webservice {
 					break;
 				default :
 					$response = new ErrorResponse ( Response::ERROR_WRONG_REQUEST );
-					Log::failWrite(null, "webservice " . $response->errorMessage);
+					Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 					break;
 			}
 		} else {
 			$response = new ErrorResponse ( Response::ERROR_NO_REQUEST );
-			Log::failWrite(null, "webservice " . $response->errorMessage);
+			Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 		}
 
 		return $response;
@@ -64,14 +71,14 @@ class Webservice {
 		$response;
 		if (! isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_ACCESS_TOKEN );
-			Log::failWrite(null, "webservice " . $response->errorMessage);
+			Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 		} else {
 			$loginService = new LoginService ();
 			$user = $loginService->validateAccessToken ($_POST [self::PARAMETER_ACCESS_TOKEN]);
 
 			if ($user == null || (!$user->accessToken->isValid())) {
 				$response = new ErrorResponse ( Response::ERROR_WRONG_ACCESS_TOKEN );
-				Log::failWrite(null, "webservice " . $response->errorMessage);
+				Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 			} else {
 				$lastUpdateTime = 0;
 				if (isset ($_POST [self::PARAMETER_LAST_UPDATE_TIME])){
@@ -81,8 +88,7 @@ class Webservice {
 				$locations = $locationsService->getLocations ( $user, $lastUpdateTime );
 
 				$response = new LocationsResponse ( $locations );
-
-				Log::write($user, self::QUERY_REQUEST_LOCATIONS);
+				Log::write($user, self::QUERY_REQUEST_LOCATIONS, $this->version);
 			}
 		}
 		header("Content-Type: application/json");
@@ -97,28 +103,28 @@ class Webservice {
 		// If an access token is already provided, this should $response = an error
 		if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
-			Log::failWrite(null, "webservice " . $response->errorMessage);
+			Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 		} else if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
 				! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
-			Log::failWrite(null, "webservice " . $response->errorMessage);
+			Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 		} else {
 			$email = $_POST [self::PARAMETER_EMAIL];
 			$password = $_POST [self::PARAMETER_PASSWORD];
 			if ($email == "" || $password == "") {
 				$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
-				Log::failWrite(null, "webservice " . $response->errorMessage);
+				Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 			} else {
 				$loginService = new LoginService ();
 				$user = $loginService->checkUser ($email, $password);
 				if($user == null || !($user->accessToken->isValid())){
 					$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
-					Log::failWrite(null, "webservice " . $response->errorMessage);
+					Log::failWrite(null, "webservice " . $response->errorMessage, $this->version);
 				} else {
 					$locationsService = new LocationsService ();
 					$locations = $locationsService->getLocations ( $user, 0 );
 					$response = new LoginResponse ( $user->accessToken, $locations );
-					Log::write($user, self::QUERY_REQUEST_ACCESS_TOKEN);
+					Log::write($user, self::QUERY_REQUEST_ACCESS_TOKEN, $this->version);
 				}
 			}
 		}
