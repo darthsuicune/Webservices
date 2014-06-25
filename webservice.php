@@ -77,7 +77,7 @@ class Webservice {
 				$locations = $locationsService->getLocations ( $user, $lastUpdateTime );
 
 				$response = new LocationsResponse ( $locations );
-				
+
 				Log::write($user, self::QUERY_REQUEST_LOCATIONS);
 			}
 		}
@@ -94,29 +94,29 @@ class Webservice {
 		if (isset ( $_POST [self::PARAMETER_ACCESS_TOKEN] )) {
 			$response = new ErrorResponse ( Response::ERROR_ALREADY_HAS_ACCESS_TOKEN );
 			Log::failWrite(null, "webservice " . $response->errorMessage);
-		}
-		if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
+		} else if (! isset ( $_POST [self::PARAMETER_EMAIL] ) ||
 				! isset ( $_POST [self::PARAMETER_PASSWORD] )) {
 			$response = new ErrorResponse ( Response::ERROR_NO_LOGIN_INFORMATION );
 			Log::failWrite(null, "webservice " . $response->errorMessage);
-		}
-
-		$email = $_POST [self::PARAMETER_EMAIL];
-		$password = $_POST [self::PARAMETER_PASSWORD];
-		if ($email == "" || $password == "") {
-			$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
-			Log::failWrite(null, "webservice " . $response->errorMessage);
 		} else {
-			$loginService = new LoginService ();
-			$user = $loginService->checkUser ($email, $password);
-			if($user == null || !($user->accessToken->isValid())){
+
+			$email = $_POST [self::PARAMETER_EMAIL];
+			$password = $_POST [self::PARAMETER_PASSWORD];
+			if ($email == "" || $password == "") {
 				$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
 				Log::failWrite(null, "webservice " . $response->errorMessage);
 			} else {
-				$locationsService = new LocationsService ();
-				$locations = $locationsService->getLocations ( $user, 0 );
-				$response = new LoginResponse ( $user->accessToken, $locations );
-				Log::write($user, self::QUERY_REQUEST_ACCESS_TOKEN);
+				$loginService = new LoginService ();
+				$user = $loginService->checkUser ($email, $password);
+				if($user == null || !($user->accessToken->isValid())){
+					$response = new ErrorResponse ( Response::ERROR_WRONG_LOGIN_INFORMATION );
+					Log::failWrite(null, "webservice " . $response->errorMessage);
+				} else {
+					$locationsService = new LocationsService ();
+					$locations = $locationsService->getLocations ( $user, 0 );
+					$response = new LoginResponse ( $user->accessToken, $locations );
+					Log::write($user, self::QUERY_REQUEST_ACCESS_TOKEN);
+				}
 			}
 		}
 		header("Content-Type: application/json");
