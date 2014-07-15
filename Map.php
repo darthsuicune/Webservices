@@ -117,7 +117,7 @@ class Map {
 				. ' + "<br>" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_PHONE
 				. ' + "<br>" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_OTHER;
 		} else {
-			return '"<strong>" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_NAME . ' + "</strong>"'
+			return '"<strong>" + marcadores[i].' . LocationsContract::LOCATIONS_COLUMN_NAME . ' + "</strong>"';
 		} 
 	}
 	function getIconFolder() {
