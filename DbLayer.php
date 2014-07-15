@@ -6,32 +6,46 @@
  */
 include_once('Location.php');
 include_once('User.php');
+require_once 'config.php';
 class DbLayer {
 
-	const DB_ADDRESS = 'localhost'; // TODO: Set values
-	const DB_USERNAME = 'testuser'; // TODO: Set values
-	const DB_PASSWORD = 'password'; // TODO: Set values
-	const DB_DATABASE = 'webservice';
-	const CHARSET = 'UTF8';
-
-	const RESULT_DB_CONNECTION_SUCCESFUL = 0;
-	const RESULT_DB_CONNECTION_ERROR = 1;
+	const RESULT_DB_CONNECTION_SUCCESFUL = 10;
+	const RESULT_DB_CONNECTION_ERROR = 11;
 
 	var $dbDsn;
 	var $pdo;
+	var $result;
+	var $error;
 
 	public function __construct() {
-		$this->dbDsn = 'mysql:dbname=' . self::DB_DATABASE . ';host=' . self::DB_ADDRESS
-		. ';charset=' . self::CHARSET;
-	}
-	public function connect() {
+		$this->dbDsn = 'mysql:dbname=' . DB_DATABASE . ';host=' . DB_ADDRESS
+		. ';charset=' . CHARSET;
 		try{
-			$this->pdo = new PDO ( $this->dbDsn, self::DB_USERNAME, self::DB_PASSWORD );
-			return self::RESULT_DB_CONNECTION_SUCCESFUL;
+			$this->pdo = new PDO ( $this->dbDsn, DB_USERNAME, DB_PASSWORD );
+			$this->result = self::RESULT_DB_CONNECTION_SUCCESFUL;
 		} catch (PDOException $e) {
-			return self::RESULT_DB_CONNECTION_ERROR;
+			$this->result = self::RESULT_DB_CONNECTION_ERROR;
+			$this->error = $e;
 		}
 	}
+	public function connect() {
+		return $this->result;
+	}
+	
+	public function joinTables($tables) {
+		$table = "";
+		if(is_array($tables)){
+			if (count($tables) > 1) {
+				$table = "$tables[0]` JOIN `$tables[1]` ON `$tables[0]`.`id` = `$tables[1]`.`user_id";
+			} else {
+				$table = array_pop($tables);
+			}
+		} else {
+			$table = $tables;
+		}
+		return $table;
+	}
+	
 	/**
 	 * Abstraction layer for the query to the database.
 	 *
@@ -41,9 +55,8 @@ class DbLayer {
 	 * @param array $whereArgs
 	 * @return mixed
 	 */
-	public function query(array $columns, array $tables, $where, array $whereArgs) {
-		if(substr_count($where, "?") != count($whereArgs)
-				|| count($tables) < 1) {
+	public function query(array $columns, $tables, $where, array $whereArgs) {
+		if(substr_count($where, "?") != count($whereArgs)) {
 			return false;
 		}
 
@@ -54,9 +67,8 @@ class DbLayer {
 			$projection = '*';
 		}
 
-		$sources = join ( '` NATURAL JOIN `', $tables );
-
-		$query = "SELECT $projection FROM `$sources`";
+		$query = "SELECT $projection FROM `$tables`";
+		
 		if($where != ""){
 			$query .= " WHERE $where";
 		}
@@ -191,6 +203,7 @@ class DbLayer {
 				}
 			}
 		} catch (PDOException $e) {
+			var_dump($e);
 			if($statement){
 				$statement->closeCursor();
 			}

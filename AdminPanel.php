@@ -32,7 +32,7 @@ class AdminPanel{
 	function getLocationList($user){
 		include_once('LocationsService.php');
 		$locationService = new LocationsService();
-		return $locationService->getAdminLocations($user);
+		return $locationService->getWebLocations($user);
 	}
 
 	function getLocationTable($locationList){
@@ -68,8 +68,8 @@ class AdminPanel{
 		$row .= $this->getNameCell("");
 		$row .= $this->getTypeCell("");
 		$row .= $this->getAddressCell("");
-		$row .= $this->getotherCell("");
-		$row .= $this->getexpireDateCell("");
+		$row .= $this->getOtherCell("");
+		$row .= $this->getExpireDateCell("");
 		$row .= '                    <td><input name="send" type="submit" value="Add new"></td>' . "\n";
 		$row .= "                </form>" . "\n";
 		$row .= "            </tr>" . "\n";
@@ -82,10 +82,10 @@ class AdminPanel{
 		$location .= $this->getLatitudeCell($row->latitude);
 		$location .= $this->getLongitudeCell($row->longitude);
 		$location .= $this->getNameCell($row->name);
-		$location .= $this->getTypeCell($row->type);
+		$location .= $this->getTypeCell($row->location_type);
 		$location .= $this->getAddressCell($row->address);
-		$location .= $this->getotherCell($row->other);
-		$location .= $this->getexpireDateCell($row->expireDate);
+		$location .= $this->getOtherCell($row->description);
+		$location .= $this->getExpireDateCell($row->expireDate);
 		$location .= '                    <td><input name="modify" type="submit" value="Modify"></td>' . "\n";
 		$location .= "                </form>" . "\n";
 		$location .= '                <td><a href="?q=' . Index::DELETE_REQUEST . '/' . $row->id 

@@ -4,11 +4,13 @@ class Location {
     var $latitude;
     var $longitude;
     var $name;
-    var $type;
+    var $location_type;
     var $address;
-    var $other;
-    var $lastUpdateTime;
+    var $phone;
+    var $description;
+    var $updated_at;
     var $expireDate;
+    var $active;
     /**
      * Public constructor
      * @param mysql_assoc $row mysql row containing the relative data.
@@ -18,11 +20,13 @@ class Location {
         $this->latitude = $values[LocationsContract::LOCATIONS_COLUMN_LATITUDE];
         $this->longitude = $values[LocationsContract::LOCATIONS_COLUMN_LONGITUDE];
         $this->name = $values[LocationsContract::LOCATIONS_COLUMN_NAME];
-        $this->type = $values[LocationsContract::LOCATIONS_COLUMN_TYPE];
+        $this->location_type = $values[LocationsContract::LOCATIONS_COLUMN_TYPE];
         $this->address = $values[LocationsContract::LOCATIONS_COLUMN_ADDRESS];
-        $this->other = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
-        $this->lastUpdateTime = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
+        $this->description = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
+        $this->updated_at = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
         $this->expireDate = $values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
+        $this->phone = $values[LocationsContract::LOCATIONS_COLUMN_PHONE];
+        $this->active = $values[LocationsContract::LOCATIONS_COLUMN_ACTIVE];
     }
 }
 
@@ -35,11 +39,13 @@ class LocationsContract {
     const LOCATIONS_COLUMN_LATITUDE = "latitude";
     const LOCATIONS_COLUMN_LONGITUDE = "longitude";
     const LOCATIONS_COLUMN_NAME = "name";
-    const LOCATIONS_COLUMN_TYPE = "type";
+    const LOCATIONS_COLUMN_TYPE = "location_type";
     const LOCATIONS_COLUMN_ADDRESS = "address";
-    const LOCATIONS_COLUMN_OTHER = "other";
-    const LOCATIONS_COLUMN_LAST_UPDATED = "lastupdated";
+    const LOCATIONS_COLUMN_OTHER = "description";
+    const LOCATIONS_COLUMN_LAST_UPDATED = "updated_at";
     const LOCATIONS_COLUMN_EXPIRE_DATE = "expiredate";
+    const LOCATIONS_COLUMN_PHONE = "phone";
+    const LOCATIONS_COLUMN_ACTIVE = "active";
 
     const TYPE_ADAPTADAS = "adaptadas";
     const TYPE_ASAMBLEA = "asamblea";

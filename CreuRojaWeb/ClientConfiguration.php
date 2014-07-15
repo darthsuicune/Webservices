@@ -1,18 +1,13 @@
 <?php
 class ClientConfiguration{
-	const DB_ADDRESS = 'localhost'; // TODO: Set values
-	const DB_USERNAME = 'testuser'; // TODO: Set values
-	const DB_PASSWORD = 'testpass'; // TODO: Set values
-	const DB_DATABASE = 'webservice';
-	const CHARSET = 'UTF8';
 
 	const ANDROID = 1;
 	const WEB = 2;
 
-	public function getClient($clientType){
-		$dsn = "mysql:dbname=" . self::DB_DATABASE . ";host=" . self::DB_ADDRESS
-		. ";charset=" . self::CHARSET;
-		$pdo = new PDO($dsn, self::DB_USERNAME, self::DB_PASSWORD);
+	public function getClient($clientType, $lang = Strings::LANG_CATALAN){
+		require_once("config.php");
+		$dsn = "mysql:dbname=$DB_DATABASE;host=$DB_ADDRESS;charset=$CHARSET";
+		$pdo = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
 		$dataStorage = new MySqlDao($pdo);
 		$usersProvider = new UsersProviderImpl($dataStorage);
 		$locationsProvider = new LocationsProviderImpl($dataStorage);
@@ -23,8 +18,15 @@ class ClientConfiguration{
 			case self::ANDROID:
 				return new AndroidClient($usersController, $locationsController);
 			case self::WEB:
-				$sessionsController = new SessionsControllerImpl();
-				return new WebClient($usersController, $locationsController, $sessionsController);
+				require_once("view/root.php");
+				$sessionsController = new SessionsControllerImpl($dataStorage);
+				$sessionsController->setLanguage($lang);
+				$user = null;
+				if(isset($_SESSION[SessionsController::USER])){
+					$user = $_SESSION[SessionsController::USER];
+				}
+				$root = new Root($user);
+				return new WebClient($usersController, $locationsController, $sessionsController, $root);
 			default:
 				return false;
 		}

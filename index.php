@@ -5,6 +5,7 @@
  * @package Webserver
  */
 include_once('User.php');
+include_once('Log.php');
 include_once('LocationsService.php');
 include_once('LoginService.php');
 
@@ -12,8 +13,7 @@ $index = new Index();
 $index->getIndex();
 
 
-class Index {
-	const LOGIN_REQUEST = "login";
+class Index {const LOGIN_REQUEST = "login";
 	const UPDATE_REQUEST = "update";
 	const ADD_REQUEST = "addNew";
 	const DELETE_REQUEST = "delete";
@@ -40,6 +40,7 @@ class Index {
 			$user = $this->getUserDetails();
 				
 			if($user && isset($_GET[self::REQUEST_TYPE])){
+				Log::write($user, $_GET[self::REQUEST_TYPE]);
 				$requestType = explode("/", $_GET[self::REQUEST_TYPE]);
 				switch($requestType[0]){
 					case self::LOGIN_REQUEST:
@@ -65,21 +66,29 @@ class Index {
 						break;
 				}
 			} else if ($user) {
+				Log::write($user, "map");
 				$this->showMap($user);
 			} else {
+				if(isset($_POST[self::EMAIL])) {
+					Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
+				} else {
+					Log::write(null, "view login");
+				}
 				$this->showLoginForm();
 			}
 		}
 	}
 
-	function handleLoginRequest($user){
+	function handleLoginRequest(User $user = null){
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
-		if($user->role == UsersContract::ROLE_ADMIN){
-			$this->showAdminPanel($user);
-		} else if ($user->role == UsersContract::ROLE_REGISTER){
-			$this->showRegister();
-		} else if ($user) {
-			$this->showMap($user);
+		if($user) {
+			if($user->role == UsersContract::ROLE_ADMIN){
+				$this->showAdminPanel($user);
+			} else if ($user->role == UsersContract::ROLE_TECHNICIAN){
+				$this->showRegister();
+			} else {
+				$this->showMap($user);
+			}
 		} else {
 			$this->showLoginForm();
 		}
@@ -123,7 +132,7 @@ class Index {
 	}
 
 	function handleRegisterRequest($user) {
-		if($user && ($user->role == UsersContract::ROLE_REGISTER
+		if($user && ($user->role == UsersContract::ROLE_TECHNICIAN
 				|| $user->role == UsersContract::ROLE_ADMIN)) {
 			$this->showRegister();
 		} else {
@@ -138,7 +147,7 @@ class Index {
 					&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
 				include_once('Register.php');
 				$register = new Register();
-				$newPassword = sha1($_POST[self::PASSWORD]);
+				$newPassword = $_POST[self::PASSWORD];
 				if($register->changePassword($email, $newPassword)){
 					echo "Canvi de contrasenya completat amb èxit";
 				} else {
@@ -164,7 +173,7 @@ class Index {
 			}
 		} else if (isset($_POST[self::PASSWORD]) && isset($_POST[self::CONFIRM_PASS])
 				&& strcmp($_POST[self::PASSWORD], $_POST[self::CONFIRM_PASS]) == 0){
-			if($loginService->updateUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]))){
+			if($loginService->updateUser($_POST[self::EMAIL], $_POST[self::PASSWORD])){
 				echo "Canvi de contrasenya completat amb èxit";
 			} else {
 				echo "Error en el canvi de contrasenya";
@@ -173,7 +182,7 @@ class Index {
 			require_once('Register.php');
 			$register = new Register();
 			if($register->recoverPassword($_POST[self::EMAIL])){
-				echo "An Email has been sent to your account";
+				echo "S'ha enviat un correu electrònic al seu compte";
 			} else {
 				echo "An error ocurred";
 			}
@@ -200,7 +209,7 @@ class Index {
 				$register = new Register();
 				$name = $_POST[self::NAME];
 				$surname = $_POST[self::SURNAME];
-				$password = password_hash(sha1($_POST[self::PASSWORD]), PASSWORD_BCRYPT);
+				$password = password_hash($_POST[self::PASSWORD], PASSWORD_BCRYPT);
 				$email = $_POST[self::EMAIL];
 				$roles = $_POST[self::ROLES];
 				if ($register->registerUser($password, $email, $roles, $name, $surname) === array()) {
@@ -255,7 +264,7 @@ class Index {
 			return;
 		}
 		$loginService = new LoginService();
-		return $loginService->checkUser($_POST[self::EMAIL], sha1($_POST[self::PASSWORD]));
+		return $loginService->checkUser($_POST[self::EMAIL], $_POST[self::PASSWORD]);
 	}
 
 	function createLocationValues(){

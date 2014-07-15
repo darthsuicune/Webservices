@@ -1,8 +1,13 @@
-<head>
-	<title>
-		<?php 
-			$strings = new Strings();
-			echo $strings->get(Strings::WEB_TITLE);
+<?php class Header {
+
+	public function showHeader(User $user = null) {
 		?>
-	</title>
-</head>
+<div id="header">
+	<a href="index.php" ><img id="logomenu" alt="logo menu" src="view/icons/logomenu.png"></a>
+	<?php // 	if ($user && $user->isAllowedTo(Actions::MENU)) {
+		$menu = new Menu();
+		$menu->showMenu($user);
+// 	} ?>
+</div>
+<?php }
+}?>

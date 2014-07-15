@@ -1,15 +1,5 @@
 <?php
-
-class WebClient implements Client {
-	const REQUEST_LOGIN = "login";
-	const REQUEST_UPDATE_LOCATION = "update";
-	const REQUEST_ADD_LOCATION = "addNew";
-	const REQUEST_DELETE_LOCATION = "delete";
-	const REQUEST_REGISTER = "register";
-	const REQUEST_CHANGE_PASSWORD = "changePassword";
-	const REQUEST_RECOVER_PASSWORD = "recoverPassword";
-	const REQUEST_TYPE = "q";
-
+class WebClient {
 	const PARAMETER_NAME = "name";
 	const PARAMETER_SURNAME = "surname";
 	const PARAMETER_PASSWORD = "password";
@@ -24,71 +14,135 @@ class WebClient implements Client {
 	var $usersController;
 	var $locationsController;
 	var $sessionsController;
+	var $root;
 
 	public function __construct(UsersController $usersController,
 			LocationsController $locationsController,
-			SessionsController $sessionsController){
+			SessionsController $sessionsController,
+			Root $root){
 		$this->usersController = $usersController;
 		$this->locationsController = $locationsController;
 		$this->sessionsController = $sessionsController;
+		$this->root = $root;
 	}
 
-	public function handleRequest() {
-		$request[0] = false;
-		if(isset($_GET[self::REQUEST_TYPE])){		
-			$request = explode("/", $_GET[self::REQUEST_TYPE]);
+	public function showDefaultView(User $user, Notice $notice = null) {
+		$this->root->showRoot($user->getDefaultView(), $notice);
+	}
+
+	public function showLogin(Notice $notice = null) {
+		$content = new Login();
+		$this->root->showRoot($content, $notice);
+	}
+
+	public function showMap() {
+		$content = new Map();
+		$this->root->showRoot($content);
+	}
+
+	public function showAbout() {
+		$content = new About();
+		$this->root->showRoot($content);
+	}
+
+	public function showContact() {
+		$content = new Contact();
+		$this->root->showRoot($content);
+	}
+
+	public function handleLoginRequest(){
+		if(isset($_POST[self::PARAMETER_EMAIL])
+				&& isset($_POST[self::PARAMETER_PASSWORD])) {
+			$email = $_POST[self::PARAMETER_EMAIL];
+			$password = sha1($_POST[self::PARAMETER_PASSWORD]);
+			$user = $this->usersController->validateUserFromLoginData($email, $password);
+			if($user) {
+				$this->sessionsController->createSession($user);
+				$this->root->setUser($user);
+				$this->showDefaultView($user);
+			} else {
+				$lang = $_SESSION[SessionsController::LANGUAGE];
+				$errors = new Notice($lang, array(Notice::NOTICE_TYPE_ERROR,
+						$lang->get(Strings::ERROR_INVALID_LOGIN)));
+				$this->showLogin($errors);
+			}
+		} else {
+			$this->showLogin();
 		}
-		switch($request[0]){
-			case self::REQUEST_LOGIN:
-				$this->handleLoginRequest();
-				break;
-			case self::REQUEST_UPDATE_LOCATION:
-				$this->handleLocationUpdateRequest($request);
-				break;
-			case self::REQUEST_ADD_LOCATION:
-				$this->handleLocationAddRequest();
-				break;
-			case self::REQUEST_DELETE_LOCATION:
-				$this->handleLocationDeleteRequest($request);
-				break;
-			case self::REQUEST_REGISTER:
-				$this->handleRegisterRequest();
-				break;
-			case self::REQUEST_CHANGE_PASSWORD:
-				$this->handlePasswordChangeRequest();
-				break;
-			case self::REQUEST_RECOVER_PASSWORD:
-				$this->handlePasswordRecoverRequest();
-				break;
-			default:
-				$this->showRoot();
-				break;
+	}
 
+	public function handleLogoutRequest(){
+		$notice = null;
+		if (isset($_SESSION[SessionsController::USER])) {
+			$lang = $_SESSION[SessionsController::LANGUAGE];
+			$notice = new Notice($lang, array(Notice::NOTICE_TYPE_NOTICE,
+					$lang->get(Strings::LOGOUT_MESSAGE)));
 		}
+		$this->sessionsController->destroySession();
+		$this->root->setUser();
+		$this->showLogin($notice);
 	}
 
-	function handleLoginRequest(){
-
+	public function handleLocationAddRequest(){
+		if($this->checkLocationValues()) {
+		}
+		return $this->root->showRoot();
 	}
-	function handleLocationUpdateRequest(){
 
+	public function handleLocationUpdateRequest($id){
+		if(!$this->checkLocationValues()
+				|| !$this->isCleanId($id)) {
+		}
+		return $this->root->showRoot();
 	}
-	function handleLocationAddRequest(){
 
+	public function handleLocationDeleteRequest($id){
+		if($this->isCleanId($request[1])) {
+		}
+		return $this->root->showRoot();
 	}
-	function handleLocationDeleteRequest(){
 
+	public function handleRegisterRequest(){
+		return $this->root->showRoot();
 	}
-	function handleRegisterRequest(){
 
+	public function handleUserManagementRequest() {
+		return $this->root->showRoot();
 	}
-	function handlePasswordChangeRequest(){
 
+	public function handleLocationManagementRequest() {
+		return $this->root->showRoot();
 	}
-	function handlePasswordRecoverRequest(){
 
+	public function handlePasswordChangeRequest(){
+		if(isset($_POST[self::PARAMETER_OLD_PASSWORD])
+				&& (isset($_POST[self::PARAMETER_PASSWORD]))
+				&& (isset($_POST[self::PARAMETER_CONFIRM_PASSWORD]))) {
+			break;
+		}
+		return $this->root->showRoot();
 	}
-	function showRoot(){
 
+	public function handlePasswordRecoverRequest(){
+		if(isset($_POST[self::PARAMETER_EMAIL])) {
+			break;
+		}
+		return $this->root->showRoot();
+	}
+
+	function isCleanId($unsafeId) {
+		return strcmp($unsafeId, mysql_real_escape_string($unsafeId)) == 0;
+	}
+
+	function checkLocationValues() {
+		return ((isset($_POST[LocationsContract::COLUMN_ADDRESS]))
+				&& (isset($_POST[LocationsContract::COLUMN_EXPIRE_DATE]))
+				&& (isset($_POST[LocationsContract::COLUMN_ID]))
+				&& (isset($_POST[LocationsContract::COLUMN_LAST_UPDATED]))
+				&& (isset($_POST[LocationsContract::COLUMN_LATITUDE]))
+				&& (isset($_POST[LocationsContract::COLUMN_LONGITUDE]))
+				&& (isset($_POST[LocationsContract::COLUMN_NAME]))
+				&& (isset($_POST[LocationsContract::COLUMN_OTHER]))
+				&& (isset($_POST[LocationsContract::COLUMN_TYPE])));
 	}
 }

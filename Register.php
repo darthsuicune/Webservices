@@ -63,15 +63,12 @@ class Register {
 
 	function isValidEmail($email, $password){
 		$loginService = new LoginService();
-		return $loginService->checkUser($email, sha1($password));
+		return $loginService->checkUser($email, $password);
 	}
 	
 	function isValidRole($roles){
-		return ($roles == UsersContract::ROLE_MARITIMOS
-				|| $roles == UsersContract::ROLE_SOCIAL
-				|| $roles == UsersContract::ROLE_SOCIAL_SOCORROS
-				|| $roles == UsersContract::ROLE_SOCORROS
-				|| $roles == UsersContract::ROLE_SOCORROS_MARITIMOS);
+		return ($roles == UsersContract::ROLE_TECHNICIAN || UsersContract::ROLE_ADMIN 
+				|| UsersContract::ROLE_VOLUNTEER);
 	}
 	
 	function incorrectData(){
