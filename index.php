@@ -71,10 +71,12 @@ class Index {const LOGIN_REQUEST = "login";
 			} else {
 				if(isset($_POST[self::EMAIL])) {
 					Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
+					$this->showLoginForm("Invalid e-mail/password");
 				} else {
 					Log::write(null, "view login");
+					$this->showLoginForm();
 				}
-				$this->showLoginForm();
+				
 			}
 		}
 	}
@@ -191,8 +193,8 @@ class Index {const LOGIN_REQUEST = "login";
 		}
 	}
 
-	function showLoginForm(){
-		require_once 'login.html';
+	function showLoginForm($error = null){
+		require_once 'login.php';
 	}
 
 	function showAdminPanel($user){
@@ -255,12 +257,16 @@ class Index {const LOGIN_REQUEST = "login";
 	}
 
 	function getUserFromForm(){
-		if(!isset($_POST[self::EMAIL]) || $_POST[self::EMAIL] == ""){
+		if(!isset($_POST[self::EMAIL]) || !isset($_POST[self::PASSWORD])) {
 			$this->showLoginForm();
 			return;
 		}
-		if(!isset($_POST[self::PASSWORD]) || $_POST[self::PASSWORD] == ""){
-			$this->showLoginForm();
+		if($_POST[self::EMAIL] == ""){
+			$this->showLoginForm("Empty e-mail");
+			return;
+		}
+		if($_POST[self::PASSWORD] == ""){
+			$this->showLoginForm("Empty password");
 			return;
 		}
 		$loginService = new LoginService();
