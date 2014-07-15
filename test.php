@@ -25,7 +25,8 @@ if($dbLayer->connect() == DbLayer::RESULT_DB_CONNECTION_SUCCESFUL){
 function testLocations() {
 	$ls = new LocationsService();
 	$user = new User("name", "surname", UsersContract::ROLE_ADMIN, "asdf@asdf.asdf", "token");
-	
+	echo "</td></tr>";
+	echo "<tr><td>";
 	echo "Testing locations...";
 	testGetLocations($user, $ls);
 	echo "Testing all locations...";
@@ -66,7 +67,8 @@ function testGetWebLocations(User $user, LocationsService $ls) {
 
 function testcalls($dbLayer){
 	$ls = new LoginService();
-	
+	echo "</td></tr>";
+	echo "<tr><td>";
 	echo "Testing insert...";
 	testInsert($dbLayer);
 	

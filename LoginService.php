@@ -22,7 +22,8 @@ class LoginService {
 				UsersContract::USERS_COLUMN_ROLE
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME);
-		$where = UsersContract::USERS_COLUMN_E_MAIL . "=?";
+		$where = UsersContract::USERS_COLUMN_E_MAIL . "=? AND " .
+				UsersContract::USERS_COLUMN_ACTIVE . "=true";
 		$whereargs = array($email);
 		$userRow = $this->getUserData($projection, $tables, $where, $whereargs);
 		if($userRow != null &&
@@ -54,7 +55,8 @@ class LoginService {
 				UsersContract::ACCESS_TOKEN_TABLE_NAME . "`.`" . UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN
 		);
 		$tables = array(UsersContract::USERS_TABLE_NAME, UsersContract::ACCESS_TOKEN_TABLE_NAME);
-		$where = UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=?";
+		$where = UsersContract::ACCESS_TOKEN_COLUMN_LOGIN_TOKEN . "=? AND " .
+				UsersContract::USERS_COLUMN_ACTIVE . "=true";
 		$whereargs = array(
 				$tokenString
 		);
