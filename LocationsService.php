@@ -18,8 +18,9 @@ class LocationsService {
     		return null;
     	}
     	
-    	$where = LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?";
+    	$where = "(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
+    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?) AND " .
+    			LocationsContract::LOCATIONS_COLUMN_ACTIVE . "=true";
     	$whereArgs = array(round(microtime(true)* 1000));
     	
     	return $this->getLocationsFromDb($user, $where, $whereArgs);
@@ -42,6 +43,7 @@ class LocationsService {
     			LocationsContract::LOCATIONS_COLUMN_ADDRESS,
     			LocationsContract::LOCATIONS_COLUMN_OTHER,
     			LocationsContract::LOCATIONS_COLUMN_PHONE,
+    			LocationsContract::LOCATIONS_COLUMN_ACTIVE,
     			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
     			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
     	);
