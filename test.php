@@ -28,7 +28,7 @@ function testLocations() {
 	
 	echo "Testing locations...";
 	testGetLocations($user, $ls);
-	echo "Testing locations...";
+	echo "Testing all locations...";
 	testGetAllLocations($user, $ls);
 	echo "Testing web locations...";
 	testGetWebLocations($user, $ls);
