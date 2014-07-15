@@ -2,10 +2,21 @@
 <html>
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="login.css">
     <title>Mapa de Creu Roja Barcelona</title>
   </head>
   <body>
     <center><br><img src="icons/logo.png"><br><br><br><br>
+    <?php
+    if ($error) {
+    ?>
+    <div class="error_message">
+    <strong><?php echo $error; ?></strong>
+    </div>
+    <?php
+    }
+    ?>
+    <br>
     <form accept-charset="utf8" novalidate="novalidate" autocomplete="on"
       method="POST" action="?q=login" name="Login"> 
       Correu electrònic: <input required="required"

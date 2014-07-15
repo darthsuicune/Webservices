@@ -11,6 +11,7 @@ class UsersContract {
 	const USERS_COLUMN_PASSWORD = "password_digest";
 	const USERS_COLUMN_E_MAIL = "email";
 	const USERS_COLUMN_ROLE = "role";
+	const USERS_COLUMN_ACTIVE = "active";
 	const USERS_COLUMN_PASSWORD_RESET_TOKEN = "resettoken";
 	const USERS_COLUMN_PASSWORD_RESET_TIME = "resettime";
 
