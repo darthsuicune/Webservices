@@ -41,6 +41,7 @@ class LocationsService {
     			LocationsContract::LOCATIONS_COLUMN_TYPE,
     			LocationsContract::LOCATIONS_COLUMN_ADDRESS,
     			LocationsContract::LOCATIONS_COLUMN_OTHER,
+    			LocationsContract::LOCATIONS_COLUMN_PHONE,
     			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
     			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
     	);
