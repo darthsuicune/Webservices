@@ -6,6 +6,7 @@ class Location {
     var $name;
     var $location_type;
     var $address;
+    var $phone;
     var $description;
     var $updated_at;
     var $expireDate;
@@ -23,6 +24,7 @@ class Location {
         $this->description = $values[LocationsContract::LOCATIONS_COLUMN_OTHER];
         $this->updated_at = $values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED];
         $this->expireDate = $values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE];
+        $this->phone = $values[LocationsContract::LOCATIONS_COLUMN_PHONE];
     }
 }
 
@@ -40,6 +42,7 @@ class LocationsContract {
     const LOCATIONS_COLUMN_OTHER = "description";
     const LOCATIONS_COLUMN_LAST_UPDATED = "updated_at";
     const LOCATIONS_COLUMN_EXPIRE_DATE = "expiredate";
+    const LOCATIONS_COLUMN_PHONE = "phone";
 
     const TYPE_ADAPTADAS = "adaptadas";
     const TYPE_ASAMBLEA = "asamblea";
