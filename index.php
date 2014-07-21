@@ -292,15 +292,6 @@ class Index {const LOGIN_REQUEST = "login";
 			$values[LocationsContract::LOCATIONS_COLUMN_OTHER] = $_POST[LocationsContract::LOCATIONS_COLUMN_OTHER];
 		}
 		$values[LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED] = round(microtime(true) * 1000);
-		if(isset($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE])
-				&& $_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] > 0){
-			date_default_timezone_set("Europe/Madrid");
-			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] =
-			strtotime($_POST[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE]) * 1000;
-		} else {
-			$values[LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE] = "0";
-
-		}
 		return $values;
 	}
 

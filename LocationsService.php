@@ -18,9 +18,7 @@ class LocationsService {
     		return null;
     	}
     	
-    	$where = "(" . LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . "=0 OR " . 
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE . ">?) AND " .
-    			LocationsContract::LOCATIONS_COLUMN_ACTIVE . "=1";
+    	$where = LocationsContract::LOCATIONS_COLUMN_ACTIVE . "=1";
     	$whereArgs = array(round(microtime(true)* 1000));
     	
     	return $this->getLocationsFromDb($user, $where, $whereArgs);
@@ -44,8 +42,7 @@ class LocationsService {
     			LocationsContract::LOCATIONS_COLUMN_OTHER,
     			LocationsContract::LOCATIONS_COLUMN_PHONE,
     			LocationsContract::LOCATIONS_COLUMN_ACTIVE,
-    			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED,
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE
+    			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED
     	);
     	$table = LocationsContract::LOCATIONS_TABLE_NAME;
     	
@@ -75,7 +72,7 @@ class LocationsService {
     	}
     	$values = array(
     			LocationsContract::LOCATIONS_COLUMN_LAST_UPDATED=>round(microtime(true) * 1000),
-    			LocationsContract::LOCATIONS_COLUMN_EXPIRE_DATE=>"1");
+    			LocationsContract::LOCATIONS_COLUMN_ACTIVE=>"0");
     	$where = LocationsContract::LOCATIONS_COLUMN_ID . "=?";
     	$whereArgs = array($id);
     	$dbLayer->update($values, LocationsContract::LOCATIONS_TABLE_NAME, $where, $whereArgs);
