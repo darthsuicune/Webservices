@@ -13,7 +13,7 @@
   Allow from all
 </Files>
 
-<Files test.php>
+<Files LOG_FILE>
   Order allow,deny
-  Allow from all
+  Deny from all
 </Files>

@@ -3,7 +3,9 @@
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <link rel="stylesheet" type="text/css" href="login.css">
-    <title>Mapa de Creu Roja Barcelona</title>
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="icons/favicon.ico" type="image/x-icon"/>
+    <title>Creu Roja Barcelona</title>
   </head>
   <body>
     <center><br><img src="icons/logo.png"><br><br><br><br>
@@ -28,6 +30,6 @@
     Aquest mapa fa servir cookies per millorar l'experiència d'ús, si inicies sessió entenem que acceptes l'ús de cookies.
     </p>
     <p>
-    <a href="?q=recoverPassword">Ha oblidat la seva contrasenya?</a>
+    <a href="http://testing.r0uzic.net/password_reset/new">Ha oblidat la seva contrasenya?</a>
   </body>
 </html>

@@ -44,7 +44,7 @@ class LocationsContract {
     const LOCATIONS_COLUMN_PHONE = "phone";
     const LOCATIONS_COLUMN_ACTIVE = "active";
 
-    const TYPE_ADAPTADAS = "adaptadas";
+    const TYPE_ADAPTADAS = "salvamento";
     const TYPE_ASAMBLEA = "asamblea";
     const TYPE_BRAVO = "bravo";
     const TYPE_CUAP = "cuap";
@@ -56,7 +56,7 @@ class LocationsContract {
     
     public static function getLocationTypes(){
     	return array(
-    			'adaptadas',
+    			'salvamento',
     			'asamblea',
     			'bravo',
     			'cuap',
