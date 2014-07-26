@@ -30,6 +30,6 @@
     Aquest mapa fa servir cookies per millorar l'experiència d'ús, si inicies sessió entenem que acceptes l'ús de cookies.
     </p>
     <p>
-    <a href="http://testing.r0uzic.net/password_reset/new">Ha oblidat la seva contrasenya?</a>
+    <a href="http://testing.creuroja.net/password_reset/new">Ha oblidat la seva contrasenya?</a>
   </body>
 </html>

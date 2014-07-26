@@ -5,10 +5,8 @@ class Log {
 		$data = "";
 		if($user) {
 			$data = "User { $user->name $user->surname, $user->email } has requested [ $action ] from $version version";
-		} else {
-			$data = "Requested action [ $action ] from $version version";
+			Log::writeToFile($data);
 		}
-		Log::writeToFile($data);
 	}
 	
 	public static function failWrite(User $user = null, $action, $version = "web") {

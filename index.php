@@ -71,7 +71,7 @@ class Index {const LOGIN_REQUEST = "login";
 			} else {
 				if(isset($_POST[self::EMAIL])) {
 					Log::failWrite(null, "login for " . $_POST[self::EMAIL]);
-					$this->showLoginForm("Invalid e-mail/password");
+					$this->showLoginForm("Correu o contrasenya incorrecta");
 				} else {
 					Log::write(null, "view login");
 					$this->showLoginForm();
