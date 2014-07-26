@@ -84,9 +84,7 @@ class Index {const LOGIN_REQUEST = "login";
 	function handleLoginRequest(User $user = null){
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
 		if($user) {
-			if($user->role == UsersContract::ROLE_ADMIN){
-				$this->showAdminPanel($user);
-			} else if ($user->role == UsersContract::ROLE_TECHNICIAN){
+			if ($user->role == UsersContract::ROLE_TECHNICIAN){
 				$this->showRegister();
 			} else {
 				$this->showMap($user);
