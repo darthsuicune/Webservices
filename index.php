@@ -84,11 +84,7 @@ class Index {const LOGIN_REQUEST = "login";
 	function handleLoginRequest(User $user = null){
 		setcookie(self::COOKIE_NAME, $user->accessToken->accessTokenString);
 		if($user) {
-			if ($user->role == UsersContract::ROLE_TECHNICIAN){
-				$this->showRegister();
-			} else {
-				$this->showMap($user);
-			}
+			$this->showMap($user);
 		} else {
 			$this->showLoginForm();
 		}
