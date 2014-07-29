@@ -56,10 +56,11 @@ class LocationsContract {
     
     public static function getLocationTypes(){
     	return array(
-    			'salvamento',
+    			'adaptadas',
     			'asamblea',
     			'bravo',
     			'cuap',
+    			'gasolinera',
     			'hospital',
     			'maritimo',
     			'nostrum',
